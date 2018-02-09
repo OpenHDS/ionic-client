@@ -25,11 +25,11 @@ export class LocationsProvider {
 
   async initProvider(): Promise<void>{
     if(localStorage.getItem('lastUpdate') == null){
-      await this.loadData().then(() => this.getAllLocations());
+      await this.loadData(this.dataUrl).then(() => this.getAllLocations());
     }
   }
 
-  private async loadData(){
+  private async loadData(url: string){
     const locations: Location[] = [];
 
     const headers = new HttpHeaders().set('authorization',
@@ -60,6 +60,13 @@ export class LocationsProvider {
 
   getAllLocations(): Promise<Location[]>{
     return this.db.locations.toArray();
+  }
+
+  //Pull updates from the server
+  async synchronizeLocations(){
+    const url = this.dataUrl + "/pull" + localStorage.getItem("lastUpdate");
+
+    await this.loadData(url);
   }
 
 }

@@ -5,14 +5,30 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
     <ion-title>Baseline Census</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
 <ion-content padding>
-  <location-list></location-list>
+  <!--- Column for each entity selection--->
+  <ion-row>
+    <ion-col col-4>
+      <button ion-button full>Location</button>
+    </ion-col>
+
+
+  <!---Column for display of the list locations --->
+
+    <ion-col col-4>
+      <location-list></location-list>
+    </ion-col>
+
+    <!---Column for options: synchronize, create, etc. --->
+    <ion-col col-4>
+      <button ion-button full>Synchronize Locations</button>
+      <button ion-button full>Create a Location</button>
+    </ion-col>
+  </ion-row>
 </ion-content>

@@ -28,6 +28,12 @@ export class LocationListPage implements OnInit{
     });
   }
 
+  async synchronize(){
+    await this.locProvider.synchronizeLocations().then(async() => {
+      this.locations = await this.locProvider.getAllLocations();
+    })
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad LocationListPage');
   }

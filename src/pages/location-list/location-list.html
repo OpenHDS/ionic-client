@@ -1,7 +1,9 @@
 <ion-list no-lines>
-  <ion-item *ngFor="let loc of this.locations">
-    <h1>{{loc.locationName}}</h1>
-    <p>{{loc.locationType}}</p>
-  </ion-item>
+  <ion-card *ngFor="let loc of this.locations">
+    <ion-card-content>
+      <h1>{{loc.locationName}}</h1>
+      <p>{{loc.locationType}}</p>
+    </ion-card-content>
+  </ion-card>
 </ion-list>
 
