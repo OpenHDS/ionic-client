@@ -5,13 +5,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
-import {LocationListPage} from "../pages/location-list/location-list";
+import { BaselineCensusPage } from "../pages/baseline-census/baseline-census";
+import { LocationListPage } from "../pages/location-list/location-list";
 import { LocationsProvider } from '../providers/locations/locations-provider';
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     MyApp,
+    BaselineCensusPage,
     LocationListPage
   ],
   imports: [
@@ -22,7 +24,7 @@ import {HttpClientModule} from "@angular/common/http";
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    LocationListPage
+    BaselineCensusPage
   ],
   providers: [
     StatusBar,

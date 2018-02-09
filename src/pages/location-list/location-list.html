@@ -1,19 +1,7 @@
-<ion-header>
+<ion-list no-lines>
+  <ion-item *ngFor="let loc of this.locations">
+    <h1>{{loc.locationName}}</h1>
+    <p>{{loc.locationType}}</p>
+  </ion-item>
+</ion-list>
 
-  <ion-navbar>
-    <ion-title>Location List
-      <ion-icon name="add-circle" float-lg-right ></ion-icon>
-      <ion-icon name="refresh-circle" float-lg-right></ion-icon>
-    </ion-title>
-  </ion-navbar>
-
-</ion-header>
-
-<ion-content padding>
-    <ion-list no-lines>
-      <ion-item *ngFor="let loc of this.locations">
-        <h1>{{loc.locationName}}</h1>
-        <p>{{loc.locationType}}</p>
-      </ion-item>
-    </ion-list>
-</ion-content>

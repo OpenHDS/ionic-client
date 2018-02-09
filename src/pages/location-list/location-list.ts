@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Location } from "../../providers/locations/locations-db";
-import {LocationsProvider} from "../../providers/locations/locations-provider";
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/observable/from";
-import "rxjs/add/observable/fromPromise";
+import { LocationsProvider } from "../../providers/locations/locations-provider";
 
 /**
  * Generated class for the LocationListPage page.
@@ -15,7 +12,7 @@ import "rxjs/add/observable/fromPromise";
 
 @IonicPage()
 @Component({
-  selector: 'page-location-list',
+  selector: 'location-list',
   templateUrl: 'location-list.html',
 })
 export class LocationListPage implements OnInit{
