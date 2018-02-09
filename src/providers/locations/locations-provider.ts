@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { LocationDb, Location } from "./locations-db";
 
 /*
@@ -25,7 +25,7 @@ export class LocationsProvider {
 
   async initProvider(): Promise<void>{
     if(localStorage.getItem('lastUpdate') == null){
-      await this.loadData();
+      await this.loadData().then(() => this.getAllLocations());
     }
   }
 
