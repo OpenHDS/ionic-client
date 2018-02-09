@@ -8,7 +8,9 @@ import { MyApp } from './app.component';
 import { BaselineCensusPage } from "../pages/baseline-census/baseline-census";
 import { LocationListPage } from "../pages/location-list/location-list";
 import { LocationsProvider } from '../providers/locations/locations-provider';
-import {HttpClientModule} from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
+import { Network } from "@ionic-native/network";
+import { NetworkConfigProvider } from "../providers/network-config/network-config";
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import {HttpClientModule} from "@angular/common/http";
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    Network,
+    NetworkConfigProvider,
     LocationsProvider
   ]
 })
