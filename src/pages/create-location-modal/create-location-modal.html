@@ -1,0 +1,56 @@
+<!--
+  Generated template for the CreateLocationModalPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!--
+  Generated template for the CreateLocationModalPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Create a Location</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!this.netConfig.isConnected()">
+    <ion-card-content color="danger">
+      <p>There is currently no network connection. You data will be uploaded to the server when there
+        is a connection!</p>
+    </ion-card-content>
+  </div>
+  <div padding-left padding-right>
+    <!-- Location Entry Form -->
+    <form (ngSubmit)="dismiss()">
+      <ion-item>
+        <ion-label floating> Name </ion-label>
+        <ion-input type="text" name="locName"  [(ngModel)]="this.loc.locationName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> External Id </ion-label>
+        <ion-input type="text" name="extId"[(ngModel)]="this.loc.extId"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Type </ion-label>
+        <ion-input name="locType" [(ngModel)]="this.loc.locationType"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Latitude </ion-label>
+        <ion-input type="text" name="latitude"[(ngModel)]="this.loc.latitude"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Longitude </ion-label>
+        <ion-input type="text" name="longitude" [(ngModel)]="this.loc.longitude"></ion-input>
+      </ion-item>
+
+      <button ion-button round color="dark" outline type="submit">Create Location </button>
+    </form>
+
+  </div>
+</ion-content>
