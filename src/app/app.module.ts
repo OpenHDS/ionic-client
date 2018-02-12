@@ -11,12 +11,14 @@ import { LocationsProvider } from '../providers/locations/locations-provider';
 import { HttpClientModule } from "@angular/common/http";
 import { Network } from "@ionic-native/network";
 import { NetworkConfigProvider } from "../providers/network-config/network-config";
+import {CreateLocationModalPage} from "../pages/create-location-modal/create-location-modal";
 
 @NgModule({
   declarations: [
     MyApp,
     BaselineCensusPage,
-    LocationListPage
+    LocationListPage,
+    CreateLocationModalPage
   ],
   imports: [
     BrowserModule,
@@ -26,7 +28,8 @@ import { NetworkConfigProvider } from "../providers/network-config/network-confi
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    BaselineCensusPage
+    BaselineCensusPage,
+    CreateLocationModalPage
   ],
   providers: [
     StatusBar,

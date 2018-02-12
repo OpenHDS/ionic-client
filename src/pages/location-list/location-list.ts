@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {Location} from "../../providers/locations/locations-db";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
+import {CreateLocationModalPage} from "../create-location-modal/create-location-modal";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/from";
 
@@ -18,22 +19,29 @@ import "rxjs/add/observable/from";
   templateUrl: 'location-list.html',
 })
 export class LocationListPage implements OnInit {
-  locations: Location[];
+  locations:Promise<Location[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
+    public modalCtrl: ModalController) {
   }
 
   async ngOnInit() {
     //Initialize data and then get all locations for display.
-    await this.locProvider.initProvider().then(async () => {
-      this.locations = await this.locProvider.getAllLocations();
+    await this.locProvider.initProvider().then(()  => {
+      this.locations = this.locProvider.getAllLocations();
     }).then(() => console.log("Location Data loaded"));  }
 
   async synchronize() {
-    return await this.pullUpdates().then(async () => this.locations = await this.locProvider.getAllLocations());
+    await this.locProvider.updateLocationsList().then(() => this.locations = this.locProvider.getAllLocations());
   }
 
-  async pullUpdates() {
-    await this.locProvider.updateLocationsList().catch(err => console.log(err));
+  presentCreationPage(){
+    const createPage = this.modalCtrl.create(CreateLocationModalPage);
+    createPage.present();
+
+    createPage.onDidDismiss(data => {
+      if(data != null)
+        this.locProvider.saveData(data.loc)
+    })
   }
 }

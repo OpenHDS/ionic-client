@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LocationDb, Location } from "./locations-db";
 
 /*
@@ -23,11 +23,11 @@ export class LocationsProvider {
     this.db = new LocationDb();
   }
 
-  async initProvider(): Promise<void>{
+  async initProvider(): Promise<Location[]>{
     if(localStorage.getItem('lastUpdate') == null){
-      await this.loadData(this.dataUrl).then(() => this.getAllLocations());
+      return await this.loadData(this.dataUrl).then(() => this.getAllLocations());
     } else {
-      await this.updateLocationsList().then(() => this.getAllLocations());
+      return await this.updateLocationsList().then(() => this.getAllLocations());
     }
   }
 
@@ -66,10 +66,14 @@ export class LocationsProvider {
   }
 
   //Pull updates from the server
-  async updateLocationsList(){
+  async updateLocationsList(): Promise<Location[]>{
     const url = this.dataUrl + "/pull/" + localStorage.getItem("lastUpdate");
-    await this.loadData(url).catch(error => console.log(error)).then(() => this.getAllLocations());
-    return;
+    console.log(url);
+    return await this.loadData(url).catch(error => console.log(error)).then(() => this.getAllLocations());
+  }
+
+  saveData(loc: Location){
+
   }
 
 }
