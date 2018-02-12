@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { LocationListPage } from "../location-list/location-list";
 
 /**
  * Generated class for the BaselineCensusPage page.

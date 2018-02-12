@@ -6,7 +6,7 @@ export class LocationDb extends Dexie {
   constructor() {
     super("Location");
     this.version(1).stores({
-      locations: 'extId, name, type, longitude, latitude, deleted, timestamp, uuid'
+      locations: 'extId, name, type, longitude, latitude, deleted, insertDate, clientInsert, uuid'
     });
   }
 }
@@ -20,6 +20,7 @@ export interface Location{
   accuracy: string;
   altitude: string;
   deleted: boolean;
-  timestamp: string;
+  insertDate: Date;
+  clientInsert: number;
   uuid: string;
 }
