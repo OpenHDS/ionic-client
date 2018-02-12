@@ -25,9 +25,9 @@ export class LocationsProvider {
 
   async initProvider(): Promise<void>{
     if(localStorage.getItem('lastUpdate') == null){
-      await this.loadData(this.dataUrl);
+      await this.loadData(this.dataUrl).then(() => this.getAllLocations());
     } else {
-      await this.updateLocationsList();
+      await this.updateLocationsList().then(() => this.getAllLocations());
     }
   }
 
@@ -38,7 +38,6 @@ export class LocationsProvider {
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
     await this.http.get(url, {headers}).subscribe(data => {
-
         for (let loc of data['locations']) {
           locations.push({
             uuid: loc.uuid,
@@ -55,7 +54,6 @@ export class LocationsProvider {
           });
         }
 
-
         this.db.transaction('rw', this.db.locations, () => {
           this.db.locations.bulkPut(locations).catch(error => console.log(error));
         }).then(() => localStorage.setItem('lastUpdate', data['timestamp'])).catch(error => console.log(error));
@@ -70,7 +68,6 @@ export class LocationsProvider {
   //Pull updates from the server
   async updateLocationsList(){
     const url = this.dataUrl + "/pull/" + localStorage.getItem("lastUpdate");
-    console.log(url);
     await this.loadData(url).catch(error => console.log(error)).then(() => this.getAllLocations());
     return;
   }
