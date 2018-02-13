@@ -25,6 +25,8 @@ export class CreateLocationModalPage {
     latitude: null,
     accuracy: null,
     altitude: null,
+    collectedBy: null,
+    locationLevel: null,
     deleted: null,
     insertDate: null,
     clientInsert: null

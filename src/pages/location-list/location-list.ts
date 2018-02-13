@@ -29,7 +29,8 @@ export class LocationListPage implements OnInit {
     //Initialize data and then get all locations for display.
     await this.locProvider.initProvider().then(()  => {
       this.locations = this.locProvider.getAllLocations();
-    }).then(() => console.log("Location Data loaded"));  }
+    }).then(() => console.log("Location Data loaded"));
+  }
 
   async synchronize() {
     await this.locProvider.updateLocationsList().then(() => this.locations = this.locProvider.getAllLocations());
@@ -43,5 +44,7 @@ export class LocationListPage implements OnInit {
       if(data != null)
         this.locProvider.saveData(data.loc)
     })
+
+
   }
 }

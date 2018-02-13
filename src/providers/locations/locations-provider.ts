@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LocationDb, Location } from "./locations-db";
+import {NetworkConfigProvider} from "../network-config/network-config";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -19,7 +20,7 @@ export class LocationsProvider {
 
   dataUrl = 'http://localhost:8080/openhds/api2/rest/locations2';
 
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider) {
     this.db = new LocationDb();
   }
 
@@ -50,7 +51,14 @@ export class LocationsProvider {
             altitude: loc.altitude,
             deleted: Boolean(loc.deleted),
             insertDate: loc.insertDate,
-            clientInsert: data['timestamp']
+            clientInsert: data['timestamp'],
+            collectedBy: {
+              extId: "FWDW1"
+            },
+            locationLevel: {
+              extId: "MBI"
+            }
+
           });
         }
 
@@ -73,7 +81,44 @@ export class LocationsProvider {
   }
 
   saveData(loc: Location){
+    const headers = new HttpHeaders().set('authorization',
+      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
+    if(this.networkConfig.isConnected()){
+      //Dummy fields until Fieldworker and Location Hierarchy implemented
+      loc.collectedBy = {
+        extId: "FWEK1D"
+      };
+
+      loc.locationLevel =  {
+          extId: "MBI"
+      };
+
+      loc.deleted = false;
+      let postData = {
+        uuid: loc.uuid,
+        locationName: loc.locationName,
+        extId: loc.extId,
+        locationType: loc.locationType,
+        locationLevel: loc.locationLevel,
+        collectedBy: loc.collectedBy,
+        longitude: loc.longitude,
+        latitude: loc.latitude,
+        deleted: loc.deleted,
+        insertDate: new Date()
+      };
+
+      this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
+        this.db.locations.add(loc).then(() => {
+          localStorage.setItem('lastUpdate', data['timestamp'])
+        }).catch(err => console.log(err));
+      });
+
+    } else {
+      //No network connection. Save locally.
+      this.db.locations.add(loc).then(() => {
+        localStorage.setItem('lastUpdate', new Date().getTime().toString())
+      }).catch(err => console.log(err));
+    }
   }
-
 }

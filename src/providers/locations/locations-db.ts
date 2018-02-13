@@ -19,6 +19,8 @@ export interface Location{
   latitude: string;
   accuracy: string;
   altitude: string;
+  collectedBy: {};
+  locationLevel: {};
   deleted: boolean;
   insertDate: Date;
   clientInsert: number;
