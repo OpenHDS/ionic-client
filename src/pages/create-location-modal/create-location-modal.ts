@@ -29,7 +29,8 @@ export class CreateLocationModalPage {
     locationLevel: null,
     deleted: null,
     insertDate: null,
-    clientInsert: null
+    clientInsert: null,
+    sentToServer: false
   };
 
   constructor(public navCtrl: NavController, public navParams: NavParams,

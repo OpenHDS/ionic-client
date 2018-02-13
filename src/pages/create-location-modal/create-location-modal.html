@@ -18,10 +18,13 @@
 
 <ion-content>
   <div *ngIf="!this.netConfig.isConnected()">
-    <ion-card-content color="danger">
-      <p>There is currently no network connection. You data will be uploaded to the server when there
-        is a connection!</p>
-    </ion-card-content>
+    <ion-card color="danger">
+      <ion-card-content>
+        <p>There is currently no network connection. You data will be uploaded to the server when there
+          is a connection!</p>
+      </ion-card-content>
+    </ion-card>
+
   </div>
   <div padding-left padding-right>
     <!-- Location Entry Form -->

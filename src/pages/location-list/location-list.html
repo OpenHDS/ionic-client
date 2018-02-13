@@ -10,14 +10,15 @@
     <ion-card-content>
       <h1>{{loc.locationName}}</h1>
       <p>{{loc.locationType}}</p>
+      <button ion-button full outline>Select</button>
     </ion-card-content>
   </ion-card>
 </ion-list>
  </ion-col>
 
   <ion-col col-4>
-    <button ion-button full (click)="this.synchronize()">Synchronize Locations</button>
-    <button ion-button full (click)="this.presentCreationPage()">Create a Location</button>
+    <button ion-button full outline [disabled]="!this.networkConfig.isConnected()" (click)="this.synchronize()">Synchronize Locations</button>
+    <button ion-button full outline (click)="this.presentCreationPage()">Create a Location</button>
   </ion-col>
 </ion-row>
 

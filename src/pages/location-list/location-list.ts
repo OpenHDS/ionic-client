@@ -5,6 +5,7 @@ import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {CreateLocationModalPage} from "../create-location-modal/create-location-modal";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/from";
+import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 
 /**
  * Generated class for the LocationListPage page.
@@ -22,7 +23,7 @@ export class LocationListPage implements OnInit {
   locations:Promise<Location[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
-    public modalCtrl: ModalController) {
+    public modalCtrl: ModalController, public networkConfig: NetworkConfigProvider) {
   }
 
   async ngOnInit() {

@@ -57,8 +57,8 @@ export class LocationsProvider {
             },
             locationLevel: {
               extId: "MBI"
-            }
-
+            },
+            sentToServer: true
           });
         }
 
@@ -109,6 +109,7 @@ export class LocationsProvider {
       };
 
       this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
+        loc.sentToServer = true;
         this.db.locations.add(loc).then(() => {
           localStorage.setItem('lastUpdate', data['timestamp'])
         }).catch(err => console.log(err));
