@@ -15,10 +15,10 @@ export interface Location{
   extId: string;
   locationName: string;
   locationType: string;
-  longitude: string;
-  latitude: string;
-  accuracy: string;
-  altitude: string;
+  longitude: number;
+  latitude: number;
+  accuracy: number;
+  altitude: number;
   collectedBy: {};
   locationLevel: {};
   deleted: boolean;

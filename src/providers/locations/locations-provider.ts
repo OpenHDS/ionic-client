@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LocationDb, Location } from "./locations-db";
 import {NetworkConfigProvider} from "../network-config/network-config";
+import { UUID } from "angular2-uuid";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -94,6 +95,8 @@ export class LocationsProvider {
           extId: "MBI"
       };
 
+      loc.uuid = UUID.UUID();
+      console.log(loc.uuid);
       loc.deleted = false;
       let postData = {
         uuid: loc.uuid,
