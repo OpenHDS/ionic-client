@@ -1,8 +1,12 @@
 <ion-row>
   <ion-col col-4>
     <button ion-button full>Location</button>
+    <div *ngIf="this.selectedLoc != undefined">
+      <p ion-text> Name: {{this.selectedLoc.locationName}}</p>
+      <p ion-text> Ext ID: {{this.selectedLoc.extId}} </p>
+      <p ion-text> Type: {{this.selectedLoc.locationType}} </p>
+    </div>
   </ion-col>
-
  <ion-col col-4>
 
 <ion-list no-lines>
@@ -10,7 +14,7 @@
     <ion-card-content>
       <h1>{{loc.locationName}}</h1>
       <p>{{loc.locationType}}</p>
-      <button ion-button full outline>Select</button>
+      <button ion-button full outline (click)="this.selectLocation(loc)">Select</button>
     </ion-card-content>
   </ion-card>
 </ion-list>

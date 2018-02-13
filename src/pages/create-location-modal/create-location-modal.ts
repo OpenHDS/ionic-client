@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { Location } from '../../providers/locations/locations-db'
 import { NetworkConfigProvider } from "../../providers/network-config/network-config";
+import {Geolocation, GeolocationOptions} from "@ionic-native/geolocation";
 
 /**
  * Generated class for the CreateLocationModalPage page.
@@ -34,8 +35,17 @@ export class CreateLocationModalPage {
   };
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              public viewCtrl: ViewController, public netConfig: NetworkConfigProvider) {
+              public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider) {
 
+  }
+
+  getGeolocationInfo(){
+    this.geo.getCurrentPosition().then((resp) => {
+      this.loc.latitude = resp.coords.latitude;
+      this.loc.longitude = resp.coords.longitude;
+      this.loc.altitude = resp.coords.altitude;
+      this.loc.accuracy = resp.coords.altitudeAccuracy;
+    }).then(() => console.log(this.loc)).catch(err => console.log(err));
   }
 
   dismiss() {

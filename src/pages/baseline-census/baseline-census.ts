@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, Input, ViewChild, AfterViewInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { LocationListPage } from "../location-list/location-list";
+import { Location } from "../../providers/locations/locations-db";
 
 /**
  * Generated class for the BaselineCensusPage page.
@@ -14,13 +15,14 @@ import { LocationListPage } from "../location-list/location-list";
   selector: 'page-baseline-census',
   templateUrl: 'baseline-census.html',
 })
+
 export class BaselineCensusPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad BaselineCensusPage');
   }
-
 }

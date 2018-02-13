@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {Location} from "../../providers/locations/locations-db";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
@@ -18,10 +18,11 @@ import {NetworkConfigProvider} from "../../providers/network-config/network-conf
 @Component({
   selector: 'location-list',
   templateUrl: 'location-list.html',
+
 })
 export class LocationListPage implements OnInit {
   locations:Promise<Location[]>;
-
+  selectedLoc: Location = null;
   constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
     public modalCtrl: ModalController, public networkConfig: NetworkConfigProvider) {
   }
@@ -44,8 +45,10 @@ export class LocationListPage implements OnInit {
     createPage.onDidDismiss(data => {
       if(data != null)
         this.locProvider.saveData(data.loc)
-    })
+    });
+  }
 
-
+  selectLocation(location: Location){
+    this.selectedLoc = location;
   }
 }

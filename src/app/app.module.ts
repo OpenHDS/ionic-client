@@ -12,6 +12,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { Network } from "@ionic-native/network";
 import { NetworkConfigProvider } from "../providers/network-config/network-config";
 import {CreateLocationModalPage} from "../pages/create-location-modal/create-location-modal";
+import {Geolocation} from "@ionic-native/geolocation";
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {CreateLocationModalPage} from "../pages/create-location-modal/create-loc
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Network,
+    Geolocation,
     NetworkConfigProvider,
     LocationsProvider
   ]
