@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { LocationDb, Location } from "./locations-db";
 import {NetworkConfigProvider} from "../network-config/network-config";
 import { UUID } from "angular2-uuid";
+import {ErrorsDb, Errors} from "../errors/errors-db";
+import {ErrorsProvider} from "../errors/errors";
+import {EntityErrorLabels} from "../errors/entity-error-labels";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -21,7 +24,7 @@ export class LocationsProvider {
 
   dataUrl = 'http://localhost:8080/openhds/api2/rest/locations2';
 
-  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider) {
+  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider) {
     this.db = new LocationDb();
   }
 
@@ -59,7 +62,7 @@ export class LocationsProvider {
             locationLevel: {
               extId: "MBI"
             },
-            sentToServer: true
+            processed: 1
           });
         }
 
@@ -95,9 +98,12 @@ export class LocationsProvider {
           extId: "MBI"
       };
 
+      //Configure UUID on client side
       loc.uuid = UUID.UUID();
       console.log(loc.uuid);
       loc.deleted = false;
+
+      //Get only data that needs to be sent to the server
       let postData = {
         uuid: loc.uuid,
         locationName: loc.locationName,
@@ -112,10 +118,22 @@ export class LocationsProvider {
       };
 
       this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
-        loc.sentToServer = true;
+        loc.processed = 0;
         this.db.locations.add(loc).then(() => {
           localStorage.setItem('lastUpdate', data['timestamp'])
         }).catch(err => console.log(err));
+      }, error => {
+        console.log(error)
+        let err: Errors = {
+          extId: loc.extId,
+          entityType: EntityErrorLabels.LOCATION_ERROR,
+          entity: loc,
+          errorMessage: error.error.errors[0],
+          timestamp: new Date().getTime(),
+          resolved: 0
+        }
+
+        this.errorsProvider.insert(err);
       });
 
     } else {

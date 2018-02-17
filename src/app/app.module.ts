@@ -11,15 +11,20 @@ import { LocationsProvider } from '../providers/locations/locations-provider';
 import { HttpClientModule } from "@angular/common/http";
 import { Network } from "@ionic-native/network";
 import { NetworkConfigProvider } from "../providers/network-config/network-config";
-import {CreateLocationModalPage} from "../pages/create-location-modal/create-location-modal";
-import {Geolocation} from "@ionic-native/geolocation";
+import { CreateLocationModalPage } from "../pages/create-location-modal/create-location-modal";
+import { Geolocation } from "@ionic-native/geolocation";
+import { ErrorsProvider } from '../providers/errors/errors';
+import {MenuPage} from "../pages/menu/menu";
+import {ErrorDisplayPage} from "../pages/error-display/error-display";
 
 @NgModule({
   declarations: [
     MyApp,
+    MenuPage,
     BaselineCensusPage,
     LocationListPage,
-    CreateLocationModalPage
+    CreateLocationModalPage,
+    ErrorDisplayPage
   ],
   imports: [
     BrowserModule,
@@ -29,8 +34,10 @@ import {Geolocation} from "@ionic-native/geolocation";
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    MenuPage,
     BaselineCensusPage,
-    CreateLocationModalPage
+    CreateLocationModalPage,
+    ErrorDisplayPage
   ],
   providers: [
     StatusBar,
@@ -39,7 +46,8 @@ import {Geolocation} from "@ionic-native/geolocation";
     Network,
     Geolocation,
     NetworkConfigProvider,
-    LocationsProvider
+    LocationsProvider,
+    ErrorsProvider
   ]
 })
 export class AppModule {}
