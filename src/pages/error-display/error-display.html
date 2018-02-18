@@ -16,8 +16,9 @@
   <ion-list>
     <ion-card>
       <ion-card-content *ngFor="let err of this.locationErrors | async">
-        <p>{{err.errorMessage}}</p>
-        <p>{{convertTimestampToDate(err.timestamp)}}</p>
+          <p>{{err.errorMessage}}</p>
+          <p>{{convertTimestampToDate(err.timestamp)}}</p>
+          <button ion-button outline color="danger" small (click)="this.getEntityModal(err)">Correct Errors</button>
       </ion-card-content>
     </ion-card>
   </ion-list>

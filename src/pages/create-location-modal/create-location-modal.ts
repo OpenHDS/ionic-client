@@ -17,6 +17,7 @@ import {Geolocation, GeolocationOptions} from "@ionic-native/geolocation";
   templateUrl: 'create-location-modal.html',
 })
 export class CreateLocationModalPage {
+  edit: boolean;
   loc: Location = {
     uuid: null,
     extId: null,
@@ -36,6 +37,11 @@ export class CreateLocationModalPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider) {
+    this.edit = this.navParams.get('edit');
+
+    if(this.edit){
+      this.loc = this.navParams.get("location");
+    }
 
   }
 

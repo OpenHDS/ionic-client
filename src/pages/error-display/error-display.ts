@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {ErrorsProvider} from "../../providers/errors/errors";
 import {EntityErrorLabels} from "../../providers/errors/entity-error-labels";
+import {CreateLocationModalPage} from "../create-location-modal/create-location-modal";
+
 import {Errors} from "../../providers/errors/errors-db";
+import {LocationsProvider} from "../../providers/locations/locations-provider";
 
 /**
  * Generated class for the ErrorDisplayPage page.
@@ -19,7 +22,8 @@ import {Errors} from "../../providers/errors/errors-db";
 export class ErrorDisplayPage {
   locationErrors: Promise<Errors[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public errorProvider: ErrorsProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+              public errorProvider: ErrorsProvider, public modalCtrl: ModalController, public locProvider: LocationsProvider) {
     this.getLocationErrors().then(() => console.log("Location errors loaded"));
   }
 
@@ -35,4 +39,18 @@ export class ErrorDisplayPage {
     return new Date(timestamp).toString();
   }
 
+  fixLocationErrors(loc: Location){
+    const createPage = this.modalCtrl.create(CreateLocationModalPage, {edit: true, location: loc});
+    createPage.present();
+
+    createPage.onDidDismiss(data => {
+      if(data != null)
+        this.locProvider.saveData(data.loc)
+    });
+  }
+
+  getEntityModal(error){
+    if(error.entityType === EntityErrorLabels.LOCATION_ERROR)
+      this.fixLocationErrors(error);
+  }
 }
