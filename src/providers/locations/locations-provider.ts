@@ -84,7 +84,7 @@ export class LocationsProvider {
     return await this.loadData(url).catch(error => console.log(error)).then(() => this.getAllLocations());
   }
 
-  saveData(loc: Location){
+  saveData(loc: Location): boolean{
     const headers = new HttpHeaders().set('authorization',
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
@@ -118,7 +118,7 @@ export class LocationsProvider {
       };
 
       this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
-        loc.processed = 0;
+        loc.processed = 1;
         this.db.locations.add(loc).then(() => {
           localStorage.setItem('lastUpdate', data['timestamp'])
         }).catch(err => console.log(err));
@@ -134,6 +134,7 @@ export class LocationsProvider {
         }
 
         this.errorsProvider.insert(err);
+        return false;
       });
 
     } else {
@@ -142,5 +143,16 @@ export class LocationsProvider {
         localStorage.setItem('lastUpdate', new Date().getTime().toString())
       }).catch(err => console.log(err));
     }
+
+    return true;
+  }
+
+  resolveErrors(error: Errors){
+    let loc = error.entity;
+    if(this.saveData(loc)){
+      error.resolved = 1;
+      this.errorsProvider.updateErrorStatus(error);
+    }
+
   }
 }

@@ -39,13 +39,16 @@ export class ErrorDisplayPage {
     return new Date(timestamp).toString();
   }
 
-  fixLocationErrors(loc: Location){
-    const createPage = this.modalCtrl.create(CreateLocationModalPage, {edit: true, location: loc});
+  fixLocationErrors(locError: Errors){
+    const createPage = this.modalCtrl.create(CreateLocationModalPage, {edit: true, location: locError.entity});
     createPage.present();
 
     createPage.onDidDismiss(data => {
-      if(data != null)
-        this.locProvider.saveData(data.loc)
+      if(data != null) {
+        locError.entity = data;
+        this.locProvider.resolveErrors(locError);
+      }
+
     });
   }
 
