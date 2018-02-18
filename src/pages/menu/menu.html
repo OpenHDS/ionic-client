@@ -5,17 +5,19 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
     <ion-title>Menu</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
 <ion-content padding>
-  <ion-list-header>
+  <ion-list>
+    <ion-list-header>Data Collection</ion-list-header>
     <button ion-item>Baseline Census</button>
     <button ion-item (click)="this.goToErrorsPage()">Data Entry Errors</button>
-  </ion-list-header>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>Configurations</ion-list-header>
+  </ion-list>
 </ion-content>

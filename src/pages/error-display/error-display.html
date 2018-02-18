@@ -14,12 +14,13 @@
 
 
 <ion-content padding>
+  <ion-list-header>Locations</ion-list-header>
   <ion-list>
-    <ion-list-header>Locations</ion-list-header>
-    <ion-item *ngFor="let err of this.locationErrors | async">
-      {{err.entity.locationName}}
-      {{err.entity.extId}}
-      {{err.errorMessage}}
-    </ion-item>
+    <ion-card>
+      <ion-card-content *ngFor="let err of this.locationErrors | async">
+        <p>{{err.errorMessage}}</p>
+        <p>{{convertTimestampToDate(err.timestamp)}}</p>
+      </ion-card-content>
+    </ion-card>
   </ion-list>
 </ion-content>

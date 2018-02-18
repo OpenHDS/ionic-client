@@ -125,7 +125,7 @@ export class LocationsProvider {
       }, error => {
         console.log(error)
         let err: Errors = {
-          extId: loc.extId,
+          uuid: loc.uuid,
           entityType: EntityErrorLabels.LOCATION_ERROR,
           entity: loc,
           errorMessage: error.error.errors[0],

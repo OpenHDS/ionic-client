@@ -6,13 +6,13 @@ export class ErrorsDb extends Dexie{
   constructor() {
     super('Error');
     this.version(1).stores({
-      errors: 'extId, entityType, entity, errorMessage, timestamp, resolved'
+      errors: 'uuid, entityType, entity, errorMessage, timestamp, resolved'
     });
   }
 }
 
 export interface Errors{
-  extId: string; //External id of the entity that caused the error
+  uuid: string; //External id of the entity that caused the error
   entityType: number;
   entity: any;  // the entity object
   errorMessage: string; //the error message

@@ -6,7 +6,11 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>Baseline Census</ion-title>
+    <ion-title>Baseline Census
+      <button ion-button small color="dark" float-right icon-right (click)="displayMenu($event)">
+        Menu <ion-icon float-sm-right name="arrow-dropdown"></ion-icon>
+      </button>
+    </ion-title>
   </ion-navbar>
 </ion-header>
 

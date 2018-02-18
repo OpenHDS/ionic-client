@@ -18,7 +18,9 @@ import {Errors} from "../../providers/errors/errors-db";
 })
 export class ErrorDisplayPage {
   locationErrors: Promise<Errors[]>;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public errorProvider: ErrorsProvider) {
+    this.getLocationErrors().then(() => console.log("Location errors loaded"));
   }
 
   ionViewDidLoad() {
@@ -27,6 +29,10 @@ export class ErrorDisplayPage {
 
   async getLocationErrors(){
     this.locationErrors = this.errorProvider.getLocationErrors()
+  }
+
+  convertTimestampToDate(timestamp: number){
+    return new Date(timestamp).toString();
   }
 
 }

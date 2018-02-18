@@ -20,9 +20,11 @@ import {NetworkConfigProvider} from "../../providers/network-config/network-conf
   templateUrl: 'location-list.html',
 
 })
+
 export class LocationListPage implements OnInit {
   locations:Promise<Location[]>;
   selectedLoc: Location = null;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
     public modalCtrl: ModalController, public networkConfig: NetworkConfigProvider) {
   }

@@ -1,7 +1,8 @@
 import {Component, Input, ViewChild, AfterViewInit} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, NavController, NavParams, PopoverController} from 'ionic-angular';
 import { LocationListPage } from "../location-list/location-list";
 import { Location } from "../../providers/locations/locations-db";
+import {MenuPage} from "../menu/menu";
 
 /**
  * Generated class for the BaselineCensusPage page.
@@ -18,11 +19,14 @@ import { Location } from "../../providers/locations/locations-db";
 
 export class BaselineCensusPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public menuPopover: PopoverController) {
 
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BaselineCensusPage');
+  displayMenu(event){
+    let popover = this.menuPopover.create(MenuPage);
+    popover.present({
+      ev: event
+    });
   }
 }
