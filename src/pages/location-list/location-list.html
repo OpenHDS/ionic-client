@@ -7,19 +7,23 @@
       <p ion-text> Type: {{this.selectedLoc.locationType}} </p>
     </div>
   </ion-col>
- <ion-col col-4>
-<ion-list no-lines>
-  <ion-card *ngFor="let loc of this.locations | async">
-    <ion-card-content>
-      <h1>{{loc.locationName}}</h1>
-      <p>{{loc.locationType}}</p>
-      <button ion-button full outline (click)="this.selectLocation(loc)">Select</button>
-    </ion-card-content>
-  </ion-card>
-</ion-list>
- </ion-col>
   <ion-col col-4>
-    <button ion-button full outline [disabled]="!this.networkConfig.isConnected()" (click)="this.synchronize()">Synchronize Locations</button>
+    <ion-scroll scrollY="true">
+      <ion-list no-lines>
+        <ion-card *ngFor="let loc of this.locations | async">
+          <ion-card-content>
+            <h1>{{loc.locationName}}</h1>
+            <p>{{loc.locationType}}</p>
+            <button ion-button full outline (click)="this.selectLocation(loc)">Select</button>
+          </ion-card-content>
+        </ion-card>
+      </ion-list>
+    </ion-scroll>
+  </ion-col>
+  <ion-col col-4>
+    <button ion-button full outline [disabled]="!this.networkConfig.isConnected()" (click)="this.synchronize()">
+      Synchronize Locations
+    </button>
     <button ion-button full outline (click)="this.presentCreationPage()">Create a Location</button>
   </ion-col>
 </ion-row>
