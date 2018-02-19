@@ -16,6 +16,7 @@ import { Geolocation } from "@ionic-native/geolocation";
 import { ErrorsProvider } from '../providers/errors/errors';
 import {MenuPage} from "../pages/menu/menu";
 import {ErrorDisplayPage} from "../pages/error-display/error-display";
+import { SystemConfigProvider } from '../providers/system-config/system-config';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import {ErrorDisplayPage} from "../pages/error-display/error-display";
     Geolocation,
     NetworkConfigProvider,
     LocationsProvider,
-    ErrorsProvider
+    ErrorsProvider,
+    SystemConfigProvider
   ]
 })
 export class AppModule {}

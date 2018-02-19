@@ -35,7 +35,9 @@ export class LocationListPage implements OnInit {
   }
 
   async synchronize() {
-    await this.locProvider.updateLocationsList().then(() => this.locations = this.locProvider.getAllLocations());
+    await this.locProvider.updateLocationsList()
+      .then(() => this.locations = this.locProvider.getAllLocations())
+      .then(() => this.locProvider.synchronizeOfflineLocations());
   }
 
   presentCreationPage(){

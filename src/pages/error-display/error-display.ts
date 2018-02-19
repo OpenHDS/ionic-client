@@ -48,7 +48,6 @@ export class ErrorDisplayPage {
         locError.entity = data.loc;
         this.locProvider.resolveErrors(locError);
       }
-
     });
   }
 

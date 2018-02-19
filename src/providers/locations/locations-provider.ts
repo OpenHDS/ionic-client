@@ -84,6 +84,7 @@ export class LocationsProvider {
     return await this.loadData(url).catch(error => console.log(error)).then(() => this.getAllLocations());
   }
 
+
   saveData(loc: Location): boolean{
     const headers = new HttpHeaders().set('authorization',
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
@@ -120,21 +121,17 @@ export class LocationsProvider {
 
       this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
         loc.processed = 1;
-        this.db.locations.add(loc).then(() => {
-          localStorage.setItem('lastUpdate', data['timestamp'])
-        }).catch(err => console.log(err));
-      }, error => {
-        console.log(error)
-        let err: Errors = {
-          uuid: loc.uuid,
-          entityType: EntityErrorLabels.LOCATION_ERROR,
-          entity: loc,
-          errorMessage: error.error.errors[0],
-          timestamp: new Date().getTime(),
-          resolved: 0
+        if(this.validateLocationExistence(loc)){
+          this.db.locations.update(loc.extId, loc).then(() => {
+            localStorage.setItem('lastUpdate', data['timestamp'])
+          }).catch(err => console.log(err));
+        } else {
+          this.db.locations.add(loc).then(() => {
+            localStorage.setItem('lastUpdate', data['timestamp'])
+          }).catch(err => console.log(err));
         }
-
-        this.errorsProvider.insert(err);
+      }, error => {
+        this.errorsProvider.insert(this.generateNewError(error, loc));
         return false;
       });
 
@@ -148,12 +145,47 @@ export class LocationsProvider {
     return true;
   }
 
-  resolveErrors(error: Errors){
+  updateData(location: Location){
 
+  }
+
+  resolveErrors(error: Errors){
     if(this.saveData(error.entity)){
       error.resolved = 1;
       this.errorsProvider.updateErrorStatus(error);
     }
+  }
+
+  async synchronizeOfflineLocations(){
+    let offline = await this.db.locations.where('processed').equals(0).toArray();
+    offline.forEach(loc => {
+      if(loc.processed)
+        console.log("Already processed");
+      else
+        this.saveData(loc);
+    })
+  }
+
+  //Creates a new instance of a Location.
+  getNewLocationEntity(){
+    return;
+  }
+
+  //Generate a new error based on error returned from server for a given location.
+  generateNewError(error, loc: Location){
+    return {
+      uuid: loc.uuid,
+      entityType: EntityErrorLabels.LOCATION_ERROR,
+      entity: loc,
+      errorMessage: error.error.errors[0],
+      timestamp: new Date().getTime(),
+      resolved: 0
+    }
+  }
+
+  async validateLocationExistence(location: Location){
+    let loc = await this.db.locations.where('extId').equals(location.extId).toArray();
+    return loc.indexOf(location) == -1;
 
   }
 }
