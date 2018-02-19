@@ -3,8 +3,6 @@ import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angula
 import {Location} from "../../providers/locations/locations-db";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {CreateLocationModalPage} from "../create-location-modal/create-location-modal";
-import {Observable} from "rxjs/Observable";
-import "rxjs/add/observable/from";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 
 /**

@@ -40,12 +40,12 @@ export class ErrorDisplayPage {
   }
 
   fixLocationErrors(locError: Errors){
-    const createPage = this.modalCtrl.create(CreateLocationModalPage, {edit: true, location: locError.entity});
+    const createPage = this.modalCtrl.create(CreateLocationModalPage, {fixError: true, location: locError.entity});
     createPage.present();
 
     createPage.onDidDismiss(data => {
       if(data != null) {
-        locError.entity = data;
+        locError.entity = data.loc;
         this.locProvider.resolveErrors(locError);
       }
 

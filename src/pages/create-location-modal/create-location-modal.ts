@@ -18,6 +18,7 @@ import {Geolocation, GeolocationOptions} from "@ionic-native/geolocation";
 })
 export class CreateLocationModalPage {
   edit: boolean;
+  errorFix: boolean;
   loc: Location = {
     uuid: null,
     extId: null,
@@ -37,12 +38,14 @@ export class CreateLocationModalPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider) {
-    this.edit = this.navParams.get('edit');
+    //Determine if error is being fixed.
+    this.errorFix = this.navParams.get('fixError');
 
-    if(this.edit){
+    if(this.errorFix){
+      //If error being fixed, set the location for the modal to the location being fixed.
       this.loc = this.navParams.get("location");
-    }
 
+    }
   }
 
   getGeolocationInfo(){
@@ -55,6 +58,7 @@ export class CreateLocationModalPage {
   }
 
   dismiss() {
+    console.log(this.loc);
     this.viewCtrl.dismiss({
       loc: this.loc
     });

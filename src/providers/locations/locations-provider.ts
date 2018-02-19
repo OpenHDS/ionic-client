@@ -98,8 +98,9 @@ export class LocationsProvider {
           extId: "MBI"
       };
 
-      //Configure UUID on client side
-      loc.uuid = UUID.UUID();
+      //Configure UUID on client side. Check to make sure it isn't null. If not null, and error is being resolved.
+      if(!loc.uuid)
+        loc.uuid = UUID.UUID();
       console.log(loc.uuid);
       loc.deleted = false;
 
@@ -148,8 +149,8 @@ export class LocationsProvider {
   }
 
   resolveErrors(error: Errors){
-    let loc = error.entity;
-    if(this.saveData(loc)){
+
+    if(this.saveData(error.entity)){
       error.resolved = 1;
       this.errorsProvider.updateErrorStatus(error);
     }
