@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LocationDb, Location } from "./locations-db";
-import {NetworkConfigProvider} from "../network-config/network-config";
+import { NetworkConfigProvider } from "../network-config/network-config";
 import { UUID } from "angular2-uuid";
-import {ErrorsDb, Errors} from "../errors/errors-db";
-import {ErrorsProvider} from "../errors/errors";
-import {EntityErrorLabels} from "../errors/entity-error-labels";
+import { ErrorsDb, Errors } from "../errors/errors-db";
+import { ErrorsProvider } from "../errors/errors";
+import { EntityErrorLabels } from "../errors/entity-error-labels";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -13,6 +13,7 @@ import {EntityErrorLabels} from "../errors/entity-error-labels";
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
 */
+
 @Injectable()
 export class LocationsProvider {
   private db: LocationDb;
@@ -73,6 +74,7 @@ export class LocationsProvider {
     });
   }
 
+  //Get all location in the database
   getAllLocations(){
       return this.db.locations.toArray();
   }
@@ -84,40 +86,30 @@ export class LocationsProvider {
     return await this.loadData(url).catch(error => console.log(error)).then(() => this.getAllLocations());
   }
 
-
+  //Save a location. If network connection save locally and to the server.
   saveData(loc: Location): boolean{
     const headers = new HttpHeaders().set('authorization',
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
+    loc.collectedBy = {
+      extId: "FWEK1D"
+    };
+
+    loc.locationLevel =  {
+      extId: "MBI"
+    };
+
+    //Configure UUID on client side. Check to make sure it isn't null. If not null, and error is being resolved.
+    if(!loc.uuid)
+      loc.uuid = UUID.UUID();
+    loc.deleted = false;
+    loc.clientInsert = new Date().getTime();
     if(this.networkConfig.isConnected()){
       //Dummy fields until Fieldworker and Location Hierarchy implemented
-      loc.collectedBy = {
-        extId: "FWEK1D"
-      };
 
-      loc.locationLevel =  {
-          extId: "MBI"
-      };
-
-      //Configure UUID on client side. Check to make sure it isn't null. If not null, and error is being resolved.
-      if(!loc.uuid)
-        loc.uuid = UUID.UUID();
-      console.log(loc.uuid);
-      loc.deleted = false;
 
       //Get only data that needs to be sent to the server
-      let postData = {
-        uuid: loc.uuid,
-        locationName: loc.locationName,
-        extId: loc.extId,
-        locationType: loc.locationType,
-        locationLevel: loc.locationLevel,
-        collectedBy: loc.collectedBy,
-        longitude: loc.longitude,
-        latitude: loc.latitude,
-        deleted: loc.deleted,
-        insertDate: new Date()
-      };
+      let postData = this.getNewServerLocationEntity(loc);
 
       this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
         loc.processed = 1;
@@ -131,7 +123,7 @@ export class LocationsProvider {
           }).catch(err => console.log(err));
         }
       }, error => {
-        this.errorsProvider.insert(this.generateNewError(error, loc));
+        this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(error, loc));
         return false;
       });
 
@@ -146,29 +138,55 @@ export class LocationsProvider {
   }
 
   updateData(location: Location){
+    const headers = new HttpHeaders().set('authorization',
+      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
+
+    var sendData = this.getNewServerLocationEntity(location);
+
+    this.http.put("http://localhost:8080/openhds/api2/rest/locations2/pushUpdates", sendData, {headers}).subscribe(data => {
+      localStorage.setItem('lastUpdate', data['timestamp']);
+    }, err => {
+      this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(err, location));
+    });
 
   }
 
   resolveErrors(error: Errors){
     if(this.saveData(error.entity)){
       error.resolved = 1;
-      this.errorsProvider.updateErrorStatus(error);
+      this.errorsProvider.updateOrSetErrorStatus(error);
     }
   }
 
   async synchronizeOfflineLocations(){
-    let offline = await this.db.locations.where('processed').equals(0).toArray();
+    //Filter locations for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
+    var offline = await this.db.locations
+      .filter(loc => loc.clientInsert >= Number.parseInt(localStorage.getItem('lastUpdate')) || loc.processed == 0)
+      .toArray();
+
+    //Process and send data to server.
     offline.forEach(loc => {
       if(loc.processed)
-        console.log("Already processed");
+        this.updateData(loc);
       else
         this.saveData(loc);
     })
   }
 
-  //Creates a new instance of a Location.
-  getNewLocationEntity(){
-    return;
+  //Creates a reduced version of a location to send to the server
+  getNewServerLocationEntity(loc: Location){
+    return {
+      uuid: loc.uuid,
+      locationName: loc.locationName,
+      extId: loc.extId,
+      locationType: loc.locationType,
+      locationLevel: loc.locationLevel,
+      collectedBy: loc.collectedBy,
+      longitude: loc.longitude,
+      latitude: loc.latitude,
+      deleted: loc.deleted,
+      insertDate: new Date()
+    };
   }
 
   //Generate a new error based on error returned from server for a given location.
