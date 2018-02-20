@@ -6,6 +6,7 @@ import { UUID } from "angular2-uuid";
 import { ErrorsDb, Errors } from "../errors/errors-db";
 import { ErrorsProvider } from "../errors/errors";
 import { EntityErrorLabels } from "../errors/entity-error-labels";
+import {SystemConfigProvider} from "../system-config/system-config";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -23,15 +24,14 @@ export class LocationsProvider {
     password: 'test'
   };
 
-  dataUrl = 'http://localhost:8080/openhds/api2/rest/locations2';
-
-  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider) {
+  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider, public systemConfig: SystemConfigProvider) {
     this.db = new LocationDb();
   }
 
   async initProvider(): Promise<Location[]>{
+    let dataUrl = this.systemConfig.getServerURL() + "locations2";
     if(localStorage.getItem('lastUpdate') == null){
-      return await this.loadData(this.dataUrl).then(() => this.getAllLocations());
+      return await this.loadData(dataUrl).then(() => this.getAllLocations());
     } else {
       return await this.updateLocationsList().then(() => this.getAllLocations());
     }
@@ -81,8 +81,7 @@ export class LocationsProvider {
 
   //Pull updates from the server
   async updateLocationsList(): Promise<Location[]>{
-    const url = this.dataUrl + "/pull/" + localStorage.getItem("lastUpdate");
-    console.log(url);
+    const url = this.systemConfig.getServerURL() + "locations2/pull/" + localStorage.getItem("lastUpdate");
     return await this.loadData(url).catch(error => console.log(error)).then(() => this.getAllLocations());
   }
 
@@ -102,6 +101,7 @@ export class LocationsProvider {
     //Configure UUID on client side. Check to make sure it isn't null. If not null, and error is being resolved.
     if(!loc.uuid)
       loc.uuid = UUID.UUID();
+
     loc.deleted = false;
     loc.clientInsert = new Date().getTime();
     if(this.networkConfig.isConnected()){
@@ -109,7 +109,7 @@ export class LocationsProvider {
       //Get only data that needs to be sent to the server
       let postData = this.getNewServerLocationEntity(loc);
 
-      this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
+      this.http.post(this.systemConfig.getServerURL() + "locations2/", postData, {headers}).subscribe(data => {
         loc.processed = 1;
         if(this.validateLocationExistence(loc).then(x => true)){
           this.update(loc, data['timestamp'])
@@ -119,7 +119,6 @@ export class LocationsProvider {
       }, error => {
         this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(error, loc));
       });
-
     } else {
      this.add(loc, new Date().getTime());
     }
@@ -130,7 +129,7 @@ export class LocationsProvider {
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
     var sendData = this.getNewServerLocationEntity(location);
-
+    const url = this.systemConfig.getServerURL() + "locations2/pushUpdates";
     this.http.put("http://localhost:8080/openhds/api2/rest/locations2/pushUpdates", sendData, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data['timestamp']);
     }, err => {

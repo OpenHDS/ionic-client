@@ -18,7 +18,6 @@ export class SystemConfigProvider {
   }
 
   init(){
-    console.log("NgOnInit: Server Configurations");
     if(localStorage.getItem('server_url') == null) {
       localStorage.setItem('server_url', this.default_url);
       this.server_url = this.default_url;
