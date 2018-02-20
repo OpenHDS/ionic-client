@@ -21,7 +21,7 @@ export class LocationsProvider {
   openhdsLogin = {
     username: 'admin',
     password: 'test'
-  }
+  };
 
   dataUrl = 'http://localhost:8080/openhds/api2/rest/locations2';
 
@@ -87,7 +87,7 @@ export class LocationsProvider {
   }
 
   //Save a location. If network connection save locally and to the server.
-  saveData(loc: Location): boolean{
+  saveData(loc: Location){
     const headers = new HttpHeaders().set('authorization',
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
@@ -113,7 +113,9 @@ export class LocationsProvider {
 
       this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
         loc.processed = 1;
-        if(this.validateLocationExistence(loc)){
+        var exist;
+        this.validateLocationExistence(loc).then(found => exist = found);
+        if(exist == true){
           this.db.locations.update(loc.extId, loc).then(() => {
             localStorage.setItem('lastUpdate', data['timestamp'])
           }).catch(err => console.log(err));
@@ -124,7 +126,6 @@ export class LocationsProvider {
         }
       }, error => {
         this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(error, loc));
-        return false;
       });
 
     } else {
@@ -133,8 +134,6 @@ export class LocationsProvider {
         localStorage.setItem('lastUpdate', new Date().getTime().toString())
       }).catch(err => console.log(err));
     }
-
-    return true;
   }
 
   updateData(location: Location){
@@ -202,8 +201,19 @@ export class LocationsProvider {
   }
 
   async validateLocationExistence(location: Location){
-    let loc = await this.db.locations.where('extId').equals(location.extId).toArray();
-    return loc.indexOf(location) == -1;
+    let loc = await this.db.locations.filter(loc => loc.extId == location.extId);
+    if(loc != null)
+      return true;
+
+    return false;
+  }
+
+  //Abstract Updates and Adds to prevent errors
+  add(){
+
+  }
+
+  update(){
 
   }
 }
