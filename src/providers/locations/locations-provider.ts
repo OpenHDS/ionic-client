@@ -105,34 +105,23 @@ export class LocationsProvider {
     loc.deleted = false;
     loc.clientInsert = new Date().getTime();
     if(this.networkConfig.isConnected()){
-      //Dummy fields until Fieldworker and Location Hierarchy implemented
-
 
       //Get only data that needs to be sent to the server
       let postData = this.getNewServerLocationEntity(loc);
 
       this.http.post("http://localhost:8080/openhds/api2/rest/locations2", postData, {headers}).subscribe(data => {
         loc.processed = 1;
-        var exist;
-        this.validateLocationExistence(loc).then(found => exist = found);
-        if(exist == true){
-          this.db.locations.update(loc.extId, loc).then(() => {
-            localStorage.setItem('lastUpdate', data['timestamp'])
-          }).catch(err => console.log(err));
+        if(this.validateLocationExistence(loc).then(x => true)){
+          this.update(loc, data['timestamp'])
         } else {
-          this.db.locations.add(loc).then(() => {
-            localStorage.setItem('lastUpdate', data['timestamp'])
-          }).catch(err => console.log(err));
+          this.add(loc, data['timestamp'])
         }
       }, error => {
         this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(error, loc));
       });
 
     } else {
-      //No network connection. Save locally.
-      this.db.locations.add(loc).then(() => {
-        localStorage.setItem('lastUpdate', new Date().getTime().toString())
-      }).catch(err => console.log(err));
+     this.add(loc, new Date().getTime());
     }
   }
 
@@ -202,18 +191,22 @@ export class LocationsProvider {
 
   async validateLocationExistence(location: Location){
     let loc = await this.db.locations.filter(loc => loc.extId == location.extId);
-    if(loc != null)
+    if(loc[0] != null)
       return true;
 
     return false;
   }
 
   //Abstract Updates and Adds to prevent errors
-  add(){
-
+  add(loc: Location, timestamp: number){
+    this.db.locations.add(loc).then(() => {
+      localStorage.setItem('lastUpdate', timestamp.toString())
+    }).catch(err => console.log(err));
   }
 
-  update(){
-
+  update(loc: Location, timestamp:number){
+    this.db.locations.update(loc.extId, loc).then(() => {
+      localStorage.setItem('lastUpdate', timestamp.toString())
+    }).catch(err => console.log(err));
   }
 }

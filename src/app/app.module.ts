@@ -14,9 +14,10 @@ import { NetworkConfigProvider } from "../providers/network-config/network-confi
 import { CreateLocationModalPage } from "../pages/create-location-modal/create-location-modal";
 import { Geolocation } from "@ionic-native/geolocation";
 import { ErrorsProvider } from '../providers/errors/errors';
-import {MenuPage} from "../pages/menu/menu";
-import {ErrorDisplayPage} from "../pages/error-display/error-display";
+import { MenuPage } from "../pages/menu/menu";
+import { ErrorDisplayPage } from "../pages/error-display/error-display";
 import { SystemConfigProvider } from '../providers/system-config/system-config';
+import {SystemConfigPage} from "../pages/system-config/system-config";
 
 @NgModule({
   declarations: [
@@ -25,21 +26,26 @@ import { SystemConfigProvider } from '../providers/system-config/system-config';
     BaselineCensusPage,
     LocationListPage,
     CreateLocationModalPage,
-    ErrorDisplayPage
+    ErrorDisplayPage,
+    SystemConfigPage
   ],
+
   imports: [
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
+
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     MenuPage,
     BaselineCensusPage,
     CreateLocationModalPage,
-    ErrorDisplayPage
+    ErrorDisplayPage,
+    SystemConfigPage
   ],
+
   providers: [
     StatusBar,
     SplashScreen,
