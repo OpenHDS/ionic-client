@@ -13,7 +13,12 @@ export class SystemConfigProvider {
   private default_url = 'http://localhost:8080/openhds/api2/rest/';
   private server_url = null;
 
-  constructor(){
+  //Used when setting the server url. If the result of a OPTIONS request returns an error, this flag is set to true.
+  private setServerError: boolean;
+  private testingFieldworker: string = "FWDW1";
+  private testingLocLevel: string = "MBI";
+
+  constructor(public http: HttpClient){
 
   }
 
@@ -26,6 +31,14 @@ export class SystemConfigProvider {
     }
   }
 
+  getTestingFieldworker(){
+    return this.testingFieldworker;
+  }
+
+  getTestingLocLevel(){
+    return this.testingLocLevel;
+  }
+
   getServerURL(){
     if(this.server_url == null)
       this.init();
@@ -35,7 +48,6 @@ export class SystemConfigProvider {
 
   setServerURL(url: string){
     this.server_url = url;
-
     localStorage.setItem('server_url', this.server_url);
   }
 

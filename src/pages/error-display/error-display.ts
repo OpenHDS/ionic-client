@@ -27,10 +27,6 @@ export class ErrorDisplayPage {
     this.getLocationErrors().then(() => console.log("Location errors loaded"));
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ErrorDisplayPage');
-  }
-
   async getLocationErrors(){
     this.locationErrors = this.errorProvider.getLocationErrors()
   }
@@ -39,6 +35,7 @@ export class ErrorDisplayPage {
     return new Date(timestamp).toString();
   }
 
+  //Fix errors that occur with creation or saving of a location.
   fixLocationErrors(locError: Errors){
     const createPage = this.modalCtrl.create(CreateLocationModalPage, {fixError: true, location: locError.entity});
     createPage.present();

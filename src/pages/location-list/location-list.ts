@@ -4,6 +4,7 @@ import {Location} from "../../providers/locations/locations-db";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {CreateLocationModalPage} from "../create-location-modal/create-location-modal";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
+import {CreateLocationPage} from "../create-location/create-location";
 
 /**
  * Generated class for the LocationListPage page.
@@ -40,14 +41,8 @@ export class LocationListPage implements OnInit {
       .then(() => this.locProvider.synchronizeOfflineLocations());
   }
 
-  presentCreationPage(){
-    const createPage = this.modalCtrl.create(CreateLocationModalPage);
-    createPage.present();
-
-    createPage.onDidDismiss(data => {
-      if(data != null)
-        this.locProvider.saveData(data.loc)
-    });
+  goToCreateLocPage(){
+    this.navCtrl.push(CreateLocationPage);
   }
 
   selectLocation(location: Location){

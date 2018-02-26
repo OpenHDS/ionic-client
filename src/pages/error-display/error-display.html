@@ -12,10 +12,21 @@
 
 
 <ion-content padding>
+  <ion-input>
+    <ion-select></ion-select>
+  </ion-input>
+  <ion-row>
+  <ion-col col-6>
+    <ion-select>Current Errors</ion-select>
+  </ion-col>
+  <ion-col col-6>
+    <ion-select>Fixed Errors</ion-select>
+  </ion-col>
   <ion-list-header>Locations</ion-list-header>
+  </ion-row>
   <ion-list>
-    <ion-card>
-      <ion-card-content *ngFor="let err of this.locationErrors | async">
+    <ion-card *ngFor="let err of this.locationErrors | async">
+      <ion-card-content>
           <p>{{err.errorMessage}}</p>
           <p>{{convertTimestampToDate(err.timestamp)}}</p>
           <button ion-button outline color="danger" small (click)="this.getEntityModal(err)">Correct Errors</button>

@@ -19,6 +19,8 @@ import {Geolocation, GeolocationOptions} from "@ionic-native/geolocation";
 export class CreateLocationModalPage {
   edit: boolean;
   errorFix: boolean;
+
+  //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   loc: Location = {
     uuid: null,
     extId: null,
@@ -48,15 +50,16 @@ export class CreateLocationModalPage {
     }
   }
 
-  getGeolocationInfo(){
-    this.geo.getCurrentPosition().then((resp) => {
-      this.loc.latitude = resp.coords.latitude;
-      this.loc.longitude = resp.coords.longitude;
-      this.loc.altitude = resp.coords.altitude;
-      this.loc.accuracy = resp.coords.altitudeAccuracy;
-    }).then(() => console.log(this.loc)).catch(err => console.log(err));
-  }
+  // getGeolocationInfo(){
+  //   this.geo.getCurrentPosition().then((resp) => {
+  //     this.loc.latitude = resp.coords.latitude;
+  //     this.loc.longitude = resp.coords.longitude;
+  //     this.loc.altitude = resp.coords.altitude;
+  //     this.loc.accuracy = resp.coords.altitudeAccuracy;
+  //   }).then(() => console.log(this.loc)).catch(err => console.log(err));
+  // }
 
+  //Dismiss the modal. Pass back the created or fixed location.
   dismiss() {
     console.log(this.loc);
     this.viewCtrl.dismiss({

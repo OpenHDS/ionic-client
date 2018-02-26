@@ -22,24 +22,29 @@
   </div>
   <div padding-left padding-right>
     <!-- Location Entry Form -->
-    <form (ngSubmit)="dismiss()">
+    <form (ngSubmit)="popView()">
+      <ion-item>
+        <ion-label floating> Fieldworker </ion-label>
+        <ion-input type="text" value="{{this.sysConfig.getTestingFieldworker()}}"disabled></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Village </ion-label>
+        <ion-input type="text" value="{{this.sysConfig.getTestingLocLevel()}}" disabled></ion-input>
+      </ion-item>
       <ion-item>
         <ion-label floating> Name </ion-label>
-        <ion-input type="text" name="locName"  [(ngModel)]="this.loc.locationName"></ion-input>
+        <ion-input ion-text type="text" name="locName"  [(ngModel)]="this.loc.locationName"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating> External Id </ion-label>
         <ion-input type="text" name="extId"[(ngModel)]="this.loc.extId"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label floating>Type </ion-label>
+        <ion-label floating>Location Type </ion-label>
         <ion-input name="locType" [(ngModel)]="this.loc.locationType"></ion-input>
       </ion-item>
-      <!--<ion-item>-->
-        <!--<button ion-button (click)="this.getGeolocationInfo()">Geolocation</button>-->
-      <!--</ion-item>-->
 
-      <button ion-button round color="dark" outline type="submit">Create Location </button>
+      <button ion-button round color="dark" outline type="submit"> Create Location </button>
     </form>
 
   </div>

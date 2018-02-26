@@ -18,6 +18,7 @@ export class SystemConfigPage {
 
   url: string;
   editing: boolean;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public systemConfig: SystemConfigProvider) {
     this.getUrl();
   }
@@ -29,6 +30,8 @@ export class SystemConfigPage {
   getUrl(){
     this.url = this.systemConfig.getServerURL();
   }
+
+
 
   setUrl(){
     this.systemConfig.setServerURL(this.url);

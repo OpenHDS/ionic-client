@@ -67,9 +67,9 @@ export class LocationsProvider {
           });
         }
 
-        this.db.transaction('rw', this.db.locations, () => {
-          this.db.locations.bulkPut(locations).catch(error => console.log(error));
-        }).then(() => localStorage.setItem('lastUpdate', data['timestamp'])).catch(error => console.log(error));
+      this.db.locations.bulkPut(locations).catch(error => console.log(error))
+        .then(() => localStorage.setItem('lastUpdate', data['timestamp']));
+
 
     });
   }
@@ -111,13 +111,16 @@ export class LocationsProvider {
 
       this.http.post(this.systemConfig.getServerURL() + "locations2/", postData, {headers}).subscribe(data => {
         loc.processed = 1;
-        if(this.validateLocationExistence(loc).then(x => true)){
+        let exists;
+        this.validateLocationExistence(loc).then(x => exists = x);
+        if(exists){
           this.update(loc, data['timestamp'])
         } else {
           this.add(loc, data['timestamp'])
         }
       }, error => {
-        this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(error, loc));
+        let serverError = this.generateNewError(error, loc);
+        this.errorsProvider.updateOrSetErrorStatus(serverError);
       });
     } else {
      this.add(loc, new Date().getTime());
@@ -129,8 +132,10 @@ export class LocationsProvider {
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
     var sendData = this.getNewServerLocationEntity(location);
+    let locations = {locations: sendData, timestamp: location.clientInsert};
     const url = this.systemConfig.getServerURL() + "locations2/pushUpdates";
-    this.http.put("http://localhost:8080/openhds/api2/rest/locations2/pushUpdates", sendData, {headers}).subscribe(data => {
+
+    this.http.put(url, locations, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data['timestamp']);
     }, err => {
       this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(err, location));
@@ -148,9 +153,10 @@ export class LocationsProvider {
   async synchronizeOfflineLocations(){
     //Filter locations for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
     var offline = await this.db.locations
-      .filter(loc => loc.clientInsert >= Number.parseInt(localStorage.getItem('lastUpdate')) || loc.processed == 0)
+      .filter(loc => loc.clientInsert > Number.parseInt(localStorage.getItem('lastUpdate')) || loc.processed == 0)
       .toArray();
 
+    console.log(offline);
     //Process and send data to server.
     offline.forEach(loc => {
       if(loc.processed)

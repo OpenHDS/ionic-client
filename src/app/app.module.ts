@@ -11,7 +11,7 @@ import { LocationsProvider } from '../providers/locations/locations-provider';
 import { HttpClientModule } from "@angular/common/http";
 import { Network } from "@ionic-native/network";
 import { NetworkConfigProvider } from "../providers/network-config/network-config";
-import { CreateLocationModalPage } from "../pages/create-location-modal/create-location-modal";
+import { CreateLocationPage } from "../pages/create-location/create-location";
 import { Geolocation } from "@ionic-native/geolocation";
 import { ErrorsProvider } from '../providers/errors/errors';
 import { MenuPage } from "../pages/menu/menu";
@@ -25,7 +25,7 @@ import {SystemConfigPage} from "../pages/system-config/system-config";
     MenuPage,
     BaselineCensusPage,
     LocationListPage,
-    CreateLocationModalPage,
+    CreateLocationPage,
     ErrorDisplayPage,
     SystemConfigPage
   ],
@@ -41,7 +41,7 @@ import {SystemConfigPage} from "../pages/system-config/system-config";
     MyApp,
     MenuPage,
     BaselineCensusPage,
-    CreateLocationModalPage,
+    CreateLocationPage,
     ErrorDisplayPage,
     SystemConfigPage
   ],
