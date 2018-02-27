@@ -28,11 +28,8 @@ export class LocationListPage implements OnInit {
     public modalCtrl: ModalController, public networkConfig: NetworkConfigProvider) {
   }
 
-  async ngOnInit() {
-    //Initialize data and then get all locations for display.
-    await this.locProvider.initProvider().then(()  => {
+  ngOnInit() {
       this.locations = this.locProvider.getAllLocations();
-    }).then(() => console.log("Location Data loaded"));
   }
 
   async synchronize() {

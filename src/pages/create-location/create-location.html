@@ -22,7 +22,7 @@
   </div>
   <div padding-left padding-right>
     <!-- Location Entry Form -->
-    <form (ngSubmit)="popView()">
+    <form [formGroup]="locationForm" (ngSubmit)="popView()">
       <ion-item>
         <ion-label floating> Fieldworker </ion-label>
         <ion-input type="text" value="{{this.sysConfig.getTestingFieldworker()}}"disabled></ion-input>
@@ -32,16 +32,34 @@
         <ion-input type="text" value="{{this.sysConfig.getTestingLocLevel()}}" disabled></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label floating> Name </ion-label>
-        <ion-input ion-text type="text" name="locName"  [(ngModel)]="this.loc.locationName"></ion-input>
+        <ion-label floating> Location Name </ion-label>
+        <ion-input ion-text formControlName="name" type="text" name="locName"  [(ngModel)]="this.loc.locationName"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.name.hasError('required') && locationForm.controls.name.dirty">
+        <p ion-text color="danger">A location name is required.</p>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.name.hasError('pattern') && locationForm.controls.name.dirty">
+        <p ion-text color="danger">A location name must match this pattern [a-zA-Z] and not begin with spaces..</p>
       </ion-item>
       <ion-item>
         <ion-label floating> External Id </ion-label>
-        <ion-input type="text" name="extId"[(ngModel)]="this.loc.extId"></ion-input>
+        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.loc.extId"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.extId.hasError('required') && locationForm.controls.extId.dirty">
+        <p ion-text color="danger">A location external ID is required.</p>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.extId.hasError('pattern') && locationForm.controls.extId.dirty">
+        <p ion-text color="danger">A location external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
       </ion-item>
       <ion-item>
         <ion-label floating>Location Type </ion-label>
-        <ion-input name="locType" [(ngModel)]="this.loc.locationType"></ion-input>
+        <ion-input name="locType" formControlName="type" [(ngModel)]="this.loc.locationType"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.type.hasError('required') && locationForm.controls.type.touched">
+        <p ion-text color="danger">A location type is required.</p>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.type.hasError('pattern') && locationForm.controls.type.touched">
+        <p ion-text color="danger">A location type must be Urban (URB) or Rural (RUR) and not begin with spaces.</p>
       </ion-item>
 
       <button ion-button round color="dark" outline type="submit"> Create Location </button>

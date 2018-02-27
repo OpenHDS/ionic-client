@@ -28,12 +28,12 @@ export class LocationsProvider {
     this.db = new LocationDb();
   }
 
-  async initProvider(): Promise<Location[]>{
+  async initProvider(){
     let dataUrl = this.systemConfig.getServerURL() + "locations2";
     if(localStorage.getItem('lastUpdate') == null){
-      return await this.loadData(dataUrl).then(() => this.getAllLocations());
+      return await this.loadData(dataUrl);
     } else {
-      return await this.updateLocationsList().then(() => this.getAllLocations());
+      return await this.updateLocationsList();
     }
   }
 
@@ -67,9 +67,10 @@ export class LocationsProvider {
           });
         }
 
-      this.db.locations.bulkPut(locations).catch(error => console.log(error))
-        .then(() => localStorage.setItem('lastUpdate', data['timestamp']));
-
+        this.db.transaction('rw', this.db.locations, () => {
+          this.db.locations.bulkPut(locations).catch(error => console.log(error))
+            .then(() => localStorage.setItem('lastUpdate', data['timestamp']));
+        })
 
     });
   }

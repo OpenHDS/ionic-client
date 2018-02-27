@@ -17,7 +17,7 @@ import { ErrorsProvider } from '../providers/errors/errors';
 import { MenuPage } from "../pages/menu/menu";
 import { ErrorDisplayPage } from "../pages/error-display/error-display";
 import { SystemConfigProvider } from '../providers/system-config/system-config';
-import {SystemConfigPage} from "../pages/system-config/system-config";
+import { SystemConfigPage } from "../pages/system-config/system-config";
 
 @NgModule({
   declarations: [

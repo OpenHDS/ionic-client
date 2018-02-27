@@ -5,6 +5,7 @@ import {Location} from "../../providers/locations/locations-db";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
+import { FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -22,6 +23,7 @@ export class CreateLocationPage {
 
   edit: boolean;
   errorFix: boolean;
+  locationForm: FormGroup;
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   loc: Location = {
@@ -41,8 +43,22 @@ export class CreateLocationPage {
     processed: 0
   };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public locProvider: LocationsProvider,
               public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider, public sysConfig: SystemConfigProvider) {
+
+
+   this.locationForm = formBuilder.group({
+     name: ['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
+     extId:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
+     type: ['', Validators.compose([Validators.required, Validators.pattern("^[^\\s]*[Rr][Uu][Rr]|^[^\\s]*[Uu][Rr][Bb]")])],
+     latitude:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][0-9]*.[0-9]*'),
+       Validators.min(-90), Validators.max(90)])],
+     longitude:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][0-9]*.[0-9]*'),
+       Validators.min(-180), Validators.max(180)])],
+   });
+
+
+
     //Determine if error is being fixed.
     this.errorFix = this.navParams.get('fixError');
 
@@ -64,9 +80,9 @@ export class CreateLocationPage {
 
 
   //Dismiss the modal. Pass back the created or fixed location.
+  //TODO: Prevent popping of page if form has errors. 
   popView() {
-    this.locProvider.saveData(this.loc);
-    console.log(this.loc);
-    this.navCtrl.pop();
+      this.locProvider.saveData(this.loc);
+      this.navCtrl.pop();
   }
 }
