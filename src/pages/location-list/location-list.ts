@@ -1,5 +1,5 @@
 import {Component, OnInit, Output} from '@angular/core';
-import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, Events, ModalController, NavController, NavParams} from 'ionic-angular';
 import {Location} from "../../providers/locations/locations-db";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {CreateLocationModalPage} from "../create-location-modal/create-location-modal";
@@ -20,21 +20,39 @@ import {CreateLocationPage} from "../create-location/create-location";
 
 })
 
-export class LocationListPage implements OnInit {
-  locations:Promise<Location[]>;
+export class LocationListPage implements OnInit{
+  refreshNeeded:boolean = false;
+  locations: Location[];
   selectedLoc: Location = null;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
+  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
     public modalCtrl: ModalController, public networkConfig: NetworkConfigProvider) {
+
+    this.ev.subscribe('submitLocation', () => {
+      this.doRefresh();
+    })
   }
 
   ngOnInit() {
-      this.locations = this.locProvider.getAllLocations();
+    this.locProvider.initProvider().then(() => this.doRefresh());
+  }
+
+  doRefresh() {
+
+    setTimeout(async () => {
+      await this.getAllLocations();
+      console.log("Refreshing....")
+    }, 2000);
+
+  }
+
+  async getAllLocations() {
+    this.locations = await this.locProvider.getAllLocations();
   }
 
   async synchronize() {
     await this.locProvider.updateLocationsList()
-      .then(() => this.locations = this.locProvider.getAllLocations())
+      .then(() => this.getAllLocations())
       .then(() => this.locProvider.synchronizeOfflineLocations());
   }
 
@@ -45,4 +63,5 @@ export class LocationListPage implements OnInit {
   selectLocation(location: Location){
     this.selectedLoc = location;
   }
+
 }

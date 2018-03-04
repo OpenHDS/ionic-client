@@ -81,13 +81,13 @@ export class LocationsProvider {
   }
 
   //Pull updates from the server
-  async updateLocationsList(): Promise<Location[]>{
+  async updateLocationsList(){
     const url = this.systemConfig.getServerURL() + "locations2/pull/" + localStorage.getItem("lastUpdate");
-    return await this.loadData(url).catch(error => console.log(error)).then(() => this.getAllLocations());
+    return await this.loadData(url).catch(error => console.log(error));
   }
 
   //Save a location. If network connection save locally and to the server.
-  saveData(loc: Location){
+  async saveData(loc: Location){
     const headers = new HttpHeaders().set('authorization',
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
@@ -110,21 +110,21 @@ export class LocationsProvider {
       //Get only data that needs to be sent to the server
       let postData = this.getNewServerLocationEntity(loc);
 
-      this.http.post(this.systemConfig.getServerURL() + "locations2/", postData, {headers}).subscribe(data => {
+      this.http.post(this.systemConfig.getServerURL() + "locations2/", postData, {headers}).subscribe(async (data) => {
         loc.processed = 1;
         let exists;
         this.validateLocationExistence(loc).then(x => exists = x);
         if(exists){
-          this.update(loc, data['timestamp'])
+          await this.update(loc, data['timestamp'])
         } else {
-          this.add(loc, data['timestamp'])
+          await this.add(loc, data['timestamp'])
         }
       }, error => {
         let serverError = this.generateNewError(error, loc);
         this.errorsProvider.updateOrSetErrorStatus(serverError);
       });
     } else {
-     this.add(loc, new Date().getTime());
+     await this.add(loc, new Date().getTime()).then(() => this.initProvider());
     }
   }
 
@@ -204,13 +204,13 @@ export class LocationsProvider {
   }
 
   //Abstract Updates and Adds to prevent errors
-  add(loc: Location, timestamp: number){
+  async add(loc: Location, timestamp: number){
     this.db.locations.add(loc).then(() => {
       localStorage.setItem('lastUpdate', timestamp.toString())
     }).catch(err => console.log(err));
   }
 
-  update(loc: Location, timestamp:number){
+  async update(loc: Location, timestamp:number){
     this.db.locations.update(loc.extId, loc).then(() => {
       localStorage.setItem('lastUpdate', timestamp.toString())
     }).catch(err => console.log(err));

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
+import {IonicPage, Events, NavController, NavParams, ViewController} from 'ionic-angular';
 import {Geolocation} from "@ionic-native/geolocation";
 import {Location} from "../../providers/locations/locations-db";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
@@ -43,14 +43,14 @@ export class CreateLocationPage {
     processed: 0
   };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public locProvider: LocationsProvider,
+  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public locProvider: LocationsProvider,
               public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider, public sysConfig: SystemConfigProvider) {
 
 
    this.locationForm = formBuilder.group({
      name: ['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
      extId:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
-     type: ['', Validators.compose([Validators.required, Validators.pattern("^[^\\s]*[Rr][Uu][Rr]|^[^\\s]*[Uu][Rr][Bb]")])],
+     type: ['', Validators.compose([Validators.required, Validators.pattern("^[^-\\s]*[Rr][Uu][Rr]|^[^-\\s]*[Uu][Rr][Bb]")])],
      latitude:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][0-9]*.[0-9]*'),
        Validators.min(-90), Validators.max(90)])],
      longitude:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][0-9]*.[0-9]*'),
@@ -80,9 +80,14 @@ export class CreateLocationPage {
 
 
   //Dismiss the modal. Pass back the created or fixed location.
-  //TODO: Prevent popping of page if form has errors. 
+  //TODO: Prevent popping of page if form has errors.
   popView() {
       this.locProvider.saveData(this.loc);
-      this.navCtrl.pop();
+      this.publishCreationEvent();
+      this.navCtrl.pop().then(() => this.locProvider.initProvider());
+  }
+
+  publishCreationEvent(){
+    this.ev.publish('submitLocation', true);
   }
 }

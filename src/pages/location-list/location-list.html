@@ -1,3 +1,4 @@
+
 <ion-row>
   <ion-col col-4>
     <button ion-button full>Location</button>
@@ -10,7 +11,7 @@
   <ion-col col-4>
     <ion-scroll scrollY="true">
       <ion-list no-lines>
-        <ion-card *ngFor="let loc of this.locations | async">
+        <ion-card *ngFor="let loc of this.locations">
           <ion-card-content>
             <h1>{{loc.locationName}}</h1>
             <p>{{loc.locationType}}</p>
@@ -27,4 +28,5 @@
     <button ion-button full outline (click)="this.goToCreateLocPage()">Create a Location</button>
   </ion-col>
 </ion-row>
+
 
