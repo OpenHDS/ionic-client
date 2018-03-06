@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {ErrorsProvider} from "../../providers/errors/errors";
 import {EntityErrorLabels} from "../../providers/errors/entity-error-labels";
-import {CreateLocationModalPage} from "../create-location-modal/create-location-modal";
-
 import {Errors} from "../../providers/errors/errors-db";
+import {CreateLocationPage} from "../create-location/create-location";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 
 /**
@@ -37,7 +36,7 @@ export class ErrorDisplayPage {
 
   //Fix errors that occur with creation or saving of a location.
   fixLocationErrors(locError: Errors){
-    const createPage = this.modalCtrl.create(CreateLocationModalPage, {fixError: true, location: locError.entity});
+    const createPage = this.modalCtrl.create(CreateLocationPage, {fixError: true, location: locError.entity});
     createPage.present();
 
     createPage.onDidDismiss(data => {
