@@ -22,9 +22,6 @@
     </ion-scroll>
   </ion-col>
   <ion-col col-4>
-    <button ion-button full outline [disabled]="!this.networkConfig.isConnected()" (click)="this.synchronize()">
-      Synchronize Locations
-    </button>
     <button ion-button full outline (click)="this.goToCreateLocPage()">Create a Location</button>
   </ion-col>
 </ion-row>

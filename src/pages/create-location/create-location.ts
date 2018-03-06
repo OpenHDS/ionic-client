@@ -81,10 +81,10 @@ export class CreateLocationPage {
 
   //Dismiss the modal. Pass back the created or fixed location.
   //TODO: Prevent popping of page if form has errors.
-  popView() {
-      this.locProvider.saveData(this.loc);
-      this.publishCreationEvent();
-      this.navCtrl.pop().then(() => this.locProvider.initProvider());
+  async popView() {
+    await this.locProvider.saveDataLocally(this.loc);
+    await this.publishCreationEvent();
+    this.navCtrl.pop()
   }
 
   publishCreationEvent(){

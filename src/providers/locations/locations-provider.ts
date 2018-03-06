@@ -37,42 +37,32 @@ export class LocationsProvider {
     }
   }
 
-  private async loadData(url: string){
-    const locations: Location[] = [];
-
+  private async loadData(url: string) {
     const headers = new HttpHeaders().set('authorization',
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
-    await this.http.get(url, {headers}).subscribe(data => {
-        for (let loc of data['locations']) {
-          locations.push({
-            uuid: loc.uuid,
-            extId: loc.extId,
-            locationName: loc.locationName,
-            locationType: loc.locationType,
-            longitude: loc.longitude,
-            latitude: loc.latitude,
-            accuracy: loc.accuracy,
-            altitude: loc.altitude,
-            deleted: Boolean(loc.deleted),
-            insertDate: loc.insertDate,
-            clientInsert: data['timestamp'],
-            collectedBy: {
-              extId: "FWDW1"
-            },
-            locationLevel: {
-              extId: "MBI"
-            },
-            processed: 1
-          });
-        }
-
-        this.db.transaction('rw', this.db.locations, () => {
-          this.db.locations.bulkPut(locations).catch(error => console.log(error))
-            .then(() => localStorage.setItem('lastUpdate', data['timestamp']));
-        })
-
+    let locations: Location[] = [];
+    let timestamp = null;
+    await this.http.get(url, {headers}).toPromise().then((data) => {
+      locations = data['locations'];
+      timestamp = data['timestamp'];
     });
+
+    locations.forEach(x => {
+      x.collectedBy = {
+        extId: "FWDW1"
+      };
+      x.locationLevel = {
+        extId: "MBI"
+      };
+      x.clientInsert = timestamp;
+      x.processed = 1;
+    });
+
+    await this.db.transaction('rw', this.db.locations, () => {
+      this.db.locations.bulkPut(locations).catch(error => console.log(error))
+        .then(() => localStorage.setItem('lastUpdate', timestamp));
+    })
   }
 
   //Get all location in the database
@@ -86,11 +76,7 @@ export class LocationsProvider {
     return await this.loadData(url).catch(error => console.log(error));
   }
 
-  //Save a location. If network connection save locally and to the server.
-  async saveData(loc: Location){
-    const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
-
+  async saveDataLocally(loc: Location){
     loc.collectedBy = {
       extId: "FWEK1D"
     };
@@ -99,32 +85,32 @@ export class LocationsProvider {
       extId: "MBI"
     };
 
-    //Configure UUID on client side. Check to make sure it isn't null. If not null, and error is being resolved.
     if(!loc.uuid)
       loc.uuid = UUID.UUID();
 
     loc.deleted = false;
     loc.clientInsert = new Date().getTime();
-    if(this.networkConfig.isConnected()){
 
+    await this.insert(loc);
+  }
+
+  //Save a location. If network connection save locally and to the server.
+  async saveData(loc: Location){
+    const headers = new HttpHeaders().set('authorization',
+      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
+
+    if(this.networkConfig.isConnected()){
       //Get only data that needs to be sent to the server
       let postData = this.getNewServerLocationEntity(loc);
 
       this.http.post(this.systemConfig.getServerURL() + "locations2/", postData, {headers}).subscribe(async (data) => {
         loc.processed = 1;
-        let exists;
-        this.validateLocationExistence(loc).then(x => exists = x);
-        if(exists){
-          await this.update(loc, data['timestamp'])
-        } else {
-          await this.add(loc, data['timestamp'])
-        }
+        await this.insert(loc);
+        localStorage.setItem('lastUpdate', data['timestamp'])
       }, error => {
         let serverError = this.generateNewError(error, loc);
         this.errorsProvider.updateOrSetErrorStatus(serverError);
       });
-    } else {
-     await this.add(loc, new Date().getTime()).then(() => this.initProvider());
     }
   }
 
@@ -204,15 +190,7 @@ export class LocationsProvider {
   }
 
   //Abstract Updates and Adds to prevent errors
-  async add(loc: Location, timestamp: number){
-    this.db.locations.add(loc).then(() => {
-      localStorage.setItem('lastUpdate', timestamp.toString())
-    }).catch(err => console.log(err));
-  }
-
-  async update(loc: Location, timestamp:number){
-    this.db.locations.update(loc.extId, loc).then(() => {
-      localStorage.setItem('lastUpdate', timestamp.toString())
-    }).catch(err => console.log(err));
+  async insert(loc: Location){
+    this.db.locations.add(loc).catch(err => console.log(err));
   }
 }

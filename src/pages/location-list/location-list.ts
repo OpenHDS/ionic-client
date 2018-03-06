@@ -2,7 +2,7 @@ import {Component, OnInit, Output} from '@angular/core';
 import {IonicPage, Events, ModalController, NavController, NavParams} from 'ionic-angular';
 import {Location} from "../../providers/locations/locations-db";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
-import {CreateLocationModalPage} from "../create-location-modal/create-location-modal";
+import { RefreshObservable } from "../../providers/RefreshObservable";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {CreateLocationPage} from "../create-location/create-location";
 
@@ -21,33 +21,31 @@ import {CreateLocationPage} from "../create-location/create-location";
 })
 
 export class LocationListPage implements OnInit{
-  refreshNeeded:boolean = false;
+  locationObserver: RefreshObservable = new RefreshObservable();
   locations: Location[];
   selectedLoc: Location = null;
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
     public modalCtrl: ModalController, public networkConfig: NetworkConfigProvider) {
 
+    this.locationObserver.subscribe(async (locations) => {
+      this.locations = locations;
+    });
+
     this.ev.subscribe('submitLocation', () => {
-      this.doRefresh();
+      this.locProvider.initProvider().then(async () => await this.getAllLocations()).catch(err => console.log(err));
     })
   }
 
   ngOnInit() {
-    this.locProvider.initProvider().then(() => this.doRefresh());
-  }
-
-  doRefresh() {
-
-    setTimeout(async () => {
-      await this.getAllLocations();
-      console.log("Refreshing....")
-    }, 2000);
-
+    console.log("ngOnInit");
+    this.locProvider.initProvider()
+      .then(async () => await this.getAllLocations()).catch(err => console.log(err))
   }
 
   async getAllLocations() {
-    this.locations = await this.locProvider.getAllLocations();
+    let locations = await this.locProvider.getAllLocations();
+    this.locationObserver.publishChange(locations);
   }
 
   async synchronize() {
