@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, Events, NavController, NavParams, ViewController} from 'ionic-angular';
+import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
 import {Geolocation} from "@ionic-native/geolocation";
 import {Location} from "../../providers/locations/locations-db";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
@@ -22,6 +22,7 @@ import { FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 export class CreateLocationPage {
 
   edit: boolean;
+  geoloc: boolean = false;
   errorFix: boolean;
   locationForm: FormGroup;
 
@@ -43,7 +44,7 @@ export class CreateLocationPage {
     processed: 0
   };
 
-  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public locProvider: LocationsProvider,
+  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController, public formBuilder: FormBuilder, public locProvider: LocationsProvider,
               public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider, public sysConfig: SystemConfigProvider) {
 
 
@@ -51,10 +52,8 @@ export class CreateLocationPage {
      name: ['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
      extId:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
      type: ['', Validators.compose([Validators.required, Validators.pattern("^[^-\\s]*[Rr][Uu][Rr]|^[^-\\s]*[Uu][Rr][Bb]")])],
-     latitude:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][0-9]*.[0-9]*'),
-       Validators.min(-90), Validators.max(90)])],
-     longitude:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][0-9]*.[0-9]*'),
-       Validators.min(-180), Validators.max(180)])],
+     latitude:['', Validators.compose([Validators.required, Validators.pattern("(-?(\\d*\\.\\d{1}?\\d*|\\d{1,}))"), Validators.min(-90), Validators.max(90)])],
+     longitude:['', Validators.compose([Validators.required, Validators.pattern("(-?(\\d*\\.\\d{1}?\\d*|\\d{1,}))"), Validators.min(-180), Validators.max(180)])],
    });
 
 
@@ -70,12 +69,21 @@ export class CreateLocationPage {
   }
 
   getGeolocationInfo(){
+    let loading = this.loadingCtrl.create({
+      content: "Gathering geolocation information..."
+    });
+
+    loading.present();
+
     this.geo.getCurrentPosition().then((resp) => {
       this.loc.latitude = resp.coords.latitude;
       this.loc.longitude = resp.coords.longitude;
       this.loc.altitude = resp.coords.altitude;
       this.loc.accuracy = resp.coords.altitudeAccuracy;
-    }).then(() => console.log(this.loc)).catch(err => console.log(err));
+    }).catch(err => console.log(err)).then(() => {
+      this.geoloc = true
+      loading.dismiss();
+    });
   }
 
 
@@ -90,4 +98,6 @@ export class CreateLocationPage {
   publishCreationEvent(){
     this.ev.publish('submitLocation', true);
   }
+
+
 }
