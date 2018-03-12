@@ -6,10 +6,9 @@
     <ion-col col-4>
       <ion-scroll scrollY="true">
         <ion-card-header>
-          Locations: ?/?
-        </ion-card-header>
-        <ion-card-header>
-          Individuals: ?/?
+          <h3>Locations</h3>
+          <ng-template [ngIf]="this.locationSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.locationSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
         </ion-card-header>
       </ion-scroll>
     </ion-col>
