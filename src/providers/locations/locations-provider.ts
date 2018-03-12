@@ -125,6 +125,8 @@ export class LocationsProvider {
 
     this.http.put(url, locations, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data['timestamp']);
+      location.processed = 1;
+      this.db.locations.put(location)
     }, err => {
       this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(err, location));
     });
