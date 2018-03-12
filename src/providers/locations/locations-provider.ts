@@ -24,7 +24,8 @@ export class LocationsProvider {
     password: 'test'
   };
 
-  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider, public systemConfig: SystemConfigProvider) {
+  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
+              public systemConfig: SystemConfigProvider) {
     this.db = new LocationDb();
   }
 
@@ -89,6 +90,7 @@ export class LocationsProvider {
       loc.uuid = UUID.UUID();
 
     loc.deleted = false;
+    loc.processed = 0;
     loc.clientInsert = new Date().getTime();
 
     await this.insert(loc);
@@ -99,7 +101,6 @@ export class LocationsProvider {
     const headers = new HttpHeaders().set('authorization',
       "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
-    if(this.networkConfig.isConnected()){
       //Get only data that needs to be sent to the server
       let postData = this.getNewServerLocationEntity(loc);
 
@@ -111,7 +112,7 @@ export class LocationsProvider {
         let serverError = this.generateNewError(error, loc);
         this.errorsProvider.updateOrSetErrorStatus(serverError);
       });
-    }
+
   }
 
   updateData(location: Location){
