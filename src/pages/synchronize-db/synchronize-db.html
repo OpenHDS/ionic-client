@@ -1,0 +1,21 @@
+<ion-content>
+  <ion-row>
+    <ion-col col-4>
+      <button ion-button full>Synchronize Database</button>
+    </ion-col>
+    <ion-col col-4>
+      <ion-scroll scrollY="true">
+        <ion-card-header>
+          Locations: ?/?
+        </ion-card-header>
+        <ion-card-header>
+          Individuals: ?/?
+        </ion-card-header>
+      </ion-scroll>
+    </ion-col>
+    <ion-col col-4>
+      <button ion-button full outline (click)="syncDatabase()">Synchronize Database</button>
+      <button ion-button full outline (click)="syncLocations()">Synchronize Only Location</button>
+    </ion-col>
+  </ion-row>
+</ion-content>
