@@ -17,6 +17,7 @@ import { RefreshObservable } from "../../providers/RefreshObservable";
 })
 export class SynchronizeDbPage {
   synchonizeObserver: RefreshObservable = new RefreshObservable();
+  locationSyncSuccess: boolean;
 
   constructor(public events: Events, public locProvider: LocationsProvider, public loadingCtrl: LoadingController) {
   }
@@ -30,13 +31,14 @@ export class SynchronizeDbPage {
   }
 
   async syncLocations(){
+    this.locationSyncSuccess = true;
     let loading = this.loadingCtrl.create({
       content: "Synchronizing location... Please wait"
     });
 
     loading.present();
-    await this.locProvider.initProvider();
-    await this.locProvider.synchronizeOfflineLocations();
+    await this.locProvider.initProvider().catch((err) => { this.locationSyncSuccess = false; });
+    await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent()
   }
