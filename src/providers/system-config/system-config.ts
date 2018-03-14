@@ -1,58 +1,27 @@
-import { HttpClient } from '@angular/common/http';
-import {Injectable, OnInit} from '@angular/core';
+import { HttpClient} from "@angular/common/http";
 
-/*
-  Generated class for the SystemConfigProvider provider.
 
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
-
-@Injectable()
-export class SystemConfigProvider {
-  private default_url = 'http://localhost:8080/openhds/api2/rest/';
-  private server_url = null;
-
-  //Used when setting the server url. If the result of a OPTIONS request returns an error, this flag is set to true.
-  private setServerError: boolean;
-  private testingFieldworker: string = "FWDW1";
+export class SystemConf {
+  private static instance: SystemConf = new SystemConf();
+  private defaultURL = "http://130.111.126.71:8081/openhds2/api2/rest/";
+  private testingFieldworker= "FWDW1";
   private testingLocLevel: string = "MBI";
 
-  constructor(public http: HttpClient){
+  private constructor(){}
 
+  public static getInstance(){
+    return this.instance;
   }
 
-  init(){
-    if(localStorage.getItem('server_url') == null) {
-      localStorage.setItem('server_url', this.default_url);
-      this.server_url = this.default_url;
-    } else {
-      this.server_url = localStorage.getItem('server_url');
-    }
+  public getServerURL(){
+    return this.defaultURL;
   }
 
-  getTestingFieldworker(){
+  public getTestingFieldworker(){
     return this.testingFieldworker;
   }
 
-  getTestingLocLevel(){
+  public getTestingLocLevel(){
     return this.testingLocLevel;
-  }
-
-  getServerURL(){
-    if(this.server_url == null)
-      this.init();
-
-    return this.server_url;
-  }
-
-  setServerURL(url: string){
-    this.server_url = url;
-    localStorage.setItem('server_url', this.server_url);
-  }
-
-  resetServerUrl(){
-    this.server_url = this.default_url;
-    localStorage.setItem('server_url', this.default_url);
   }
 }

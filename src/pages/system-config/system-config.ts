@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { SystemConfigProvider } from "../../providers/system-config/system-config";
+import { SystemConf} from "../../providers/system-config/system-config";
 
 /**
  * Generated class for the SystemConfigPage page.
@@ -15,12 +15,12 @@ import { SystemConfigProvider } from "../../providers/system-config/system-confi
   templateUrl: 'system-config.html',
 })
 export class SystemConfigPage {
-
+  configuration = SystemConf.getInstance();
   url: string;
   editing: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public systemConfig: SystemConfigProvider) {
-    this.getUrl();
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
+
   }
 
   ionViewDidLoad() {
@@ -28,14 +28,7 @@ export class SystemConfigPage {
   }
 
   getUrl(){
-    this.url = this.systemConfig.getServerURL();
-  }
-
-
-
-  setUrl(){
-    this.systemConfig.setServerURL(this.url);
-    this.setEditing();
+    return this.configuration.getServerURL();
   }
 
   setEditing(){

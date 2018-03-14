@@ -6,7 +6,7 @@ import { UUID } from "angular2-uuid";
 import { ErrorsDb, Errors } from "../errors/errors-db";
 import { ErrorsProvider } from "../errors/errors";
 import { EntityErrorLabels } from "../errors/entity-error-labels";
-import {SystemConfigProvider} from "../system-config/system-config";
+import { SystemConf} from "../../providers/system-config/system-config";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -18,14 +18,15 @@ import {SystemConfigProvider} from "../system-config/system-config";
 @Injectable()
 export class LocationsProvider {
   private db: LocationDb;
-
+  private systemConfig: SystemConf;
   openhdsLogin = {
     username: 'admin',
     password: 'test'
   };
 
-  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider, public systemConfig: SystemConfigProvider) {
+  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider) {
     this.db = new LocationDb();
+    this.systemConfig = SystemConf.getInstance();
   }
 
   async initProvider(){

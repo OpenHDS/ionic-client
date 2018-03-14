@@ -4,8 +4,8 @@ import {Geolocation} from "@ionic-native/geolocation";
 import {Location} from "../../providers/locations/locations-db";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
-import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import { FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { SystemConf} from "../../providers/system-config/system-config";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -25,6 +25,7 @@ export class CreateLocationPage {
   geoloc: boolean = false;
   errorFix: boolean;
   locationForm: FormGroup;
+  sysConfig = SystemConf.getInstance();
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   loc: Location = {
@@ -45,7 +46,7 @@ export class CreateLocationPage {
   };
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController, public formBuilder: FormBuilder, public locProvider: LocationsProvider,
-              public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider, public sysConfig: SystemConfigProvider) {
+              public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider) {
 
 
    this.locationForm = formBuilder.group({

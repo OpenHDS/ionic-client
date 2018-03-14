@@ -19,11 +19,11 @@
     <ion-card-content>
       <div *ngIf="editing">
         <ion-input type="text" name='url'[(ngModel)]="this.url"></ion-input>
-        <button ion-button round (click)="this.setUrl()">Set URL</button>
+        <button ion-button round>Set URL</button>
       </div>
       <div *ngIf="!editing">
-        <p>{{this.url}}</p>
-        <button ion-button round (click)="this.setEditing()">Edit URL</button>
+        <p>{{this.getUrl()}}</p>
+        <button ion-button round>Edit URL</button>
       </div>
     </ion-card-content>
   </ion-card>
