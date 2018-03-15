@@ -1,0 +1,15 @@
+{
+  "defaultURL": "http://130.111.126.71:8081/openhds2/api2/rest/",
+  "defaultUser": "admin",
+  "defaultPassword": "test",
+
+  "locationHierarchyLevel1": "Country",
+  "locationHierarchyLevel2": "Region",
+  "locationHierarchyLevel3": "District",
+  "locationHierarchyLevel4": "Village",
+  "locationHierarchyLevel5": "Subvillage",
+  "locationHierarchyLevel6": null,
+  "locationHierarchyLevel7": null,
+  "locationHierarchyLevel8": null,
+  "locationHierarchyLevel9": null
+}
