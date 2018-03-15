@@ -27,5 +27,11 @@
       </div>
     </ion-card-content>
   </ion-card>
+  <ion-card>
+  <ion-card-header>Location Hierarchy Configuration</ion-card-header>
+  <ion-card-content>
+    <h5 *ngFor="let loc of this.configuration.getLocationHierarchyConfig(); let i = index">Level {{i + 1}}: {{loc}}</h5>
+  </ion-card-content>
+  </ion-card>
 
 </ion-content>

@@ -6,7 +6,7 @@ import { UUID } from "angular2-uuid";
 import { ErrorsDb, Errors } from "../errors/errors-db";
 import { ErrorsProvider } from "../errors/errors";
 import { EntityErrorLabels } from "../errors/entity-error-labels";
-import { SystemConf} from "../../providers/system-config/system-config";
+import { SystemConfigProvider} from "../system-config/system-config";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -18,15 +18,10 @@ import { SystemConf} from "../../providers/system-config/system-config";
 @Injectable()
 export class LocationsProvider {
   private db: LocationDb;
-  private systemConfig: SystemConf;
-  openhdsLogin = {
-    username: 'admin',
-    password: 'test'
-  };
 
-  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider) {
+  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
+              public systemConfig: SystemConfigProvider) {
     this.db = new LocationDb();
-    this.systemConfig = SystemConf.getInstance();
   }
 
   async initProvider(){
@@ -40,7 +35,7 @@ export class LocationsProvider {
 
   private async loadData(url: string) {
     const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
+      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
 
     let locations: Location[] = [];
     let timestamp = null;
@@ -98,7 +93,7 @@ export class LocationsProvider {
   //Save a location. If network connection save locally and to the server.
   async saveData(loc: Location){
     const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
+      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
 
     if(this.networkConfig.isConnected()){
       //Get only data that needs to be sent to the server
@@ -117,7 +112,7 @@ export class LocationsProvider {
 
   updateData(location: Location){
     const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
+      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
 
     var sendData = this.getNewServerLocationEntity(location);
     let locations = {locations: sendData, timestamp: location.clientInsert};
