@@ -14,20 +14,28 @@ import { NetworkConfigProvider } from "../providers/network-config/network-confi
 import { CreateLocationPage } from "../pages/create-location/create-location";
 import { Geolocation } from "@ionic-native/geolocation";
 import { ErrorsProvider } from '../providers/errors/errors';
-import { MenuPage } from "../pages/menu/menu";
+import { FieldworkerMenuPage } from "../pages/fieldworker-menu/menu";
 import { ErrorDisplayPage } from "../pages/error-display/error-display";
 import { SystemConfigProvider } from '../providers/system-config/system-config';
 import { SystemConfigPage } from "../pages/system-config/system-config";
+import { SupervisorModePage } from "../pages/supervisor-mode/supervisor-mode";
+import { SynchronizeDbPage } from "../pages/synchronize-db/synchronize-db";
+import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
+
+
 
 @NgModule({
   declarations: [
     MyApp,
-    MenuPage,
+    FieldworkerMenuPage,
     BaselineCensusPage,
     LocationListPage,
     CreateLocationPage,
     ErrorDisplayPage,
-    SystemConfigPage
+    SystemConfigPage,
+    SupervisorModePage,
+    SupervisorMenuPage,
+    SynchronizeDbPage
   ],
 
   imports: [
@@ -39,11 +47,14 @@ import { SystemConfigPage } from "../pages/system-config/system-config";
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    MenuPage,
+    FieldworkerMenuPage,
     BaselineCensusPage,
     CreateLocationPage,
     ErrorDisplayPage,
-    SystemConfigPage
+    SystemConfigPage,
+    SupervisorModePage,
+    SupervisorMenuPage,
+    SynchronizeDbPage
   ],
 
   providers: [

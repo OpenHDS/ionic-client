@@ -1,0 +1,20 @@
+<ion-content>
+  <ion-row>
+    <ion-col col-4>
+      <button ion-button full>Synchronize Database</button>
+    </ion-col>
+    <ion-col col-4>
+      <ion-scroll scrollY="true">
+        <ion-card-header>
+          <h3>Locations</h3>
+          <ng-template [ngIf]="this.locationSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.locationSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
+        </ion-card-header>
+      </ion-scroll>
+    </ion-col>
+    <ion-col col-4>
+      <button ion-button full outline (click)="syncDatabase()">Synchronize Database</button>
+      <button ion-button full outline (click)="syncLocations()">Synchronize Only Location</button>
+    </ion-col>
+  </ion-row>
+</ion-content>

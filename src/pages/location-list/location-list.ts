@@ -20,7 +20,7 @@ import {CreateLocationPage} from "../create-location/create-location";
 
 })
 
-export class LocationListPage implements OnInit{
+export class LocationListPage {
   locationObserver: RefreshObservable = new RefreshObservable();
   locations: Location[];
   selectedLoc: Location = null;
@@ -34,13 +34,15 @@ export class LocationListPage implements OnInit{
 
     this.ev.subscribe('submitLocation', () => {
       this.locProvider.initProvider().then(async () => await this.getAllLocations()).catch(err => console.log(err));
-    })
+    });
+
+    this.ev.subscribe('syncDb', () => {
+      this.locProvider.initProvider().then(async () => await this.getAllLocations()).catch(err => console.log(err));
+    });
   }
 
-  ngOnInit() {
-    console.log("ngOnInit");
-    this.locProvider.initProvider()
-      .then(async () => await this.getAllLocations()).catch(err => console.log(err))
+  async ngOnInit() {
+    await this.getAllLocations().catch(err => console.log(err));
   }
 
   async getAllLocations() {

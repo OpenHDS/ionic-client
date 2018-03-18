@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import {ErrorDisplayPage} from "../error-display/error-display";
 import {SystemConfigPage} from "../system-config/system-config";
+import {SupervisorModePage} from "../supervisor-mode/supervisor-mode";
 
 /**
  * Generated class for the MenuPage page.
@@ -15,7 +16,7 @@ import {SystemConfigPage} from "../system-config/system-config";
   selector: 'page-menu',
   templateUrl: 'menu.html',
 })
-export class MenuPage {
+export class FieldworkerMenuPage {
 
   constructor(public viewCtrl: ViewController, public navController: NavController) {
   }
@@ -26,6 +27,14 @@ export class MenuPage {
 
   goToSystemSettings(){
     this.navController.push(SystemConfigPage).then(() => this.close());
+  }
+
+  switchToSuper(){
+    //Pop all fieldworker views, and push the supervisor view.
+    this.navController.pop()
+      .then(() => this.navController.push(SupervisorModePage)
+        .then(() => this.close()));
+
   }
 
   close(){

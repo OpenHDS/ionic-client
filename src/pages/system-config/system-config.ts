@@ -31,8 +31,6 @@ export class SystemConfigPage {
     this.url = this.systemConfig.getServerURL();
   }
 
-
-
   setUrl(){
     this.systemConfig.setServerURL(this.url);
     this.setEditing();
