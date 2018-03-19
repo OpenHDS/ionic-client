@@ -9,7 +9,6 @@
   <ion-navbar>
     <ion-title>System Configurations</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
@@ -17,21 +16,34 @@
   <ion-card>
     <ion-card-header>OpenHDS Server URL</ion-card-header>
     <ion-card-content>
-      <div *ngIf="editing">
-        <ion-input type="text" name='url'[(ngModel)]="this.url"></ion-input>
-        <button ion-button round>Set URL</button>
-      </div>
-      <div *ngIf="!editing">
-        <p>{{this.getUrl()}}</p>
-        <button ion-button round>Edit URL</button>
+      <div>
+        <ion-input [disabled]="!this.editing" type="text" name='url'[(ngModel)]="this.url"></ion-input>
+        <div *ngIf="!editing; else elseBlock">
+          <button ion-button small outline (click)="this.setEditing()">Set URL</button>
+        </div>
+        <ng-template #elseBlock>
+          <button ion-button small outline (click)="this.saveServerUrl()">Save URL</button>
+          <button ion-button small outline (click)="this.setEditing()">Cancel</button>
+        </ng-template>
       </div>
     </ion-card-content>
   </ion-card>
+
   <ion-card>
   <ion-card-header>Location Hierarchy Configuration</ion-card-header>
   <ion-card-content>
-    <h5 *ngFor="let loc of this.configuration.getLocationHierarchyConfig(); let i = index">Level {{i + 1}}: {{loc}}</h5>
+    <h5 *ngFor="let loc of this.hierarchyLevels; let i = index">Level {{i + 1}}: {{loc.value}}</h5>
+
   </ion-card-content>
   </ion-card>
+
+  <ion-card>
+    <ion-card-header>Codes and Parameters</ion-card-header>
+    <ion-card-content *ngFor="let code of this.codes">
+      <h5>{{code.codeName}}: {{code.value}}</h5>
+    </ion-card-content>
+  </ion-card>
+
+  <button ion-button outline dark (click)="this.configuration.saveConfigToFile()">Save Configurations to File</button>
 
 </ion-content>

@@ -18,6 +18,8 @@ import { MenuPage } from "../pages/menu/menu";
 import { ErrorDisplayPage } from "../pages/error-display/error-display";
 import { SystemConfigProvider } from '../providers/system-config/system-config';
 import { SystemConfigPage } from "../pages/system-config/system-config";
+import { File} from "@ionic-native/file";
+import {FileTransfer} from "@ionic-native/file-transfer";
 
 @NgModule({
   declarations: [
@@ -55,7 +57,8 @@ import { SystemConfigPage } from "../pages/system-config/system-config";
     NetworkConfigProvider,
     LocationsProvider,
     ErrorsProvider,
-    SystemConfigProvider
+    SystemConfigProvider,
+    File
   ]
 })
 
