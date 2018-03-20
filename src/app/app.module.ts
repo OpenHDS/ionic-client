@@ -6,12 +6,12 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { BaselineCensusPage } from "../pages/baseline-census/baseline-census";
-import { LocationListPage } from "../pages/location-list/location-list";
+import { LocationListPage } from "../pages/entity-lists/location-list";
 import { LocationsProvider } from '../providers/locations/locations-provider';
 import { HttpClientModule } from "@angular/common/http";
 import { Network } from "@ionic-native/network";
 import { NetworkConfigProvider } from "../providers/network-config/network-config";
-import { CreateLocationPage } from "../pages/create-location/create-location";
+import { CreateLocationPage } from "../pages/create-entities/create-location";
 import { Geolocation } from "@ionic-native/geolocation";
 import { ErrorsProvider } from '../providers/errors/errors';
 import { FieldworkerMenuPage } from "../pages/fieldworker-menu/menu";

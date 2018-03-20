@@ -1,6 +1,6 @@
 import {Component, Input, ViewChild, AfterViewInit} from '@angular/core';
 import {IonicPage, NavController, NavParams, PopoverController} from 'ionic-angular';
-import { LocationListPage } from "../location-list/location-list";
+import { LocationListPage } from "../entity-lists/location-list";
 import { Location } from "../../providers/locations/locations-db";
 import {FieldworkerMenuPage} from "../fieldworker-menu/menu";
 

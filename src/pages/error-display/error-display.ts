@@ -3,7 +3,7 @@ import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angula
 import {ErrorsProvider} from "../../providers/errors/errors";
 import {EntityErrorLabels} from "../../providers/errors/entity-error-labels";
 import {Errors} from "../../providers/errors/errors-db";
-import {CreateLocationPage} from "../create-location/create-location";
+import {CreateLocationPage} from "../create-entities/create-location";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 
 /**
