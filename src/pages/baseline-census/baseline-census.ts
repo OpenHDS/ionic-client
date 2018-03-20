@@ -18,7 +18,6 @@ import {MenuPage} from "../menu/menu";
 })
 
 export class BaselineCensusPage {
-
   constructor(public navCtrl: NavController, public navParams: NavParams, public menuPopover: PopoverController) {
 
   }

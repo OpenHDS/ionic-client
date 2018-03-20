@@ -18,12 +18,10 @@ import { SystemConfigProvider} from "../../providers/system-config/system-config
 export class SystemConfigPage {
   url: string;
   hierarchyLevels: Object;
-  levelKeys: any;
-  codeKeys: any;
   codes: Object;
-  showCodes: boolean = false;
-  showHierarchy: boolean = false;
-  showURL: boolean = false;
+  showCodes: boolean;
+  showHierarchy: boolean;
+  showURL: boolean;
   editing: boolean;
   editingLH: boolean;
   editingCodes: boolean;
@@ -93,5 +91,17 @@ export class SystemConfigPage {
   saveCodes(){
     this.configuration.saveSystemCodes(this.codes);
     this.editingCodes = !this.editingCodes;
+  }
+
+  displayCodes(){
+    this.showCodes = !this.showCodes;
+  }
+
+  displayLH(){
+    this.showHierarchy = !this.showHierarchy;
+  }
+
+  displayURL(){
+    this.showURL = !this.showURL;
   }
 }

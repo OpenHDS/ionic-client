@@ -12,8 +12,18 @@
 
 <ion-content padding>
   <ion-card>
-    <ion-card-header>OpenHDS Server URL</ion-card-header>
-    <ion-card-content>
+    <ion-card-header>OpenHDS Server URL
+      <button ion-button icon-only *ngIf="!this.showURL; else showURLIcon" small float-end (click)="this.displayURL()">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+
+      <ng-template #showURLIcon>
+        <button ion-button icon-only small float-end (click)="this.displayURL()">
+          <ion-icon name="arrow-down"></ion-icon>
+        </button>
+      </ng-template>
+    </ion-card-header>
+    <ion-card-content *ngIf="this.showURL">
       <div>
         <ion-input [disabled]="!this.editing" type="text" name='url' [(ngModel)]="this.url"></ion-input>
         <div *ngIf="!editing; else elseBlock">
@@ -29,9 +39,20 @@
 
 
   <ion-card>
-    <ion-card-header>Location Hierarchy Configuration</ion-card-header>
+    <ion-card-header>Location Hierarchy Configuration
+      <button ion-button icon-only *ngIf="!this.showHierarchy; else showHierarchyIcon" small float-end (click)="this.displayLH()">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+
+      <ng-template #showHierarchyIcon>
+        <button ion-button icon-only small float-end (click)="this.displayLH()">
+          <ion-icon name="arrow-down"></ion-icon>
+        </button>
+      </ng-template>
+    </ion-card-header>
+
     <ion-card-content>
-      <div>
+      <div *ngIf="this.showHierarchy">
         <ion-item *ngFor="let key of this.getHierarchyLevelKeys()">
           <ion-label>{{key}}:</ion-label>
           <ion-input type="text" name="locHier-{{i}}" [disabled]="!this.editingLH" [(ngModel)]="this.hierarchyLevels[key]"></ion-input>
@@ -47,10 +68,18 @@
     </ion-card-content>
   </ion-card>
 
-
   <ion-card>
-    <ion-card-header>Codes and Parameters</ion-card-header>
-    <ion-card-content>
+    <ion-card-header>Codes and Parameters
+    <button ion-button icon-only *ngIf="!this.showCodes; else showCodesIconBlock" small float-end (click)="this.displayCodes()">
+      <ion-icon name="arrow-forward"></ion-icon>
+    </button>
+      <ng-template #showCodesIconBlock>
+        <button ion-button icon-only small float-end (click)="this.displayCodes()">
+          <ion-icon name="arrow-down"></ion-icon>
+        </button>
+      </ng-template>
+    </ion-card-header>
+    <ion-card-content *ngIf="showCodes">
       <div>
         <ion-item *ngFor="let key of this.getCodeKeys()">
           <ion-label>{{key}}:</ion-label>
