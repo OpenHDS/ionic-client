@@ -18,6 +18,7 @@ import {FieldworkerMenuPage} from "../fieldworker-menu/menu";
 })
 
 export class BaselineCensusPage {
+
   locationEnabled: boolean = true;
   individualsEnabled: boolean = false;
 

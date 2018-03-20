@@ -18,11 +18,12 @@ import { FieldworkerMenuPage } from "../pages/fieldworker-menu/menu";
 import { ErrorDisplayPage } from "../pages/error-display/error-display";
 import { SystemConfigProvider } from '../providers/system-config/system-config';
 import { SystemConfigPage } from "../pages/system-config/system-config";
+
+import { File} from "@ionic-native/file";
+
 import { SupervisorModePage } from "../pages/supervisor-mode/supervisor-mode";
 import { SynchronizeDbPage } from "../pages/synchronize-db/synchronize-db";
 import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
-
-
 
 @NgModule({
   declarations: [
@@ -66,7 +67,10 @@ import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
     NetworkConfigProvider,
     LocationsProvider,
     ErrorsProvider,
-    SystemConfigProvider
+    SystemConfigProvider,
+    File
   ]
 })
+
 export class AppModule {}
+

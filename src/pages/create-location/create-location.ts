@@ -4,8 +4,8 @@ import {Geolocation} from "@ionic-native/geolocation";
 import {Location} from "../../providers/locations/locations-db";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
+import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
-import { FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -44,8 +44,10 @@ export class CreateLocationPage {
     processed: 0
   };
 
-  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController, public formBuilder: FormBuilder, public locProvider: LocationsProvider,
-              public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider, public sysConfig: SystemConfigProvider) {
+  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
+              public formBuilder: FormBuilder, public locProvider: LocationsProvider,
+              public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider,
+              public sysConfig: SystemConfigProvider) {
 
 
    this.locationForm = formBuilder.group({
@@ -79,7 +81,7 @@ export class CreateLocationPage {
       this.loc.altitude = resp.coords.altitude;
       this.loc.accuracy = resp.coords.altitudeAccuracy;
     }).catch(err => console.log(err)).then(() => {
-      this.geoloc = true
+      this.geoloc = true;
       loading.dismiss();
     });
   }

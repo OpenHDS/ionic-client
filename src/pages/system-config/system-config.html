@@ -5,27 +5,97 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
     <ion-title>System Configurations</ion-title>
   </ion-navbar>
-
 </ion-header>
-
 
 <ion-content padding>
   <ion-card>
-    <ion-card-header>OpenHDS Server URL</ion-card-header>
-    <ion-card-content>
-      <div *ngIf="editing">
-        <ion-input type="text" name='url'[(ngModel)]="this.url"></ion-input>
-        <button ion-button round (click)="this.setUrl()">Set URL</button>
-      </div>
-      <div *ngIf="!editing">
-        <p>{{this.url}}</p>
-        <button ion-button round (click)="this.setEditing()">Edit URL</button>
+    <ion-card-header>OpenHDS Server URL
+      <button ion-button icon-only *ngIf="!this.showURL; else showURLIcon" small float-end (click)="this.displayURL()">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+
+      <ng-template #showURLIcon>
+        <button ion-button icon-only small float-end (click)="this.displayURL()">
+          <ion-icon name="arrow-down"></ion-icon>
+        </button>
+      </ng-template>
+    </ion-card-header>
+    <ion-card-content *ngIf="this.showURL">
+      <div>
+        <ion-input [disabled]="!this.editing" type="text" name='url' [(ngModel)]="this.url"></ion-input>
+        <div *ngIf="!editing; else elseBlock">
+          <button ion-button small outline (click)="this.setEditing()">Edit URL</button>
+        </div>
+        <ng-template #elseBlock>
+          <button ion-button small outline (click)="this.saveServerUrl()">Save URL</button>
+          <button ion-button small outline (click)="this.setEditing()">Cancel</button>
+        </ng-template>
       </div>
     </ion-card-content>
   </ion-card>
+
+
+  <ion-card>
+    <ion-card-header>Location Hierarchy Configuration
+      <button ion-button icon-only *ngIf="!this.showHierarchy; else showHierarchyIcon" small float-end (click)="this.displayLH()">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+
+      <ng-template #showHierarchyIcon>
+        <button ion-button icon-only small float-end (click)="this.displayLH()">
+          <ion-icon name="arrow-down"></ion-icon>
+        </button>
+      </ng-template>
+    </ion-card-header>
+
+    <ion-card-content>
+      <div *ngIf="this.showHierarchy">
+        <ion-item *ngFor="let key of this.getHierarchyLevelKeys()">
+          <ion-label>{{key}}:</ion-label>
+          <ion-input type="text" name="locHier-{{i}}" [disabled]="!this.editingLH" [(ngModel)]="this.hierarchyLevels[key]"></ion-input>
+        </ion-item>
+        <div *ngIf="!this.editingLH; else elseLocHierBlock">
+          <button ion-button small outline (click)="this.setLHEditing()">Edit Hierarchy Configuration</button>
+        </div>
+        <ng-template #elseLocHierBlock>
+          <button ion-button small outline (click)="this.saveLocationHierarchy()">Save Hierarchy Configuration</button>
+          <button ion-button small outline (click)="this.setLHEditing()">Cancel</button>
+        </ng-template>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>Codes and Parameters
+    <button ion-button icon-only *ngIf="!this.showCodes; else showCodesIconBlock" small float-end (click)="this.displayCodes()">
+      <ion-icon name="arrow-forward"></ion-icon>
+    </button>
+      <ng-template #showCodesIconBlock>
+        <button ion-button icon-only small float-end (click)="this.displayCodes()">
+          <ion-icon name="arrow-down"></ion-icon>
+        </button>
+      </ng-template>
+    </ion-card-header>
+    <ion-card-content *ngIf="showCodes">
+      <div>
+        <ion-item *ngFor="let key of this.getCodeKeys()">
+          <ion-label>{{key}}:</ion-label>
+          <ion-input type="text" name="code-{{i}}" [disabled]="!this.editingCodes" [(ngModel)]="this.codes[key]"></ion-input>
+        </ion-item>
+        <div *ngIf="!this.editingCodes; else elseCodeBlock">
+          <button ion-button small outline (click)="this.setCodeEditing()">Edit Code Configuration</button>
+        </div>
+        <ng-template #elseCodeBlock>
+          <button ion-button small outline (click)="this.saveCodes()">Save Code Configuration</button>
+          <button ion-button small outline (click)="this.setCodeEditing()">Cancel</button>
+        </ng-template>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <button ion-button outline dark (click)="this.configuration.saveConfigToFile()">Save Configurations to File</button>
 
 </ion-content>
