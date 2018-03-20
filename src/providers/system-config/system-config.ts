@@ -44,18 +44,21 @@ export class SystemConfigProvider {
   }
 
   getLocationHierarchyConfig() {
-    var hierarchy = [];
+    var hierarchy = {};
     for (var level in ConfigLabels.LOC_HIERARCHY_CONFIG) {
-      hierarchy.push({level: ConfigLabels.LOC_HIERARCHY_CONFIG[level], value: localStorage.getItem(ConfigLabels.LOC_HIERARCHY_CONFIG[level])});
+      var lvl = ConfigLabels.LOC_HIERARCHY_CONFIG[level];
+      var val = localStorage.getItem(lvl);
+      if(val == "null")
+        val = null;
+      hierarchy[lvl] =  val;
     }
 
     return hierarchy;
   }
 
-  setLocationHierarchyConfig(hierachy: any[]){
-
+  setLocationHierarchyConfig(hierarchy){
     for (var level in ConfigLabels.LOC_HIERARCHY_CONFIG) {
-      localStorage.setItem(ConfigLabels.LOC_HIERARCHY_CONFIG[level], hierachy[ConfigLabels.LOC_HIERARCHY_CONFIG[level]]);
+      localStorage.setItem(ConfigLabels.LOC_HIERARCHY_CONFIG[level], hierarchy[ConfigLabels.LOC_HIERARCHY_CONFIG[level]]);
     }
   }
 
@@ -76,16 +79,19 @@ export class SystemConfigProvider {
   }
 
   getSystemCodes(){
-    var codes = [];
+    var codes = {};
     for(var code in ConfigLabels.CODES_PROPERTIES_CONFIG){
-      codes.push({codeName: ConfigLabels.CODES_PROPERTIES_CONFIG[code],
-        value: localStorage.getItem(ConfigLabels.CODES_PROPERTIES_CONFIG[code])})
+      codes[ConfigLabels.CODES_PROPERTIES_CONFIG[code]] =
+        localStorage.getItem(ConfigLabels.CODES_PROPERTIES_CONFIG[code]);
     }
 
     return codes;
   }
-  saveSystemCodes(){
 
+  saveSystemCodes(codeProp){
+    for (var code in ConfigLabels.CODES_PROPERTIES_CONFIG) {
+      localStorage.setItem(ConfigLabels.CODES_PROPERTIES_CONFIG[code], codeProp[ConfigLabels.CODES_PROPERTIES_CONFIG[code]]);
+    }
   }
 
   saveConfigToFile(){

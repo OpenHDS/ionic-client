@@ -5,21 +5,19 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
     <ion-title>System Configurations</ion-title>
   </ion-navbar>
 </ion-header>
-
 
 <ion-content padding>
   <ion-card>
     <ion-card-header>OpenHDS Server URL</ion-card-header>
     <ion-card-content>
       <div>
-        <ion-input [disabled]="!this.editing" type="text" name='url'[(ngModel)]="this.url"></ion-input>
+        <ion-input [disabled]="!this.editing" type="text" name='url' [(ngModel)]="this.url"></ion-input>
         <div *ngIf="!editing; else elseBlock">
-          <button ion-button small outline (click)="this.setEditing()">Set URL</button>
+          <button ion-button small outline (click)="this.setEditing()">Edit URL</button>
         </div>
         <ng-template #elseBlock>
           <button ion-button small outline (click)="this.saveServerUrl()">Save URL</button>
@@ -29,18 +27,43 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card>
-  <ion-card-header>Location Hierarchy Configuration</ion-card-header>
-  <ion-card-content>
-    <h5 *ngFor="let loc of this.hierarchyLevels; let i = index">Level {{i + 1}}: {{loc.value}}</h5>
 
-  </ion-card-content>
+  <ion-card>
+    <ion-card-header>Location Hierarchy Configuration</ion-card-header>
+    <ion-card-content>
+      <div>
+        <ion-item *ngFor="let key of this.getHierarchyLevelKeys()">
+          <ion-label>{{key}}:</ion-label>
+          <ion-input type="text" name="locHier-{{i}}" [disabled]="!this.editingLH" [(ngModel)]="this.hierarchyLevels[key]"></ion-input>
+        </ion-item>
+        <div *ngIf="!this.editingLH; else elseLocHierBlock">
+          <button ion-button small outline (click)="this.setLHEditing()">Edit Hierarchy Configuration</button>
+        </div>
+        <ng-template #elseLocHierBlock>
+          <button ion-button small outline (click)="this.saveLocationHierarchy()">Save Hierarchy Configuration</button>
+          <button ion-button small outline (click)="this.setLHEditing()">Cancel</button>
+        </ng-template>
+      </div>
+    </ion-card-content>
   </ion-card>
+
 
   <ion-card>
     <ion-card-header>Codes and Parameters</ion-card-header>
-    <ion-card-content *ngFor="let code of this.codes">
-      <h5>{{code.codeName}}: {{code.value}}</h5>
+    <ion-card-content>
+      <div>
+        <ion-item *ngFor="let key of this.getCodeKeys()">
+          <ion-label>{{key}}:</ion-label>
+          <ion-input type="text" name="code-{{i}}" [disabled]="!this.editingCodes" [(ngModel)]="this.codes[key]"></ion-input>
+        </ion-item>
+        <div *ngIf="!this.editingCodes; else elseCodeBlock">
+          <button ion-button small outline (click)="this.setCodeEditing()">Edit Code Configuration</button>
+        </div>
+        <ng-template #elseCodeBlock>
+          <button ion-button small outline (click)="this.saveCodes()">Save Code Configuration</button>
+          <button ion-button small outline (click)="this.setCodeEditing()">Cancel</button>
+        </ng-template>
+      </div>
     </ion-card-content>
   </ion-card>
 

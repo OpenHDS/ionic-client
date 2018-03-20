@@ -14,14 +14,19 @@ import { SystemConfigProvider} from "../../providers/system-config/system-config
   selector: 'page-system-config',
   templateUrl: 'system-config.html',
 })
+
 export class SystemConfigPage {
   url: string;
-  hierarchyLevels: any;
-  codes: any;
+  hierarchyLevels: Object;
+  levelKeys: any;
+  codeKeys: any;
+  codes: Object;
   showCodes: boolean = false;
   showHierarchy: boolean = false;
-  showURL: boolean = false
+  showURL: boolean = false;
   editing: boolean;
+  editingLH: boolean;
+  editingCodes: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public configuration: SystemConfigProvider) {
     this.setServerUrl();
@@ -41,20 +46,52 @@ export class SystemConfigPage {
     this.hierarchyLevels = this.configuration.getLocationHierarchyConfig();
   }
 
+  getHierarchyLevelKeys(){
+    return Object.getOwnPropertyNames(this.hierarchyLevels)
+  }
+
   setCodes(){
     this.codes = this.configuration.getSystemCodes();
   }
 
-  saveServerUrl(){
-    this.configuration.saveServerURL(this.url);
-    this.setEditing();
+  getCodeKeys(){
+    return Object.getOwnPropertyNames(this.codes);
   }
 
-  setEditing(){
+  saveServerUrl(){
+    this.configuration.saveServerURL(this.url);
     this.editing = !this.editing;
   }
 
-  saveLocationHierarchy(){
+  setEditing(){
+    //Possibility editing was canceled. Reset the text to display the original url.
+    if(this.editing)
+      this.url = this.configuration.getServerURL();
 
+    this.editing = !this.editing;
+  }
+
+  setLHEditing(){
+    if(this.editingLH)
+      this.hierarchyLevels = this.configuration.getLocationHierarchyConfig();
+
+    this.editingLH = !this.editingLH;
+  }
+
+  setCodeEditing(){
+    if(this.editingCodes)
+      this.codes = this.configuration.getSystemCodes();
+
+    this.editingCodes = !this.editingCodes;
+  }
+
+  saveLocationHierarchy(){
+    this.configuration.setLocationHierarchyConfig(this.hierarchyLevels);
+    this.editingLH = !this.editingLH;
+  }
+
+  saveCodes(){
+    this.configuration.saveSystemCodes(this.codes);
+    this.editingCodes = !this.editingCodes;
   }
 }
