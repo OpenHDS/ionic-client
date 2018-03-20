@@ -19,6 +19,11 @@ import { SystemConfigProvider} from "../system-config/system-config";
 export class LocationsProvider {
   private db: LocationDb;
 
+  openhdsLogin = {
+    username: 'admin',
+    password: 'test'
+  };
+
   constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {
     this.db = new LocationDb();
@@ -42,6 +47,8 @@ export class LocationsProvider {
     await this.http.get(url, {headers}).toPromise().then((data) => {
       locations = data['locations'];
       timestamp = data['timestamp'];
+    }).catch((err)  => {
+      throw "Error getting data occurred";
     });
 
     locations.forEach(x => {
@@ -53,7 +60,7 @@ export class LocationsProvider {
       };
       x.clientInsert = timestamp;
       x.processed = 1;
-    });
+    })
 
     await this.db.transaction('rw', this.db.locations, () => {
       this.db.locations.bulkPut(locations).catch(error => console.log(error))
@@ -69,7 +76,7 @@ export class LocationsProvider {
   //Pull updates from the server
   async updateLocationsList(){
     const url = this.systemConfig.getServerURL() + "locations2/pull/" + localStorage.getItem("lastUpdate");
-    return await this.loadData(url).catch(error => console.log(error));
+    return await this.loadData(url);
   }
 
   async saveDataLocally(loc: Location){
@@ -85,6 +92,7 @@ export class LocationsProvider {
       loc.uuid = UUID.UUID();
 
     loc.deleted = false;
+    loc.processed = 0;
     loc.clientInsert = new Date().getTime();
 
     await this.insert(loc);
@@ -95,7 +103,6 @@ export class LocationsProvider {
     const headers = new HttpHeaders().set('authorization',
       "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
 
-    if(this.networkConfig.isConnected()){
       //Get only data that needs to be sent to the server
       let postData = this.getNewServerLocationEntity(loc);
 
@@ -106,8 +113,10 @@ export class LocationsProvider {
       }, error => {
         let serverError = this.generateNewError(error, loc);
         this.errorsProvider.updateOrSetErrorStatus(serverError);
+
+        throw "Saving failed..."
       });
-    }
+
   }
 
   updateData(location: Location){
@@ -120,8 +129,12 @@ export class LocationsProvider {
 
     this.http.put(url, locations, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data['timestamp']);
+      location.processed = 1;
+      this.db.locations.put(location)
     }, err => {
-      this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(err, location));
+      if(err.errors[0] != null)
+        this.errorsProvider.updateOrSetErrorStatus(this.generateNewError(err, location));
+      throw "Updating failed...";
     });
 
   }
@@ -139,7 +152,6 @@ export class LocationsProvider {
       .filter(loc => loc.clientInsert > Number.parseInt(localStorage.getItem('lastUpdate')) || loc.processed == 0)
       .toArray();
 
-    console.log(offline);
     //Process and send data to server.
     offline.forEach(loc => {
       if(loc.processed)
@@ -147,6 +159,10 @@ export class LocationsProvider {
       else
         this.saveData(loc);
     })
+  }
+
+  getLocationDBCount(): Promise<Number>{
+    return this.db.locations.count();
   }
 
   //Creates a reduced version of a location to send to the server

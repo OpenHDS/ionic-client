@@ -40,6 +40,7 @@ export class SystemConfigPage {
     this.url = this.configuration.getServerURL();
   }
 
+
   setHierarchy(){
     this.hierarchyLevels = this.configuration.getLocationHierarchyConfig();
   }
@@ -59,6 +60,10 @@ export class SystemConfigPage {
   saveServerUrl(){
     this.configuration.saveServerURL(this.url);
     this.editing = !this.editing;
+
+  setUrl(){
+    this.systemConfig.setServerURL(this.url);
+    this.setEditing();
   }
 
   setEditing(){

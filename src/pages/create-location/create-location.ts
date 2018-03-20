@@ -58,8 +58,6 @@ export class CreateLocationPage {
      longitude:['', Validators.compose([Validators.required, Validators.pattern("(-?(\\d*\\.\\d{1}?\\d*|\\d{1,}))"), Validators.min(-180), Validators.max(180)])],
    });
 
-
-
     //Determine if error is being fixed.
     this.errorFix = this.navParams.get('fixError');
 
