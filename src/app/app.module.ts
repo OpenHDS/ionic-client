@@ -24,6 +24,8 @@ import { File} from "@ionic-native/file";
 import { SupervisorModePage } from "../pages/supervisor-mode/supervisor-mode";
 import { SynchronizeDbPage } from "../pages/synchronize-db/synchronize-db";
 import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
+import { LocationHierarchiesProvider } from '../providers/location-hierarchies/location-hierarchies';
+import {LocationHierarchyPage} from "../pages/entity-lists/location-hierarchy";
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
     SystemConfigPage,
     SupervisorModePage,
     SupervisorMenuPage,
-    SynchronizeDbPage
+    SynchronizeDbPage,
+    LocationHierarchyPage
   ],
 
   imports: [
@@ -55,7 +58,8 @@ import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
     SystemConfigPage,
     SupervisorModePage,
     SupervisorMenuPage,
-    SynchronizeDbPage
+    SynchronizeDbPage,
+    LocationHierarchyPage
   ],
 
   providers: [
@@ -68,7 +72,8 @@ import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
     LocationsProvider,
     ErrorsProvider,
     SystemConfigProvider,
-    File
+    File,
+    LocationHierarchiesProvider
   ]
 })
 

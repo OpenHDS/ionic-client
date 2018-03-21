@@ -41,7 +41,8 @@ export class CreateLocationPage {
     deleted: null,
     insertDate: null,
     clientInsert: null,
-    processed: 0
+    processed: 0,
+    selected: false
   };
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,

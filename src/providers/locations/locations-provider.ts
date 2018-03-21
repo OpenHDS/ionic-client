@@ -58,6 +58,7 @@ export class LocationsProvider {
       x.locationLevel = {
         extId: "MBI"
       };
+      x.selected = false;
       x.clientInsert = timestamp;
       x.processed = 1;
     })
@@ -92,6 +93,7 @@ export class LocationsProvider {
       loc.uuid = UUID.UUID();
 
     loc.deleted = false;
+    loc.selected = false;
     loc.processed = 0;
     loc.clientInsert = new Date().getTime();
 

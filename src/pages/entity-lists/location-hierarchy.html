@@ -6,20 +6,23 @@
 -->
 <ion-row>
   <ion-col col-4>
-    <button ion-button full *ngFor="let level of this.levels">{{level.name}}</button>
+    <button ion-button full *ngFor="let level of this.levels; let i = index" value="{{level.keyIdentifier}}" [disabled]="this.levelInHierarchy != level.keyIdentifier">{{level.name}}</button>
   </ion-col>
 
   <ion-col col-4>
     <ion-scroll scrollY="true">
-      <ion-list no-lines>
-        <ion-card *ngFor="let loc of this.locations" [color]="this.loc.selected ? 'light-secondary' : 'light'">
-          <ion-card-content>
-            <h1>{{loc.locationName}}</h1>
-            <h5>External Id: {{loc.extId}}</h5>
-            <button ion-button full outline (click)="this.selectLocation(loc)">Select</button>
-          </ion-card-content>
-        </ion-card>
-      </ion-list>
+      <div *ngFor="let level of this.levels">
+        <ion-list no-lines *ngIf="this.levelInHierarchy == level.keyIdentifier">
+          <ion-card *ngFor="let hier of this.filterByLevel(this.levelInHierarchy)">
+            <ion-card-content>
+              <h1>{{hier.name}}</h1>
+              <h5>External Id: {{hier.extId}}</h5>
+              <button ion-button full outline (click)="this.setSelectedLevel(this.levelInHierarchy, hier)">Select</button>
+            </ion-card-content>
+          </ion-card>
+        </ion-list>
+      </div>
+
     </ion-scroll>
   </ion-col>
 </ion-row>

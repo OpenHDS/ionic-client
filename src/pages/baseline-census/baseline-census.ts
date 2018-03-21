@@ -22,6 +22,8 @@ export class BaselineCensusPage {
   locationEnabled: boolean = true;
   individualsEnabled: boolean = false;
 
+
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public menuPopover: PopoverController) {
 
   }

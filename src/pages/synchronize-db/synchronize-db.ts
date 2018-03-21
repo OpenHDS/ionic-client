@@ -46,6 +46,7 @@ export class SynchronizeDbPage {
     await this.lhProvider.initHierarchy().catch((err) => this.locationLevelsSyncSuccess = false);
     loading.dismiss();
     this.publishSynchronizationEvent()
+
   }
   async syncLocations(){
     this.locationSyncSuccess = true;
@@ -63,6 +64,4 @@ export class SynchronizeDbPage {
   publishSynchronizationEvent(){
     this.events.publish('syncDb', true);
   }
-
-  async
 }

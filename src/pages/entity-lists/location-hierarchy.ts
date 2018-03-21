@@ -21,9 +21,11 @@ import {RefreshObservable} from "../../providers/RefreshObservable";
 export class LocationHierarchyPage implements OnInit{
   levelsObserver: RefreshObservable = new RefreshObservable();
   hierarchyObserver: RefreshObservable = new RefreshObservable();
-
-  hierarchy: Hierarchy[];
+  hierarchy: Hierarchy[] = [];
   levels: HierarchyLevels[];
+  selectedHierarchy: any = [];
+  levelInHierarchy: number = 2;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public ev: Events,
               public lhProvider: LocationHierarchiesProvider) {
     this.levelsObserver.subscribe(async (levels) => {
@@ -36,22 +38,21 @@ export class LocationHierarchyPage implements OnInit{
 
     this.ev.subscribe('syncDb', () => {
       this.lhProvider.getLevels().then(async (lvls) => this.levelsObserver.publishChange(lvls.sort((a,b) => {
-        if (a.keyIdentifier < b.keyIdentifier)
-          return a.keyIdentifier;
-        else
-          return b.keyIdentifier;
-      }))).catch(err => console.log(err));
+        return a.keyIdentifier - b.keyIdentifier;
+      }).filter(x => x.keyIdentifier > 1))).catch(err => console.log(err));
 
-      this.lhProvider.getHierarchy().then(async (locHierarchy) => this.hierarchyObserver
-        .publishChange(locHierarchy));
+      this.lhProvider.getHierarchy().then(async (locHierarchy) =>
+        this.hierarchyObserver.publishChange(locHierarchy));
     });
   }
 
   async ngOnInit(){
     this.levels = await this.lhProvider.getLevels();
+
+    //Process and setup of location hierarchy
     this.levels = this.levels.sort((a, b) => {
       return a.keyIdentifier - b.keyIdentifier;
-    });
+    }).filter(x => x.keyIdentifier > 1);
     this.hierarchy = await this.lhProvider.getHierarchy();
   }
 
@@ -59,23 +60,13 @@ export class LocationHierarchyPage implements OnInit{
     console.log('ionViewDidLoad LocationHierarchyPage');
   }
 
-  getLevel1(){
-    this.hierarchy.filter(x => x.level == this.levels[0])
+  filterByLevel(keyLevel){
+      return this.hierarchy.filter(x => x.level.keyIdentifier == keyLevel)
   }
 
-  getLevel2(){
-    this.hierarchy.filter(x => x.level == this.levels[1])
+  setSelectedLevel(levelInHierarchy, hier){
+    this.selectedHierarchy[levelInHierarchy] = hier;
+    this.levelInHierarchy++;
   }
 
-  getLevel3(){
-    this.hierarchy.filter(x => x.level == this.levels[2])
-  }
-
-  getLevel4(){
-    this.hierarchy.filter(x => x.level == this.levels[3])
-  }
-
-  getLevel5(){
-    this.hierarchy.filter(x => x.level == this.levels[4])
-  }
 }
