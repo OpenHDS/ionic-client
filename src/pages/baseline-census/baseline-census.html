@@ -8,7 +8,8 @@
   <ion-navbar>
     <ion-title>Baseline Census
       <button ion-button small color="dark" float-right icon-right (click)="displayMenu($event)">
-        Menu <ion-icon float-sm-right name="arrow-dropdown"></ion-icon>
+        Menu
+        <ion-icon float-sm-right name="arrow-dropdown"></ion-icon>
       </button>
     </ion-title>
   </ion-navbar>
@@ -16,6 +17,27 @@
 
 
 <ion-content padding>
-    <location-hierarchy></location-hierarchy>
-    <location-list></location-list>
+  <ion-row>
+    <ion-col col-4>
+      <div *ngFor="let level of this.levels; let i = index">
+        <button ion-button full [disabled]="this.selectedHierarchy[i + 1] == undefined && level != 'Region'" >{{level}}</button>
+        <div *ngIf="this.selectedHierarchy[i+2] != undefined">
+          <p ion-text>Name: {{this.selectedHierarchy[i +2].name}}</p>
+          <p ion-text>Ext. Id: {{this.selectedHierarchy[i +2].extId}}</p>
+        </div>
+      </div>
+      <button ion-button full [disabled]="this.selectedHierarchy[this.levels.length + 1] == undefined">Location</button>
+      <div *ngIf="this.selectedLocation != undefined">
+        <p ion-text> Name: {{this.selectedLocation.locationName}}</p>
+        <p ion-text> Ext ID: {{this.selectedLocation.extId}} </p>
+        <p ion-text> Latitude: {{this.selectedLocation.latitude}}</p>
+        <p ion-text> Longitude: {{this.selectedLocation.longitude}}</p>
+      </div>
+    </ion-col>
+    <ion-col>
+      <location-hierarchy (selectedHierarchy)="this.setSelectedHierarchy($event)" *ngIf="this.selectedHierarchy.length != this.levels.length + 2"></location-hierarchy>
+      <location-list (selectedLoc)="this.setLocation($event)" *ngIf="this.selectedHierarchy.length == this.levels.length + 2"></location-list>
+    </ion-col>
+  </ion-row>
+
 </ion-content>

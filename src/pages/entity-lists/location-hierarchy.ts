@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/location-hierarchies";
 import {HierarchyLevels} from "../../providers/location-hierarchies/hierarchy-levels-db";
@@ -22,12 +22,15 @@ export class LocationHierarchyPage implements OnInit{
   levelsObserver: RefreshObservable = new RefreshObservable();
   hierarchyObserver: RefreshObservable = new RefreshObservable();
   hierarchy: Hierarchy[] = [];
-  levels: HierarchyLevels[];
-  selectedHierarchy: any = [];
+  levels: HierarchyLevels[] = [];
+
+  @Output()
+  selectedHierarchy = new EventEmitter<Hierarchy>();
   levelInHierarchy: number = 2;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public ev: Events,
               public lhProvider: LocationHierarchiesProvider) {
+
     this.levelsObserver.subscribe(async (levels) => {
       this.levels = levels;
     });
@@ -65,8 +68,12 @@ export class LocationHierarchyPage implements OnInit{
   }
 
   setSelectedLevel(levelInHierarchy, hier){
-    this.selectedHierarchy[levelInHierarchy] = hier;
+    this.selectedHierarchy.emit(hier);
     this.levelInHierarchy++;
+  }
+
+  getLevelCount(){
+    return this.levels.length;
   }
 
 }

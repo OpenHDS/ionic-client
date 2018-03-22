@@ -94,4 +94,16 @@ export class SystemConfigProvider {
     }
   }
 
+  getLocationHierarchyLevelNames(){
+    var hierarchy = [];
+    for (var level in ConfigLabels.LOC_HIERARCHY_CONFIG) {
+      var lvl = ConfigLabels.LOC_HIERARCHY_CONFIG[level];
+      var val = localStorage.getItem(lvl);
+      if(val != "null" && val != "Country")
+        hierarchy.push(val);
+    }
+
+    return hierarchy;
+  }
+
 }

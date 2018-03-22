@@ -1,4 +1,4 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {IonicPage, Events, ModalController, NavController, NavParams} from 'ionic-angular';
 import {Location} from "../../providers/locations/locations-db";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
@@ -23,7 +23,7 @@ import {CreateLocationPage} from "../create-entities/create-location";
 export class LocationListPage {
   locationObserver: RefreshObservable = new RefreshObservable();
   locations: Location[];
-  selectedLoc: Location;
+  @Output() selectedLoc = new EventEmitter<Location>();
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider,
     public modalCtrl: ModalController, public networkConfig: NetworkConfigProvider) {
@@ -61,9 +61,8 @@ export class LocationListPage {
   }
 
   selectLocation(location: Location){
-    if(this.selectedLoc != null)
-      this.locations[this.locations.indexOf(this.selectedLoc)].selected = false;
-    this.selectedLoc = location;
-    location.selected = true
+    // if(this.selectedLoc != null)
+    //   this.locations[this.locations.indexOf(this.selectedLoc)].selected = false;
+    this.selectedLoc.emit(location);
   }
 }

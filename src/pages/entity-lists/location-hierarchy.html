@@ -6,10 +6,6 @@
 -->
 <ion-row>
   <ion-col col-4>
-    <button ion-button full *ngFor="let level of this.levels; let i = index" value="{{level.keyIdentifier}}" [disabled]="this.levelInHierarchy != level.keyIdentifier">{{level.name}}</button>
-  </ion-col>
-
-  <ion-col col-4>
     <ion-scroll scrollY="true">
       <div *ngFor="let level of this.levels">
         <ion-list no-lines *ngIf="this.levelInHierarchy == level.keyIdentifier">
@@ -22,7 +18,6 @@
           </ion-card>
         </ion-list>
       </div>
-
     </ion-scroll>
   </ion-col>
 </ion-row>
