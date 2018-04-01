@@ -33,12 +33,21 @@
         <p ion-text> Latitude: {{this.selectedLocation.latitude}}</p>
         <p ion-text> Longitude: {{this.selectedLocation.longitude}}</p>
       </div>
+      <button ion-button full [disabled]="this.selectedLocation == undefined">Social Group</button>
+      <div *ngIf="this.selectedSocialGrp != undefined">
+        <p ion-text> Group Head: {{this.selectedSocialGrp.groupHead.firstName}} {{this.selectedSocialGrp.groupHead.lastName}}</p>
+        <p ion-text> Group Name: {{this.selectedSocialGrp.groupName}}</p>
+        <p ion-text> Ext ID: {{this.selectedSocialGrp.extId}} </p>
+      </div>
     </ion-col>
     <ion-col>
       <location-hierarchy (selectedHierarchy)="this.setSelectedHierarchy($event)" *ngIf="this.selectedHierarchy.length != this.levels.length + 2"></location-hierarchy>
-      <location-list (selectedLoc)="this.setLocation($event)" *ngIf="this.selectedHierarchy.length == this.levels.length + 2"
+      <location-list (selectedLoc)="this.setLocation($event)" *ngIf="this.selectedHierarchy.length == this.levels.length + 2 && this.selectedLocation == undefined"
                      [parentLevel]="this.selectedHierarchy[this.selectedHierarchy.length-1]"></location-list>
+      <social-groups (selectedSg)="this.setSocialGroup($event)" [sgLocation]="this.selectedLocation"
+                      *ngIf="this.selectedLocation != undefined"></social-groups>
     </ion-col>
+
   </ion-row>
 
 </ion-content>

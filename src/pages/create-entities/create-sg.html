@@ -1,0 +1,129 @@
+<!--
+  Generated template for the CreateLocationModalPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>Create a Location</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!this.netConfig.isConnected()">
+    <ion-card color="danger">
+      <ion-card-content>
+        <p>There is currently no network connection. You data will be uploaded to the server when there
+          is a connection!</p>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+  <div padding-left padding-right>
+    <!-- Location Entry Form -->
+    <form [formGroup]="locationForm" (ngSubmit)="popView()">
+      <ion-item>
+        <ion-label floating> Fieldworker </ion-label>
+        <ion-input type="text" value="{{this.sysConfig.getTestingFieldworker()}}"disabled></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Subvillage </ion-label>
+        <ion-input type="text" value="{{this.loc.locationLevel.name}}" disabled></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Location Name </ion-label>
+        <ion-input ion-text formControlName="name" type="text" name="locName"  [(ngModel)]="this.loc.locationName"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.name.hasError('required') && locationForm.controls.name.dirty">
+        <p ion-text color="danger">A location name is required.</p>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.name.hasError('pattern') && locationForm.controls.name.dirty">
+        <p ion-text color="danger">A location name must match this pattern [a-zA-Z] and not begin with spaces..</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> External Id </ion-label>
+        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.loc.extId"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.extId.hasError('required') && locationForm.controls.extId.dirty">
+        <p ion-text color="danger">A location external ID is required.</p>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.extId.hasError('pattern') && locationForm.controls.extId.dirty">
+        <p ion-text color="danger">A location external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Location Type </ion-label>
+        <ion-input name="locType" formControlName="type" [(ngModel)]="this.loc.locationType"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="locationForm.controls.type.hasError('required') && locationForm.controls.type.touched">
+        <p ion-text color="danger">A location type is required.</p>
+      </ion-item>
+
+      <ion-item *ngIf="locationForm.controls.type.hasError('pattern') && locationForm.controls.type.hasError('pattern') && locationForm.controls.type.touched">
+        <p ion-text color="danger">A location type must be Urban (URB) or Rural (RUR) and not begin with spaces.</p>
+      </ion-item>
+      <div *ngIf="this.netConfig.isConnected(); else elseBlock">
+        <ion-item>
+          <ion-label floating>Latitude </ion-label>
+          <ion-input name="latitude" formControlName="latitude" [disabled]="!this.geoloc" [(ngModel)]="this.loc.latitude"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="locationForm.controls.latitude.hasError('required') && locationForm.controls.latitude.touched">
+          <p ion-text color="danger">A location type is required.</p>
+        </ion-item>
+        <ion-item *ngIf="locationForm.controls.latitude.hasError('min')">
+          <p ion-text color="danger">A location latitude must be greater than or equal to -180 degrees.</p>
+        </ion-item>
+        <ion-item *ngIf="locationForm.controls.latitude.hasError('max')">
+          <p ion-text color="danger">A location latitude must be less than or equal to 180 degrees.</p>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>Longitude </ion-label>
+          <ion-input name="longitude" formControlName="longitude" [disabled]="!this.geoloc" [(ngModel)]="this.loc.longitude"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="locationForm.controls.longitude.hasError('required') && locationForm.controls.longitude.touched">
+          <p ion-text color="danger">A location type is required.</p>
+        </ion-item>
+        <ion-item *ngIf="locationForm.controls.longitude.hasError('min')">
+          <p ion-text color="danger">A location longitude must be greater than or equal to -180 degrees.</p>
+        </ion-item>
+        <ion-item *ngIf="locationForm.controls.longitude.hasError('max')">
+          <p ion-text color="danger">A location longitude must be less than or equal to 180 degrees.</p>
+        </ion-item>
+        <ion-item>
+          <button ion-button type="button" (click)="this.getGeolocationInfo()">Geolocation</button>
+        </ion-item>
+      </div>
+        <ng-template #elseBlock>
+          <ion-item>
+            <ion-label floating>Latitude </ion-label>
+            <ion-input name="latitude" formControlName="latitude" [(ngModel)]="this.loc.latitude"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="locationForm.controls.latitude.hasError('required') && locationForm.controls.latitude.touched">
+            <p ion-text color="danger">A location type is required.</p>
+          </ion-item>
+          <ion-item *ngIf="locationForm.controls.latitude.hasError('min')">
+            <p ion-text color="danger">A location latitude must be greater than or equal to -180 degrees.</p>
+          </ion-item>
+          <ion-item *ngIf="locationForm.controls.latitude.hasError('max')">
+            <p ion-text color="danger">A location latitude must be less than or equal to 180 degrees.</p>
+          </ion-item>
+          <ion-item>
+            <ion-label floating>Longitude </ion-label>
+            <ion-input name="longitude" formControlName="longitude"  [(ngModel)]="this.loc.longitude"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="locationForm.controls.longitude.hasError('required') && locationForm.controls.longitude.touched">
+            <p ion-text color="danger">A location type is required.</p>
+          </ion-item>
+          <ion-item *ngIf="locationForm.controls.longitude.hasError('min')">
+            <p ion-text color="danger">A location longitude must be greater than or equal to -180 degrees.</p>
+          </ion-item>
+          <ion-item *ngIf="locationForm.controls.longitude.hasError('max')">
+            <p ion-text color="danger">A location longitude must be less than or equal to 180 degrees.</p>
+          </ion-item>
+        </ng-template>
+
+
+      <button ion-button round color="dark" [disabled]="!locationForm.valid" type="submit"> Create Location </button>
+    </form>
+  </div>
+</ion-content>

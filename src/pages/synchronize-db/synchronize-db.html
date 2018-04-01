@@ -16,12 +16,20 @@
           <ng-template [ngIf]="this.locationSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
           <ng-template [ngIf]="!this.locationSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
         </ion-card-header>
+
+        <ion-card-header>
+          <h3>Social Groups</h3>
+          <ng-template [ngIf]="this.sgSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.sgSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
+        </ion-card-header>
       </ion-scroll>
     </ion-col>
     <ion-col col-4>
       <button ion-button full outline (click)="syncDatabase()">Synchronize Database</button>
       <button ion-button full outline (click)="syncLocLevels()">Synchronize Only Location Hierarchy</button>
       <button ion-button full outline (click)="syncLocations()">Synchronize Only Location</button>
+      <button ion-button full outline (click)="syncSocialGroups()">Synchronize Only Social Groups</button>
+
     </ion-col>
   </ion-row>
 </ion-content>

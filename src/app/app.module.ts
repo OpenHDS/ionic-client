@@ -26,6 +26,9 @@ import { SynchronizeDbPage } from "../pages/synchronize-db/synchronize-db";
 import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
 import { LocationHierarchiesProvider } from '../providers/location-hierarchies/location-hierarchies';
 import {LocationHierarchyPage} from "../pages/entity-lists/location-hierarchy";
+import { SocialGroupProvider } from '../providers/social-group/social-group';
+import { IndividualProvider } from '../providers/individual/individual';
+import {SocialGroupsPage} from "../pages/entity-lists/social-groups";
 
 @NgModule({
   declarations: [
@@ -39,7 +42,8 @@ import {LocationHierarchyPage} from "../pages/entity-lists/location-hierarchy";
     SupervisorModePage,
     SupervisorMenuPage,
     SynchronizeDbPage,
-    LocationHierarchyPage
+    LocationHierarchyPage,
+    SocialGroupsPage
   ],
 
   imports: [
@@ -59,7 +63,8 @@ import {LocationHierarchyPage} from "../pages/entity-lists/location-hierarchy";
     SupervisorModePage,
     SupervisorMenuPage,
     SynchronizeDbPage,
-    LocationHierarchyPage
+    LocationHierarchyPage,
+    SocialGroupsPage
   ],
 
   providers: [
@@ -73,7 +78,9 @@ import {LocationHierarchyPage} from "../pages/entity-lists/location-hierarchy";
     ErrorsProvider,
     SystemConfigProvider,
     File,
-    LocationHierarchiesProvider
+    LocationHierarchiesProvider,
+    SocialGroupProvider,
+    IndividualProvider
   ]
 })
 

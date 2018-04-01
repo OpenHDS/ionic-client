@@ -3,6 +3,7 @@ import { Events, IonicPage, LoadingController } from 'ionic-angular';
 import { LocationsProvider } from "../../providers/locations/locations-provider";
 import { RefreshObservable } from "../../providers/RefreshObservable";
 import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/location-hierarchies";
+import {SocialGroupProvider} from "../../providers/social-group/social-group";
 
 /**
  * Generated class for the SynchronizeDbPage page.
@@ -18,12 +19,14 @@ import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/
 })
 export class SynchronizeDbPage {
   synchonizeObserver: RefreshObservable = new RefreshObservable();
-  locationSyncSuccess: boolean;
   locationLevelsSyncSuccess: boolean;
+  locationSyncSuccess: boolean;
+  sgSyncSuccess: boolean;
 
 
   constructor(public events: Events, public loadingCtrl: LoadingController,
-              public locProvider: LocationsProvider, public lhProvider: LocationHierarchiesProvider) {
+              public lhProvider: LocationHierarchiesProvider, public locProvider: LocationsProvider,
+              public sgProvider: SocialGroupProvider) {
   }
 
   ionViewDidLoad() {
@@ -31,7 +34,9 @@ export class SynchronizeDbPage {
   }
 
   async syncDatabase(){
+    await this.syncLocLevels()
     await this.syncLocations();
+    await this.syncSocialGroups();
   }
 
   async syncLocLevels(){
@@ -57,6 +62,18 @@ export class SynchronizeDbPage {
     loading.present();
     await this.locProvider.initProvider().catch((err) => { this.locationSyncSuccess = false; });
     await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
+    loading.dismiss();
+    this.publishSynchronizationEvent()
+  }
+
+  async syncSocialGroups(){
+    this.sgSyncSuccess = true;
+    let loading = this.loadingCtrl.create({
+      content: "Synchronizing social groups... Please wait"
+    });
+
+    loading.present();
+    await this.sgProvider.initProvider().catch((err) => { this.sgSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent()
   }
