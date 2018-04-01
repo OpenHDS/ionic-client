@@ -36,7 +36,8 @@
     </ion-col>
     <ion-col>
       <location-hierarchy (selectedHierarchy)="this.setSelectedHierarchy($event)" *ngIf="this.selectedHierarchy.length != this.levels.length + 2"></location-hierarchy>
-      <location-list (selectedLoc)="this.setLocation($event)" *ngIf="this.selectedHierarchy.length == this.levels.length + 2"></location-list>
+      <location-list (selectedLoc)="this.setLocation($event)" *ngIf="this.selectedHierarchy.length == this.levels.length + 2"
+                     [parentLevel]="this.selectedHierarchy[this.selectedHierarchy.length-1]"></location-list>
     </ion-col>
   </ion-row>
 

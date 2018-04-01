@@ -61,7 +61,7 @@ export class CreateLocationPage {
 
     //Determine if error is being fixed.
     this.errorFix = this.navParams.get('fixError');
-
+    this.loc.locationLevel = this.navParams.get("parentLevel");
     if(this.errorFix){
       //If error being fixed, set the location for the modal to the location being fixed.
       this.loc = this.navParams.get("location");

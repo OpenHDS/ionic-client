@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, OnInit, Input, ViewChild, AfterViewInit} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams, PopoverController} from 'ionic-angular';
 import { LocationListPage } from "../entity-lists/location-list";
 import { Location } from "../../providers/locations/locations-db";
@@ -19,13 +19,16 @@ import {Hierarchy} from "../../providers/location-hierarchies/hierarchy-db";
   templateUrl: 'baseline-census.html',
 })
 
-export class BaselineCensusPage {
-  levels: any;
+export class BaselineCensusPage implements OnInit{
+  levels = ["Region", "District", "Village", "Subvillage"];
+
   selectedHierarchy: Hierarchy[] = [];
   selectedLocation: Location;
   constructor(public navCtrl: NavController, public navParams: NavParams, public menuPopover: PopoverController, public ev: Events,
               public prop: SystemConfigProvider) {
-    this.levels =  this.prop.getLocationHierarchyLevelNames();
+  }
+
+  ngOnInit(){
   }
 
 

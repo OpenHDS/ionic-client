@@ -30,7 +30,7 @@ export class LocationsProvider {
   }
 
   async initProvider(){
-    let dataUrl = this.systemConfig.getServerURL() + "locations2";
+    let dataUrl = this.systemConfig.getServerURL() + "/locations2";
     if(localStorage.getItem('lastUpdate') == null){
       return await this.loadData(dataUrl);
     } else {
@@ -40,7 +40,7 @@ export class LocationsProvider {
 
   private async loadData(url: string) {
     const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
+      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
     let locations: Location[] = [];
     let timestamp = null;
@@ -55,9 +55,7 @@ export class LocationsProvider {
       x.collectedBy = {
         extId: "FWDW1"
       };
-      x.locationLevel = {
-        extId: "MBI"
-      };
+
       x.selected = false;
       x.clientInsert = timestamp;
       x.processed = 1;
@@ -76,7 +74,7 @@ export class LocationsProvider {
 
   //Pull updates from the server
   async updateLocationsList(){
-    const url = this.systemConfig.getServerURL() + "locations2/pull/" + localStorage.getItem("lastUpdate");
+    const url = this.systemConfig.getServerURL() + "/locations2/pull/" + localStorage.getItem("lastUpdate");
     return await this.loadData(url);
   }
 
@@ -85,9 +83,6 @@ export class LocationsProvider {
       extId: "FWEK1D"
     };
 
-    loc.locationLevel =  {
-      extId: "MBI"
-    };
 
     if(!loc.uuid)
       loc.uuid = UUID.UUID();
@@ -103,12 +98,12 @@ export class LocationsProvider {
   //Save a location. If network connection save locally and to the server.
   async saveData(loc: Location){
     const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
+      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
       //Get only data that needs to be sent to the server
       let postData = this.getNewServerLocationEntity(loc);
 
-      this.http.post(this.systemConfig.getServerURL() + "locations2/", postData, {headers}).subscribe(async (data) => {
+      this.http.post(this.systemConfig.getServerURL() + "/locations2/", postData, {headers}).subscribe(async (data) => {
         loc.processed = 1;
         await this.insert(loc);
         localStorage.setItem('lastUpdate', data['timestamp'])
@@ -123,11 +118,11 @@ export class LocationsProvider {
 
   updateData(location: Location){
     const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
+      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
     var sendData = this.getNewServerLocationEntity(location);
     let locations = {locations: sendData, timestamp: location.clientInsert};
-    const url = this.systemConfig.getServerURL() + "locations2/pushUpdates";
+    const url = this.systemConfig.getServerURL() + "/locations2/pushUpdates";
 
     this.http.put(url, locations, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data['timestamp']);

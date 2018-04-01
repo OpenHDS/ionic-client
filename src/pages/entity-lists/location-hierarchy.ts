@@ -21,6 +21,7 @@ import {RefreshObservable} from "../../providers/RefreshObservable";
 export class LocationHierarchyPage implements OnInit{
   levelsObserver: RefreshObservable = new RefreshObservable();
   hierarchyObserver: RefreshObservable = new RefreshObservable();
+  parent: Hierarchy;
   hierarchy: Hierarchy[] = [];
   levels: HierarchyLevels[] = [];
 
@@ -64,10 +65,15 @@ export class LocationHierarchyPage implements OnInit{
   }
 
   filterByLevel(keyLevel){
-      return this.hierarchy.filter(x => x.level.keyIdentifier == keyLevel)
+    if(keyLevel != 2)
+      return this.hierarchy.filter(x => x.level.keyIdentifier == keyLevel && x.parent.extId == this.parent.extId);
+    else
+      return this.hierarchy.filter(x => x.level.keyIdentifier == keyLevel);
   }
 
   setSelectedLevel(levelInHierarchy, hier){
+    //Set the value selected in the hierarchy as the parent to to filter next level for values associated
+    this.parent = hier;
     this.selectedHierarchy.emit(hier);
     this.levelInHierarchy++;
   }

@@ -1,4 +1,5 @@
 import Dexie from 'dexie';
+import {Hierarchy} from "../location-hierarchies/hierarchy-db";
 
 export class LocationDb extends Dexie {
   locations: Dexie.Table<Location, string>;
@@ -20,7 +21,7 @@ export interface Location{
   accuracy: number;
   altitude: number;
   collectedBy: {};
-  locationLevel: {};
+  locationLevel: Hierarchy;
   deleted: boolean;
   insertDate: Date;
   clientInsert: number;

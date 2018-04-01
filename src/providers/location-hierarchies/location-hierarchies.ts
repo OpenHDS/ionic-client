@@ -17,6 +17,11 @@ export class LocationHierarchiesProvider {
   levelsDb: HierarchyLevelsDb;
   locHierarchyDb: HierarchyDb;
 
+  openhdsLogin = {
+    username: 'admin',
+    password: 'test'
+  };
+
   constructor(public http: HttpClient, public systemConfig: SystemConfigProvider) {
     this.levelsDb = new HierarchyLevelsDb();
     this.locHierarchyDb = new HierarchyDb();
@@ -32,7 +37,7 @@ export class LocationHierarchiesProvider {
 
   private async loadLevels(url: string) {
     const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
+      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
     let levels: HierarchyLevels[] = [];
     let timestamp = null;
@@ -55,7 +60,7 @@ export class LocationHierarchiesProvider {
 
   private async loadLocationHierarchyData(url: string) {
     const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
+      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
 
     let hierarchy: Hierarchy[] = [];
     let timestamp = null;
