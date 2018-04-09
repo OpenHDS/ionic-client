@@ -1,0 +1,99 @@
+<!--
+  Generated template for the CreateLocationModalPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <div *ngIf="this.createHead; else elseBlock">
+      <ion-title>Create Social Group Head</ion-title>
+    </div>
+    <ng-template #elseBlock>
+      <ion-title>Create an Individual</ion-title>
+    </ng-template>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!this.netConfig.isConnected()">
+    <ion-card color="danger">
+      <ion-card-content>
+        <p>There is currently no network connection. You data will be uploaded to the server when there
+          is a connection!</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <div padding-left padding-right>
+    <!-- Social Group Entry Form -->
+    <form  [formGroup]="individualForm" (ngSubmit)="popView()">
+      <ion-item>
+        <ion-label floating> Fieldworker </ion-label>
+        <ion-input type="text" value="{{this.sysConfig.getTestingFieldworker()}}"disabled></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> External Id </ion-label>
+        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.individual.extId"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.extId.hasError('required') && individualForm.controls.extId.dirty">
+        <p ion-text color="danger">A individual external ID is required.</p>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.extId.hasError('pattern') && individualForm.controls.extId.dirty">
+        <p ion-text color="danger">A individual external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>First Name </ion-label>
+        <ion-input name="type" formControlName="firstName" [(ngModel)]="this.individual.firstName"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.firstName.hasError('required') && individualForm.controls.firstName.touched">
+        <p ion-text color="danger">A first name is required.</p>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.firstName.hasError('pattern') && individualForm.controls.firstName.touched">
+        <p ion-text color="danger">The first name of an individual can only contain characters a-z and A-Z</p>
+      </ion-item>
+      <ion-item>
+      <ion-label floating> Middle Name </ion-label>
+      <ion-input ion-text formControlName="middleName" type="text" name="name"  [(ngModel)]="this.individual.middleName"></ion-input>
+    </ion-item>
+      <ion-item *ngIf="individualForm.controls.middleName.hasError('pattern') && individualForm.controls.middleName.dirty">
+        <p ion-text color="danger">A middle name must match this pattern [a-zA-Z] and not begin with spaces.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Last Name </ion-label>
+        <ion-input ion-text formControlName="middleName" type="text" name="name"  [(ngModel)]="this.individual.lastName"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.firstName.hasError('required') && individualForm.controls.firstName.touched">
+        <p ion-text color="danger">A last name is required.</p>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.lastName.hasError('pattern') && individualForm.controls.lastName.dirty">
+        <p ion-text color="danger">A last name must match this pattern [a-zA-Z] and not begin with spaces.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Date of Birth </ion-label>
+        <ion-input ion-text formControlName="dob" type="date" name="name"  [(ngModel)]="this.individual.dob"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.dob.hasError('required') && individualForm.controls.dob.dirty">
+        <p ion-text color="danger">A date of birth is required.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Partial Date </ion-label>
+        <ion-input ion-text formControlName="dobAspect" type="text" name="name"  [(ngModel)]="this.individual.dobAspect"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.dobAspect.hasError('required') && individualForm.controls.dobAspect.dirty">
+        <p ion-text color="danger">A partial date is required.</p>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.dobAspect.hasError('min') && individualForm.controls.dobAspect.hasError('max')
+          && individualForm.controls.dobAspect.dirty">
+        <p ion-text color="danger">A partial date is (1) for exact, and (2) for approximate</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Gender </ion-label>
+        <ion-input ion-text formControlName="gender" type="text" name="gender"  [(ngModel)]="this.individual.gender"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.gender.hasError('required') && individualForm.controls.gender.dirty">
+        <p ion-text color="danger">A gender is required.</p>
+      </ion-item>
+      <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Individual </button>
+    </form>
+  </div>
+</ion-content>

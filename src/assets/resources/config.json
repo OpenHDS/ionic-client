@@ -13,6 +13,8 @@
   "locationHierarchyLevel8": null,
   "locationHierarchyLevel9": null,
 
+  "socialGroupLookupLevel": 5,
+
   "minAgeOfMarriage": 12,
   "dataStatusClosed": "C",
   "yesResponse" : "Y",

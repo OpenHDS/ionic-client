@@ -1,7 +1,7 @@
 import Dexie from 'dexie';
 
 export class IndividualDb extends Dexie {
-  individuals: Dexie.Table<Location, string>;
+  individuals: Dexie.Table<Individual, string>;
 
   constructor() {
     super("Individual");
