@@ -60,9 +60,9 @@
       </ion-item>
       <ion-item>
         <ion-label floating> Last Name </ion-label>
-        <ion-input ion-text formControlName="middleName" type="text" name="name"  [(ngModel)]="this.individual.lastName"></ion-input>
+        <ion-input ion-text formControlName="lastName" type="text" name="name"  [(ngModel)]="this.individual.lastName"></ion-input>
       </ion-item>
-      <ion-item *ngIf="individualForm.controls.firstName.hasError('required') && individualForm.controls.firstName.touched">
+      <ion-item *ngIf="individualForm.controls.lastName.hasError('required') && individualForm.controls.lastName.touched">
         <p ion-text color="danger">A last name is required.</p>
       </ion-item>
       <ion-item *ngIf="individualForm.controls.lastName.hasError('pattern') && individualForm.controls.lastName.dirty">

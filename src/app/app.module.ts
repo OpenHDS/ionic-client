@@ -29,6 +29,8 @@ import {LocationHierarchyPage} from "../pages/entity-lists/location-hierarchy";
 import { SocialGroupProvider } from '../providers/social-group/social-group';
 import { IndividualProvider } from '../providers/individual/individual';
 import {SocialGroupsPage} from "../pages/entity-lists/social-groups";
+import {CreateSocialGroupPage} from "../pages/create-entities/create-sg";
+import {CreateIndividualPage} from "../pages/create-entities/create-individual";
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import {SocialGroupsPage} from "../pages/entity-lists/social-groups";
     SupervisorMenuPage,
     SynchronizeDbPage,
     LocationHierarchyPage,
-    SocialGroupsPage
+    SocialGroupsPage,
+    CreateSocialGroupPage,
+    CreateIndividualPage
   ],
 
   imports: [
@@ -64,7 +68,9 @@ import {SocialGroupsPage} from "../pages/entity-lists/social-groups";
     SupervisorMenuPage,
     SynchronizeDbPage,
     LocationHierarchyPage,
-    SocialGroupsPage
+    SocialGroupsPage,
+    CreateSocialGroupPage,
+    CreateIndividualPage
   ],
 
   providers: [

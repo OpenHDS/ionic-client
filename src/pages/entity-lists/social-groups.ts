@@ -4,6 +4,7 @@ import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {RefreshObservable} from "../../providers/RefreshObservable";
 import {SocialGroup} from "../../providers/social-group/socialGroup-db";
 import {Location} from "../../providers/locations/locations-db";
+import {CreateSocialGroupPage} from "../create-entities/create-sg";
 
 /**
  * Generated class for the SocialGroupsPage page.
@@ -25,6 +26,16 @@ export class SocialGroupsPage {
   selectedSGDisplay: SocialGroup;
 
   constructor(public navCtrl: NavController, public ev: Events, public navParams: NavParams, public sgProvider: SocialGroupProvider) {
+    this.ev.subscribe("submitSG", (sg) => {
+      console.log(sg.sg);
+      this.sgProvider.initProvider().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err))
+        .then(() =>
+          {
+            this.socialGroups = this.filterByLocationExtId();
+            this.selectSocialGroup(sg.sg)
+          });
+    });
+
     this.ev.subscribe('syncDb', () => {
       this.sgProvider.initProvider().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err));
     });
@@ -60,5 +71,9 @@ export class SocialGroupsPage {
     this.selectedSGDisplay = socialGroup;
     socialGroup.selected = true;
     this.selectedSg.emit(socialGroup);
+  }
+
+  goToCreateSgPage(){
+    this.navCtrl.push(CreateSocialGroupPage, {sgLocation: this.sgLocation});
   }
 }

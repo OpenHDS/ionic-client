@@ -6,7 +6,7 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>Create a Location</ion-title>
+    <ion-title>Create a Social Group</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -18,112 +18,50 @@
           is a connection!</p>
       </ion-card-content>
     </ion-card>
-
   </div>
   <div padding-left padding-right>
-    <!-- Location Entry Form -->
-    <form [formGroup]="locationForm" (ngSubmit)="popView()">
+    <!-- Social Group Entry Form -->
+    <form  [formGroup]="sgForm" (ngSubmit)="createHead()">
       <ion-item>
         <ion-label floating> Fieldworker </ion-label>
         <ion-input type="text" value="{{this.sysConfig.getTestingFieldworker()}}"disabled></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label floating> Subvillage </ion-label>
-        <ion-input type="text" value="{{this.loc.locationLevel.name}}" disabled></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> Location Name </ion-label>
-        <ion-input ion-text formControlName="name" type="text" name="locName"  [(ngModel)]="this.loc.locationName"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="locationForm.controls.name.hasError('required') && locationForm.controls.name.dirty">
-        <p ion-text color="danger">A location name is required.</p>
-      </ion-item>
-      <ion-item *ngIf="locationForm.controls.name.hasError('pattern') && locationForm.controls.name.dirty">
-        <p ion-text color="danger">A location name must match this pattern [a-zA-Z] and not begin with spaces..</p>
+        <ion-label floating> Location Id </ion-label>
+        <ion-input type="text" value="{{this.navParams.get('sgLocation')}}"disabled></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating> External Id </ion-label>
-        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.loc.extId"></ion-input>
+        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.sg.extId"></ion-input>
       </ion-item>
-      <ion-item *ngIf="locationForm.controls.extId.hasError('required') && locationForm.controls.extId.dirty">
-        <p ion-text color="danger">A location external ID is required.</p>
+      <ion-item *ngIf="sgForm.controls.extId.hasError('required') && sgForm.controls.extId.dirty">
+        <p ion-text color="danger">A social group external ID is required.</p>
       </ion-item>
-      <ion-item *ngIf="locationForm.controls.extId.hasError('pattern') && locationForm.controls.extId.dirty">
-        <p ion-text color="danger">A location external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
+      <ion-item *ngIf="sgForm.controls.extId.hasError('pattern') && sgForm.controls.extId.dirty">
+        <p ion-text color="danger">A social group external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
       </ion-item>
       <ion-item>
-        <ion-label floating>Location Type </ion-label>
-        <ion-input name="locType" formControlName="type" [(ngModel)]="this.loc.locationType"></ion-input>
+        <ion-label floating>Group Type </ion-label>
+        <ion-input name="type" formControlName="type" [(ngModel)]="this.sg.groupType"></ion-input>
       </ion-item>
-      <ion-item *ngIf="locationForm.controls.type.hasError('required') && locationForm.controls.type.touched">
-        <p ion-text color="danger">A location type is required.</p>
+      <ion-item *ngIf="sgForm.controls.type.hasError('required') && sgForm.controls.type.touched">
+        <p ion-text color="danger">A social group type is required.</p>
       </ion-item>
 
-      <ion-item *ngIf="locationForm.controls.type.hasError('pattern') && locationForm.controls.type.hasError('pattern') && locationForm.controls.type.touched">
-        <p ion-text color="danger">A location type must be Urban (URB) or Rural (RUR) and not begin with spaces.</p>
+      <ion-item *ngIf="sgForm.controls.type.hasError('pattern') && sgForm.controls.type.touched">
+        <p ion-text color="danger">A social group type must be Urban (URB) or Rural (RUR) and not begin with spaces.</p>
       </ion-item>
-      <div *ngIf="this.netConfig.isConnected(); else elseBlock">
-        <ion-item>
-          <ion-label floating>Latitude </ion-label>
-          <ion-input name="latitude" formControlName="latitude" [disabled]="!this.geoloc" [(ngModel)]="this.loc.latitude"></ion-input>
-        </ion-item>
-        <ion-item *ngIf="locationForm.controls.latitude.hasError('required') && locationForm.controls.latitude.touched">
-          <p ion-text color="danger">A location type is required.</p>
-        </ion-item>
-        <ion-item *ngIf="locationForm.controls.latitude.hasError('min')">
-          <p ion-text color="danger">A location latitude must be greater than or equal to -180 degrees.</p>
-        </ion-item>
-        <ion-item *ngIf="locationForm.controls.latitude.hasError('max')">
-          <p ion-text color="danger">A location latitude must be less than or equal to 180 degrees.</p>
-        </ion-item>
-        <ion-item>
-          <ion-label floating>Longitude </ion-label>
-          <ion-input name="longitude" formControlName="longitude" [disabled]="!this.geoloc" [(ngModel)]="this.loc.longitude"></ion-input>
-        </ion-item>
-        <ion-item *ngIf="locationForm.controls.longitude.hasError('required') && locationForm.controls.longitude.touched">
-          <p ion-text color="danger">A location type is required.</p>
-        </ion-item>
-        <ion-item *ngIf="locationForm.controls.longitude.hasError('min')">
-          <p ion-text color="danger">A location longitude must be greater than or equal to -180 degrees.</p>
-        </ion-item>
-        <ion-item *ngIf="locationForm.controls.longitude.hasError('max')">
-          <p ion-text color="danger">A location longitude must be less than or equal to 180 degrees.</p>
-        </ion-item>
-        <ion-item>
-          <button ion-button type="button" (click)="this.getGeolocationInfo()">Geolocation</button>
-        </ion-item>
-      </div>
-        <ng-template #elseBlock>
-          <ion-item>
-            <ion-label floating>Latitude </ion-label>
-            <ion-input name="latitude" formControlName="latitude" [(ngModel)]="this.loc.latitude"></ion-input>
-          </ion-item>
-          <ion-item *ngIf="locationForm.controls.latitude.hasError('required') && locationForm.controls.latitude.touched">
-            <p ion-text color="danger">A location type is required.</p>
-          </ion-item>
-          <ion-item *ngIf="locationForm.controls.latitude.hasError('min')">
-            <p ion-text color="danger">A location latitude must be greater than or equal to -180 degrees.</p>
-          </ion-item>
-          <ion-item *ngIf="locationForm.controls.latitude.hasError('max')">
-            <p ion-text color="danger">A location latitude must be less than or equal to 180 degrees.</p>
-          </ion-item>
-          <ion-item>
-            <ion-label floating>Longitude </ion-label>
-            <ion-input name="longitude" formControlName="longitude"  [(ngModel)]="this.loc.longitude"></ion-input>
-          </ion-item>
-          <ion-item *ngIf="locationForm.controls.longitude.hasError('required') && locationForm.controls.longitude.touched">
-            <p ion-text color="danger">A location type is required.</p>
-          </ion-item>
-          <ion-item *ngIf="locationForm.controls.longitude.hasError('min')">
-            <p ion-text color="danger">A location longitude must be greater than or equal to -180 degrees.</p>
-          </ion-item>
-          <ion-item *ngIf="locationForm.controls.longitude.hasError('max')">
-            <p ion-text color="danger">A location longitude must be less than or equal to 180 degrees.</p>
-          </ion-item>
-        </ng-template>
-
-
-      <button ion-button round color="dark" [disabled]="!locationForm.valid" type="submit"> Create Location </button>
+      <ion-item>
+        <ion-label floating> Group Name </ion-label>
+        <ion-input ion-text formControlName="name" type="text" name="name"  [(ngModel)]="this.sg.groupName"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="sgForm.controls.name.hasError('required') && sgForm.controls.name.dirty">
+        <p ion-text color="danger">A social group name is required.</p>
+      </ion-item>
+      <ion-item *ngIf="sgForm.controls.name.hasError('pattern') && sgForm.controls.name.dirty">
+        <p ion-text color="danger">A social group name must match this pattern [a-zA-Z] and not begin with spaces..</p>
+      </ion-item>
+      <button ion-button round color="dark" [disabled]="!sgForm.valid" type="submit"> Create Head of Social Group </button>
     </form>
   </div>
 </ion-content>

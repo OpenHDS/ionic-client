@@ -20,7 +20,8 @@ export class SystemConfigProvider {
   }
 
   private async loadPropertiesFile(){
-    let properties = this.http.get("../../assets/resources/config.json").toPromise();
+
+    let properties = this.http.get("/www/assets/resources/config.json").toPromise();
     let info = await properties;
 
     for(var prop in info){

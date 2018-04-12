@@ -34,7 +34,7 @@ export class SynchronizeDbPage {
   }
 
   async syncDatabase(){
-    await this.syncLocLevels()
+    await this.syncLocLevels();
     await this.syncLocations();
     await this.syncSocialGroups();
   }
@@ -61,7 +61,7 @@ export class SynchronizeDbPage {
 
     loading.present();
     await this.locProvider.initProvider().catch((err) => { this.locationSyncSuccess = false; });
-    await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
+    //await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent()
   }

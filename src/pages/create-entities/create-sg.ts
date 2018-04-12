@@ -6,6 +6,7 @@ import {SocialGroup} from "../../providers/social-group/socialGroup-db";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
+import {CreateIndividualPage} from "./create-individual";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -16,13 +17,12 @@ import {SystemConfigProvider} from "../../providers/system-config/system-config"
 
 @IonicPage()
 @Component({
-  selector: 'page-create-location',
-  templateUrl: 'create-location.html',
+  selector: 'create-social-group',
+  templateUrl: 'create-sg.html',
 })
 export class CreateSocialGroupPage {
 
   edit: boolean;
-  geoloc: boolean = false;
   errorFix: boolean;
   sgForm: FormGroup;
 
@@ -42,12 +42,14 @@ export class CreateSocialGroupPage {
   };
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
-              public formBuilder: FormBuilder, public sgProvider: SocialGroupProvider,
-              public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider,
+              public formBuilder: FormBuilder, public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider,
               public sysConfig: SystemConfigProvider) {
 
 
    this.sgForm = formBuilder.group({
+     name: ['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
+     extId:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
+     type: ['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
    });
 
     //Determine if error is being fixed.
@@ -56,8 +58,13 @@ export class CreateSocialGroupPage {
     if(this.errorFix){
       //If error being fixed, set the location for the modal to the location being fixed.
       this.sg = this.navParams.get("socialGrp");
-
     }
+
+    this.ev.subscribe("submitHeadIndividual", (ind) => {
+      console.log("SOCIAL GROUP" + ind.ind);
+      this.sg.groupHead = ind.ind;
+      this.popView();
+    })
   }
 
 
@@ -69,9 +76,11 @@ export class CreateSocialGroupPage {
     this.navCtrl.pop()
   }
 
-  publishCreationEvent(){
-    this.ev.publish('submitLocation', true);
+  async createHead(){
+    await this.navCtrl.push(CreateIndividualPage, {sg: this.sg, createHead: true});
   }
 
-
+  publishCreationEvent(){
+    this.ev.publish('submitSG', {sg: this.sg, reload: true});
+  }
 }
