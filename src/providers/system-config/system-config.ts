@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { File } from "@ionic-native/file";
 import { FileError } from "@ionic-native/file";
 import {ConfigLabels} from "./config-labels";
+
 /*
   Generated class for the SystemConfigProvider provider.
 
@@ -21,7 +22,7 @@ export class SystemConfigProvider {
 
   private async loadPropertiesFile(){
 
-    let properties = this.http.get("/www/assets/resources/config.json").toPromise();
+    let properties = this.http.get("../../assets/resources/config.json").toPromise();
     let info = await properties;
 
     for(var prop in info){
