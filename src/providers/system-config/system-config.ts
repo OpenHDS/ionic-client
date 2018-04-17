@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { File } from "@ionic-native/file";
 import { FileError } from "@ionic-native/file";
 import {ConfigLabels} from "./config-labels";
+import {FilePath} from "@ionic-native/file-path";
 
 /*
   Generated class for the SystemConfigProvider provider.
@@ -15,14 +16,14 @@ import {ConfigLabels} from "./config-labels";
 export class SystemConfigProvider {
   private testingFieldworker= "FWDW1";
   private testingLocLevel: string = "MBI";
-
-  constructor(public http: HttpClient) {
+  private url: string;
+  constructor(public http: HttpClient, private filepath: FilePath) {
     this.loadPropertiesFile();
   }
 
   private async loadPropertiesFile(){
 
-    let properties = this.http.get("../../assets/resources/config.json").toPromise();
+    let properties = this.http.get("../www/assets/resources/config.json").toPromise();
     let info = await properties;
 
     for(var prop in info){
