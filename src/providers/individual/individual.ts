@@ -42,7 +42,7 @@ export class IndividualProvider {
     let ind: Individual[] = [];
     let timestamp = null;
     await this.http.get(url, {headers}).toPromise().then((data) => {
-      ind = data['socialGroups'];
+      ind = data['individuals'];
       timestamp = data['timestamp'];
     }).catch((err) => {
       throw "Error getting data occurred";
@@ -66,7 +66,7 @@ export class IndividualProvider {
   }
 
   //Get all location in the database
-  getAllSocialGroups(){
+  getAllIndividuals(){
     return this.db.individuals.toArray();
   }
 

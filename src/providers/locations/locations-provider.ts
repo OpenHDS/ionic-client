@@ -30,12 +30,10 @@ export class LocationsProvider {
   }
 
   async initProvider(){
-    let dataUrl = this.systemConfig.getServerURL() + "/locations2";
-    if(localStorage.getItem('lastUpdate') == null){
+    let dataUrl = "http://130.111.126.71:8081/openhds2/api2/rest/" + "locations2";
+    // if(localStorage.getItem('lastUpdate') == null){
       return await this.loadData(dataUrl);
-    } else {
-      return await this.updateLocationsList();
-    }
+    //}
   }
 
   private async loadData(url: string) {

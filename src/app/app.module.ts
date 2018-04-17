@@ -31,6 +31,8 @@ import { IndividualProvider } from '../providers/individual/individual';
 import {SocialGroupsPage} from "../pages/entity-lists/social-groups";
 import {CreateSocialGroupPage} from "../pages/create-entities/create-sg";
 import {CreateIndividualPage} from "../pages/create-entities/create-individual";
+import {FilePath} from "@ionic-native/file-path";
+import {IndividualListPage} from "../pages/entity-lists/individual-list";
 
 @NgModule({
   declarations: [
@@ -47,7 +49,8 @@ import {CreateIndividualPage} from "../pages/create-entities/create-individual";
     LocationHierarchyPage,
     SocialGroupsPage,
     CreateSocialGroupPage,
-    CreateIndividualPage
+    CreateIndividualPage,
+    IndividualListPage
   ],
 
   imports: [
@@ -70,7 +73,8 @@ import {CreateIndividualPage} from "../pages/create-entities/create-individual";
     LocationHierarchyPage,
     SocialGroupsPage,
     CreateSocialGroupPage,
-    CreateIndividualPage
+    CreateIndividualPage,
+    IndividualListPage
   ],
 
   providers: [
@@ -84,6 +88,7 @@ import {CreateIndividualPage} from "../pages/create-entities/create-individual";
     ErrorsProvider,
     SystemConfigProvider,
     File,
+    FilePath,
     LocationHierarchiesProvider,
     SocialGroupProvider,
     IndividualProvider

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
-import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {Individual} from "../../providers/individual/individual-db";
 import {IndividualProvider} from "../../providers/individual/individual";
+import {SocialGroup} from "../../providers/social-group/socialGroup-db";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -25,6 +25,7 @@ export class CreateIndividualPage {
   errorFix: boolean;
   createHead: boolean;
   individualForm: FormGroup;
+  sg: SocialGroup;
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   individual: Individual = {
@@ -37,6 +38,7 @@ export class CreateIndividualPage {
     gender: null,
     father: null,
     mother: null,
+    bIsToA: null,
     collectedBy: {},
     deleted: null,
     insertDate: null,
@@ -52,8 +54,13 @@ export class CreateIndividualPage {
 
     if(this.navParams.get('createHead'))
       this.createHead = true;
-    else
+    else {
       this.createHead = false;
+    }
+
+    this.sg = this.navParams.get('indSg');
+
+
 
     this.individualForm = formBuilder.group({
       extId:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
@@ -64,6 +71,7 @@ export class CreateIndividualPage {
       dobAspect: ['', Validators.compose([Validators.required, Validators.min(1),
                     Validators.max(2)])],
       gender: ['', Validators.compose([Validators.required])],
+      bIsToA: ['', Validators.compose([Validators.required])]
     });
 
     //Determine if error is being fixed.
@@ -75,18 +83,25 @@ export class CreateIndividualPage {
     }
   }
 
-
   //Dismiss the modal. Pass back the created or fixed location.
   //TODO: Prevent popping of page if form has errors.
   async popView() {
     await this.individualProvider.saveDataLocally(this.individual);
     if(this.createHead)
       await this.publishHeadCreationEvent();
-    this.navCtrl.pop()
+    else
+      await this.publishIndividualCreation();
+
+    this.popView();
   }
 
-  publishHeadCreationEvent(){
+  async publishHeadCreationEvent(){
     this.ev.publish('submitHeadIndividual', {ind: this.individual, head: false});
+  }
+
+  async publishIndividualCreation(){
+    this.ev.publish('submitIndividual', {ind: this.individual, head: false});
+
   }
 
 

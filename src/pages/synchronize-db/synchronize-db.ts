@@ -4,6 +4,7 @@ import { LocationsProvider } from "../../providers/locations/locations-provider"
 import { RefreshObservable } from "../../providers/RefreshObservable";
 import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/location-hierarchies";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
+import {IndividualProvider} from "../../providers/individual/individual";
 
 /**
  * Generated class for the SynchronizeDbPage page.
@@ -18,15 +19,14 @@ import {SocialGroupProvider} from "../../providers/social-group/social-group";
   templateUrl: 'synchronize-db.html',
 })
 export class SynchronizeDbPage {
-  synchonizeObserver: RefreshObservable = new RefreshObservable();
   locationLevelsSyncSuccess: boolean;
   locationSyncSuccess: boolean;
   sgSyncSuccess: boolean;
-
+  individualSyncSuccess: boolean;
 
   constructor(public events: Events, public loadingCtrl: LoadingController,
               public lhProvider: LocationHierarchiesProvider, public locProvider: LocationsProvider,
-              public sgProvider: SocialGroupProvider) {
+              public sgProvider: SocialGroupProvider, public indProvider: IndividualProvider) {
   }
 
   ionViewDidLoad() {
@@ -37,6 +37,8 @@ export class SynchronizeDbPage {
     await this.syncLocLevels();
     await this.syncLocations();
     await this.syncSocialGroups();
+    await this.syncIndividuals();
+
   }
 
   async syncLocLevels(){
@@ -47,7 +49,7 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.lhProvider.initLevels().catch((err) => { this.locationSyncSuccess = false; });
+    await this.lhProvider.initLevels().catch((err) =>  this.locationLevelsSyncSuccess = false );
     await this.lhProvider.initHierarchy().catch((err) => this.locationLevelsSyncSuccess = false);
     loading.dismiss();
     this.publishSynchronizationEvent()
@@ -60,7 +62,7 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.locProvider.initProvider().catch((err) => { this.locationSyncSuccess = false; });
+    await this.locProvider.initProvider().catch((err) =>  this.locationSyncSuccess = false);
     //await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent()
@@ -74,6 +76,18 @@ export class SynchronizeDbPage {
 
     loading.present();
     await this.sgProvider.initProvider().catch((err) => { this.sgSyncSuccess = false; });
+    loading.dismiss();
+    this.publishSynchronizationEvent()
+  }
+
+  async syncIndividuals(){
+    this.individualSyncSuccess = true;
+    let loading = this.loadingCtrl.create({
+      content: "Synchronizing individuals... Please wait"
+    });
+
+    loading.present();
+    await this.indProvider.initProvider().catch((err) => { this.individualSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent()
   }

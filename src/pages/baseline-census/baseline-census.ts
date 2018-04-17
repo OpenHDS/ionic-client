@@ -6,6 +6,7 @@ import {FieldworkerMenuPage} from "../fieldworker-menu/menu";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {Hierarchy} from "../../providers/location-hierarchies/hierarchy-db";
 import {SocialGroup} from "../../providers/social-group/socialGroup-db";
+import {Individual} from "../../providers/individual/individual-db";
 
 /**
  * Generated class for the BaselineCensusPage page.
@@ -26,6 +27,7 @@ export class BaselineCensusPage implements OnInit{
   selectedHierarchy: Hierarchy[] = [];
   selectedLocation: Location;
   selectedSocialGrp: SocialGroup;
+  selectedIndividuals: Individual[] = [];
   constructor(public navCtrl: NavController, public navParams: NavParams, public menuPopover: PopoverController, public ev: Events,
               public prop: SystemConfigProvider) {
   }
@@ -53,6 +55,10 @@ export class BaselineCensusPage implements OnInit{
 
   setSocialGroup(sg: SocialGroup){
     this.selectedSocialGrp = sg;
+  }
+
+  setSelectedIndividuals(ind: Individual){
+    this.selectedIndividuals.push(ind);
   }
 }
 

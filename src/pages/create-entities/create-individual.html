@@ -69,7 +69,7 @@
         <p ion-text color="danger">A last name must match this pattern [a-zA-Z] and not begin with spaces.</p>
       </ion-item>
       <ion-item>
-        <ion-label floating> Date of Birth </ion-label>
+        <ion-label> Date of Birth </ion-label>
         <ion-input ion-text formControlName="dob" type="date" name="name"  [(ngModel)]="this.individual.dob"></ion-input>
       </ion-item>
       <ion-item *ngIf="individualForm.controls.dob.hasError('required') && individualForm.controls.dob.dirty">
@@ -93,7 +93,26 @@
       <ion-item *ngIf="individualForm.controls.gender.hasError('required') && individualForm.controls.gender.dirty">
         <p ion-text color="danger">A gender is required.</p>
       </ion-item>
-      <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Individual </button>
+      <ion-item>
+        <ion-label floating>Relationship to Group Head</ion-label>
+        <ion-select formControlName="bIsToA" [(ngModel)]="this.individual.bIsToA" interface="popover">
+          <ion-option val="1">1 - Head</ion-option>
+          <ion-option val="2">2 - Spouse</ion-option>
+          <ion-option val="3">3 - Son/Daughter</ion-option>
+          <ion-option val="4">4 - Brother/Sister</ion-option>
+          <ion-option val="5">5 - Parent</ion-option>
+          <ion-option val="6">6 - Grandchild</ion-option>
+          <ion-option val="7">7 - Not Related</ion-option>
+          <ion-option val="8">8 - Other Relative</ion-option>
+          <ion-option val="9">9 - Don't Know</ion-option>
+        </ion-select>
+      </ion-item>
+      <div *ngIf="this.createHead; else indButtonBlock">
+        <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Head </button>
+      </div>
+      <ng-template #indButtonBlock>
+        <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Individual </button>
+      </ng-template>
     </form>
   </div>
 </ion-content>

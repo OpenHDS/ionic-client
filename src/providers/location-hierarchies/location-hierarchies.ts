@@ -3,7 +3,6 @@ import { OnInit, Injectable } from '@angular/core';
 import {HierarchyLevelsDb, HierarchyLevels} from "./hierarchy-levels-db";
 import {HierarchyDb, Hierarchy} from "./hierarchy-db";
 import {SystemConfigProvider} from "../system-config/system-config";
-import {Location} from "../locations/locations-db";
 
 /*
   Generated class for the LocationHierarchiesProvider provider.

@@ -45,7 +45,10 @@
       <location-list (selectedLoc)="this.setLocation($event)" *ngIf="this.selectedHierarchy.length == this.levels.length + 2 && this.selectedLocation == undefined"
                      [parentLevel]="this.selectedHierarchy[this.selectedHierarchy.length-1]"></location-list>
       <social-groups (selectedSg)="this.setSocialGroup($event)" [sgLocation]="this.selectedLocation"
-                      *ngIf="this.selectedLocation != undefined"></social-groups>
+                      *ngIf="this.selectedLocation != undefined && this.selectedSocialGrp == undefined"></social-groups>
+      <individual-list (selectedIndividuals)="this.setSelectedIndividuals($event)" [sg]="this.selectedSocialGrp"
+                     *ngIf="this.selectedSocialGrp != undefined && this.selectedIndividuals.length >= 0"></individual-list>
+
     </ion-col>
 
   </ion-row>
