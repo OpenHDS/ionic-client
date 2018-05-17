@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Events, IonicPage, LoadingController } from 'ionic-angular';
 import { LocationsProvider } from "../../providers/locations/locations-provider";
-import { RefreshObservable } from "../../providers/RefreshObservable";
 import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/location-hierarchies";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {IndividualProvider} from "../../providers/individual/individual";
+import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 
 /**
  * Generated class for the SynchronizeDbPage page.
@@ -19,6 +19,7 @@ import {IndividualProvider} from "../../providers/individual/individual";
   templateUrl: 'synchronize-db.html',
 })
 export class SynchronizeDbPage {
+  fieldworkerSyncSuccess: boolean;
   locationLevelsSyncSuccess: boolean;
   locationSyncSuccess: boolean;
   sgSyncSuccess: boolean;
@@ -26,7 +27,7 @@ export class SynchronizeDbPage {
 
   constructor(public events: Events, public loadingCtrl: LoadingController,
               public lhProvider: LocationHierarchiesProvider, public locProvider: LocationsProvider,
-              public sgProvider: SocialGroupProvider, public indProvider: IndividualProvider) {
+              public sgProvider: SocialGroupProvider, public indProvider: IndividualProvider, public fwProvider: FieldworkerProvider) {
   }
 
   ionViewDidLoad() {
@@ -34,11 +35,24 @@ export class SynchronizeDbPage {
   }
 
   async syncDatabase(){
+    await this.syncFieldworkers();
     await this.syncLocLevels();
     await this.syncLocations();
     await this.syncSocialGroups();
     await this.syncIndividuals();
 
+  }
+
+  async syncFieldworkers(){
+    this.fieldworkerSyncSuccess = true;
+    let loading = this.loadingCtrl.create({
+      content: "Synchronizing fieldworkers... Please wait"
+    });
+
+    loading.present();
+    await this.fwProvider.initProvider().catch((err) => { this.fieldworkerSyncSuccess = false; });
+    loading.dismiss();
+    this.publishSynchronizationEvent("fieldworkerSync")
   }
 
   async syncLocLevels(){
@@ -52,7 +66,7 @@ export class SynchronizeDbPage {
     await this.lhProvider.initLevels().catch((err) =>  this.locationLevelsSyncSuccess = false );
     await this.lhProvider.initHierarchy().catch((err) => this.locationLevelsSyncSuccess = false);
     loading.dismiss();
-    this.publishSynchronizationEvent()
+    this.publishSynchronizationEvent("hierarchySync")
 
   }
   async syncLocations(){
@@ -65,7 +79,7 @@ export class SynchronizeDbPage {
     await this.locProvider.initProvider().catch((err) =>  this.locationSyncSuccess = false);
     //await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
     loading.dismiss();
-    this.publishSynchronizationEvent()
+    this.publishSynchronizationEvent("locationSync")
   }
 
   async syncSocialGroups(){
@@ -77,7 +91,7 @@ export class SynchronizeDbPage {
     loading.present();
     await this.sgProvider.initProvider().catch((err) => { this.sgSyncSuccess = false; });
     loading.dismiss();
-    this.publishSynchronizationEvent()
+    this.publishSynchronizationEvent("socialGroupSync")
   }
 
   async syncIndividuals(){
@@ -89,10 +103,10 @@ export class SynchronizeDbPage {
     loading.present();
     await this.indProvider.initProvider().catch((err) => { this.individualSyncSuccess = false; });
     loading.dismiss();
-    this.publishSynchronizationEvent()
+    this.publishSynchronizationEvent("individualSync")
   }
 
-  publishSynchronizationEvent(){
-    this.events.publish('syncDb', true);
+  publishSynchronizationEvent(topic){
+    this.events.publish(topic, true);
   }
 }

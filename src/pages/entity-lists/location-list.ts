@@ -35,6 +35,7 @@ export class LocationListPage {
 
     this.locationObserver.subscribe(async (locations) => {
       this.locations = locations;
+      console.log(this.locations)
     });
 
     this.ev.subscribe('submitLocation', () => {
@@ -48,6 +49,7 @@ export class LocationListPage {
 
   async ngOnInit() {
     await this.getAllLocations().catch(err => console.log(err));
+
   }
 
   async getAllLocations() {

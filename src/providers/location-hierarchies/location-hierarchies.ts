@@ -42,7 +42,6 @@ export class LocationHierarchiesProvider {
     let timestamp = null;
     await this.http.get(url, {headers}).toPromise().then((data) => {
       levels = data['locationHierarchies'];
-      console.log(levels);
     }).catch((err)  => {
       throw "Error getting data occurred";
     });
@@ -65,7 +64,6 @@ export class LocationHierarchiesProvider {
     let timestamp = null;
     await this.http.get(url, {headers}).toPromise().then((data) => {
       hierarchy = data['locationHierarchies'];
-      console.log(hierarchy);
     }).catch((err)  => {
       throw "Error getting data occurred";
     });

@@ -17,8 +17,9 @@ export class SystemConfigProvider {
   private testingFieldworker= "FWDW1";
   private testingLocLevel: string = "MBI";
   private url: string;
-  constructor(public http: HttpClient, private filepath: FilePath) {
-    this.loadPropertiesFile();
+  constructor(public http: HttpClient) {
+    if(localStorage.getItem("propertiesLoaded") != "Y")
+      this.loadPropertiesFile();
   }
 
   private async loadPropertiesFile(){

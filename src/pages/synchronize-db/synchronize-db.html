@@ -6,6 +6,11 @@
     <ion-col col-4>
       <ion-scroll scrollY="true">
         <ion-card-header>
+          <h3>Fieldworker Sync</h3>
+          <ng-template [ngIf]="this.fieldworkerSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.fieldworkerSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
+        </ion-card-header>
+        <ion-card-header>
           <h3>Location Hierarchy</h3>
           <ng-template [ngIf]="this.locationLevelsSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
           <ng-template [ngIf]="!this.locationLevelsSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>

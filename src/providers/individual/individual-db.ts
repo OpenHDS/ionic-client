@@ -1,5 +1,6 @@
 import Dexie from 'dexie';
 
+import {SocialGroup} from "../social-group/socialGroup-db";
 export class IndividualDb extends Dexie {
   individuals: Dexie.Table<Individual, string>;
 
@@ -21,6 +22,7 @@ export interface Individual{
   gender: string;
   father: Individual;
   mother: Individual;
+  socialGroup: SocialGroup;
   collectedBy: {};
   deleted: boolean;
   insertDate: Date;

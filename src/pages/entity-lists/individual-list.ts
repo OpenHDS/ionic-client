@@ -27,7 +27,7 @@ export class IndividualListPage {
   individuals: Individual[];
 
   constructor(public navCtrl: NavController, public ev: Events, public navParams: NavParams, public indProvider: IndividualProvider) {
-    this.ev.subscribe("submitInd", (ind) => {
+    this.ev.subscribe("submitIndividual", (ind) => {
       this.indProvider.initProvider().then(async () => await this.getAllIndividuals()).catch(err => console.log(err))
         .then(() =>
         {
@@ -69,6 +69,6 @@ export class IndividualListPage {
   }
 
   goToCreateIndividualPage(){
-   this.navCtrl.push(CreateIndividualPage, {sg: this.sg});
+    this.navCtrl.push(CreateIndividualPage, {sg: this.sg});
   }
 }

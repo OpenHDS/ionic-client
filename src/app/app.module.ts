@@ -18,9 +18,7 @@ import { FieldworkerMenuPage } from "../pages/fieldworker-menu/menu";
 import { ErrorDisplayPage } from "../pages/error-display/error-display";
 import { SystemConfigProvider } from '../providers/system-config/system-config';
 import { SystemConfigPage } from "../pages/system-config/system-config";
-
-import { File} from "@ionic-native/file";
-
+import {File} from "@ionic-native/file";
 import { SupervisorModePage } from "../pages/supervisor-mode/supervisor-mode";
 import { SynchronizeDbPage } from "../pages/synchronize-db/synchronize-db";
 import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
@@ -31,8 +29,10 @@ import { IndividualProvider } from '../providers/individual/individual';
 import {SocialGroupsPage} from "../pages/entity-lists/social-groups";
 import {CreateSocialGroupPage} from "../pages/create-entities/create-sg";
 import {CreateIndividualPage} from "../pages/create-entities/create-individual";
-import {FilePath} from "@ionic-native/file-path";
 import {IndividualListPage} from "../pages/entity-lists/individual-list";
+import { LoginProvider } from '../providers/login/login';
+import {LoginPage} from "../pages/login/login";
+import { FieldworkerProvider } from '../providers/fieldworker/fieldworker';
 
 @NgModule({
   declarations: [
@@ -50,7 +50,8 @@ import {IndividualListPage} from "../pages/entity-lists/individual-list";
     SocialGroupsPage,
     CreateSocialGroupPage,
     CreateIndividualPage,
-    IndividualListPage
+    IndividualListPage,
+    LoginPage
   ],
 
   imports: [
@@ -71,10 +72,11 @@ import {IndividualListPage} from "../pages/entity-lists/individual-list";
     SupervisorMenuPage,
     SynchronizeDbPage,
     LocationHierarchyPage,
+    LocationListPage,
     SocialGroupsPage,
     CreateSocialGroupPage,
     CreateIndividualPage,
-    IndividualListPage
+    IndividualListPage, LoginPage
   ],
 
   providers: [
@@ -88,10 +90,11 @@ import {IndividualListPage} from "../pages/entity-lists/individual-list";
     ErrorsProvider,
     SystemConfigProvider,
     File,
-    FilePath,
     LocationHierarchiesProvider,
     SocialGroupProvider,
-    IndividualProvider
+    IndividualProvider,
+    LoginProvider,
+    FieldworkerProvider
   ]
 })
 

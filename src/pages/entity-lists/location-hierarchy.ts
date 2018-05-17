@@ -47,7 +47,12 @@ export class LocationHierarchyPage implements OnInit{
 
       this.lhProvider.getHierarchy().then(async (locHierarchy) =>
         this.hierarchyObserver.publishChange(locHierarchy));
+
+      console.log(this.levels);
+      console.log(this.hierarchy);
     });
+
+
   }
 
   async ngOnInit(){

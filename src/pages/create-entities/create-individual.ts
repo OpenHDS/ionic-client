@@ -38,6 +38,7 @@ export class CreateIndividualPage {
     gender: null,
     father: null,
     mother: null,
+    socialGroup: null,
     bIsToA: null,
     collectedBy: {},
     deleted: null,
@@ -45,7 +46,7 @@ export class CreateIndividualPage {
     clientInsert: null,
     uuid: null,
     processed: null,
-    selected: null
+    selected: false
   };
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
@@ -92,7 +93,7 @@ export class CreateIndividualPage {
     else
       await this.publishIndividualCreation();
 
-    this.popView();
+    this.navCtrl.pop()
   }
 
   async publishHeadCreationEvent(){
@@ -103,7 +104,4 @@ export class CreateIndividualPage {
     this.ev.publish('submitIndividual', {ind: this.individual, head: false});
 
   }
-
-
-
 }

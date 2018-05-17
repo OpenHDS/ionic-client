@@ -93,7 +93,7 @@
     <allow-navigation href="http://192.168.0.10:8119" />
     <allow-navigation href="http://192.168.0.10:8125" />
     <plugin name="cordova-plugin-filepath" spec="^1.3.0" />
-    <engine name="browser" spec="5.0.3" />
     <engine name="ios" spec="4.5.4" />
     <engine name="android" spec="7.0.0" />
+    <engine name="browser" spec="5.0.3" />
 </widget>
