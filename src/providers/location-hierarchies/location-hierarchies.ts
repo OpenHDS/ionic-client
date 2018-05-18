@@ -1,8 +1,9 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { OnInit, Injectable } from '@angular/core';
-import {HierarchyLevelsDb, HierarchyLevels} from "./hierarchy-levels-db";
-import {HierarchyDb, Hierarchy} from "./hierarchy-db";
+import { Injectable } from '@angular/core';
 import {SystemConfigProvider} from "../system-config/system-config";
+import {HierarchyLevels} from "../../interfaces/hierarchy-levels";
+import {Hierarchy} from "../../interfaces/hierarchy";
+import {OpenhdsDb} from "../database-providers/openhds-db";
 
 /*
   Generated class for the LocationHierarchiesProvider provider.
@@ -13,8 +14,7 @@ import {SystemConfigProvider} from "../system-config/system-config";
 @Injectable()
 export class LocationHierarchiesProvider {
 
-  levelsDb: HierarchyLevelsDb;
-  locHierarchyDb: HierarchyDb;
+  db: OpenhdsDb;
 
   openhdsLogin = {
     username: 'admin',
@@ -22,8 +22,7 @@ export class LocationHierarchiesProvider {
   };
 
   constructor(public http: HttpClient, public systemConfig: SystemConfigProvider) {
-    this.levelsDb = new HierarchyLevelsDb();
-    this.locHierarchyDb = new HierarchyDb();
+    this.db = new OpenhdsDb()
   }
 
   async initLevels(){
@@ -50,8 +49,8 @@ export class LocationHierarchiesProvider {
       x.extId = x.name;
     })
 
-    await this.levelsDb.transaction('rw', this.levelsDb.levels, () => {
-      this.levelsDb.levels.bulkPut(levels).catch(error => console.log(error));
+    await this.db.transaction('rw', this.db.levels, () => {
+      this.db.levels.bulkPut(levels).catch(error => console.log(error));
     })
   }
 
@@ -68,16 +67,16 @@ export class LocationHierarchiesProvider {
       throw "Error getting data occurred";
     });
 
-    await this.locHierarchyDb.transaction('rw', this.locHierarchyDb.hierarchy, () => {
-      this.locHierarchyDb.hierarchy.bulkPut(hierarchy).catch(error => console.log(error));
+    await this.db.transaction('rw', this.db.locationhierarchies, () => {
+      this.db.locationhierarchies.bulkPut(hierarchy).catch(error => console.log(error));
     })
   }
 
   getLevels(): Promise<HierarchyLevels[]>{
-    return this.levelsDb.levels.toArray();
+    return this.db.levels.toArray();
   }
 
   getHierarchy(): Promise<Hierarchy[]>{
-    return this.locHierarchyDb.hierarchy.toArray();
+    return this.db.locationhierarchies.toArray();
   }
 }

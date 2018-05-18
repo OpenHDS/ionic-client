@@ -1,12 +1,12 @@
 import {Component, OnInit, Input, ViewChild, AfterViewInit} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams, PopoverController} from 'ionic-angular';
 import { LocationListPage } from "../entity-lists/location-list";
-import { Location } from "../../providers/locations/locations-db";
+import { Location } from "../../interfaces/locations";
 import {FieldworkerMenuPage} from "../fieldworker-menu/menu";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
-import {Hierarchy} from "../../providers/location-hierarchies/hierarchy-db";
-import {SocialGroup} from "../../providers/social-group/socialGroup-db";
-import {Individual} from "../../providers/individual/individual-db";
+import {Hierarchy} from "../../interfaces/hierarchy";
+import {SocialGroup} from "../../interfaces/social-groups";
+import {Individual} from "../../interfaces/individual";
 
 /**
  * Generated class for the BaselineCensusPage page.

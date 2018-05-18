@@ -1,16 +1,4 @@
-import Dexie from 'dexie';
-
-import {SocialGroup} from "../social-group/socialGroup-db";
-export class IndividualDb extends Dexie {
-  individuals: Dexie.Table<Individual, string>;
-
-  constructor() {
-    super("Individual");
-    this.version(1).stores({
-      individuals: 'extId, dob, dobAspect, firstName, middleName, lastName, gender, mother, father, bIsToA, deleted, insertDate, clientInsert, uuid, processed'
-    });
-  }
-}
+import {SocialGroup} from "./social-groups";
 
 export interface Individual{
   extId: string;

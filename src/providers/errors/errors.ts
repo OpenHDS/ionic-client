@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Location } from "../locations/locations-db";
-import {ErrorsDb, Errors} from "./errors-db";
+import {Errors} from "../../interfaces/data-errors";
 import {EntityErrorLabels} from "./entity-error-labels";
+import {OpenhdsDb} from "../database-providers/openhds-db";
 
 /*
   Generated class for the ErrorsProvider provider.
@@ -13,24 +12,24 @@ import {EntityErrorLabels} from "./entity-error-labels";
 
 @Injectable()
 export class ErrorsProvider {
-  private errorDb: ErrorsDb;
+  private db: OpenhdsDb;
   constructor(){
-    this.errorDb = new ErrorsDb();
+    this.db = new OpenhdsDb();
   }
 
   async updateOrSetErrorStatus(error: Errors){
     if(await this.validateErrorExistence(error) == true)
-      return await this.errorDb.errors.update(error.uuid, error);
+      return await this.db.errors.update(error.uuid, error);
     else
-      return await this.errorDb.errors.add(error);
+      return await this.db.errors.add(error);
   }
 
   async getLocationErrors(): Promise<Errors[]>{
-    return this.errorDb.errors.where('entityType').equals(EntityErrorLabels.LOCATION_ERROR).toArray();
+    return this.db.errors.where('entityType').equals(EntityErrorLabels.LOCATION_ERROR).toArray();
   }
 
   async validateErrorExistence(error: Errors){
-    let err = await this.errorDb.errors.filter(err => err.uuid == error.uuid).toArray();
+    let err = await this.db.errors.filter(err => err.uuid == error.uuid).toArray();
     if(err[0] != null)
       return true;
 

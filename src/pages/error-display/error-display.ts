@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {ErrorsProvider} from "../../providers/errors/errors";
 import {EntityErrorLabels} from "../../providers/errors/entity-error-labels";
-import {Errors} from "../../providers/errors/errors-db";
+import {Errors} from "../../interfaces/data-errors"
 import {CreateLocationPage} from "../create-entities/create-location";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 

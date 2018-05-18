@@ -5,7 +5,8 @@ import {NetworkConfigProvider} from "../network-config/network-config";
 import {ErrorsProvider} from "../errors/errors";
 import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
-import {Individual, IndividualDb} from "./individual-db";
+import {Individual} from "../../interfaces/individual";
+import {OpenhdsDb} from "../database-providers/openhds-db";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -16,7 +17,7 @@ import {Individual, IndividualDb} from "./individual-db";
 @Injectable()
 export class IndividualProvider {
 
-  private db: IndividualDb;
+  private db: OpenhdsDb;
 
   openhdsLogin = {
     username: 'admin',
@@ -25,7 +26,7 @@ export class IndividualProvider {
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {
-    this.db = new IndividualDb();
+    this.db = new OpenhdsDb();
   }
 
   async initProvider(){

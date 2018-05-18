@@ -33,6 +33,7 @@ import {IndividualListPage} from "../pages/entity-lists/individual-list";
 import { LoginProvider } from '../providers/login/login';
 import {LoginPage} from "../pages/login/login";
 import { FieldworkerProvider } from '../providers/fieldworker/fieldworker';
+import { DatabaseProvidersProvider } from '../providers/database-providers/database-providers';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { FieldworkerProvider } from '../providers/fieldworker/fieldworker';
     SocialGroupProvider,
     IndividualProvider,
     LoginProvider,
-    FieldworkerProvider
+    FieldworkerProvider,
+    DatabaseProvidersProvider
   ]
 })
 

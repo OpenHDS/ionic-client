@@ -1,16 +1,4 @@
-import Dexie from 'dexie';
-import {Hierarchy} from "../location-hierarchies/hierarchy-db";
-
-export class LocationDb extends Dexie {
-  locations: Dexie.Table<Location, string>;
-
-  constructor() {
-    super("Location");
-    this.version(1).stores({
-      locations: 'extId, name, type, longitude, latitude, deleted, insertDate, clientInsert, uuid, processed'
-    });
-  }
-}
+import {Hierarchy} from "./hierarchy";
 
 export interface Location{
   extId: string;

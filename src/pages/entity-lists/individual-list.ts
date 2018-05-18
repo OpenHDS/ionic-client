@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {RefreshObservable} from "../../providers/RefreshObservable";
-import {SocialGroup} from "../../providers/social-group/socialGroup-db";
-import {Individual} from "../../providers/individual/individual-db";
+import {SocialGroup} from "../../interfaces/social-groups";
+import {Individual} from "../../interfaces/individual";
 import {CreateIndividualPage} from "../create-entities/create-individual";
 import {IndividualProvider} from "../../providers/individual/individual";
 

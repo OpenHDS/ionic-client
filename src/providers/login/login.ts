@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import Bcrypt from "bcryptjs";
 import {FieldworkerProvider} from "../fieldworker/fieldworker";
-import {Fieldworker} from "../fieldworker/fieldworker-db";
+import {Fieldworker} from "../../interfaces/fieldworker";
 
 /*
   Generated class for the LoginProvider provider.

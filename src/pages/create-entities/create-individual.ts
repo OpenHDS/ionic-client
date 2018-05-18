@@ -3,9 +3,9 @@ import {IonicPage, Events, NavController, NavParams, ViewController, LoadingCont
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
-import {Individual} from "../../providers/individual/individual-db";
+import {Individual} from "../../interfaces/individual";
 import {IndividualProvider} from "../../providers/individual/individual";
-import {SocialGroup} from "../../providers/social-group/socialGroup-db";
+import {SocialGroup} from "../../interfaces/social-groups";
 
 /**
  * Generated class for the CreateLocationPage page.

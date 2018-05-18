@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
 import {Geolocation} from "@ionic-native/geolocation";
-import {Location} from "../../providers/locations/locations-db";
+import {Location} from "../../interfaces/locations";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";

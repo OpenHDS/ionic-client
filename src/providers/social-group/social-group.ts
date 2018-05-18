@@ -2,11 +2,11 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {SystemConfigProvider} from "../system-config/system-config";
 import {NetworkConfigProvider} from "../network-config/network-config";
-import {Location, LocationDb} from "../locations/locations-db";
 import {ErrorsProvider} from "../errors/errors";
-import {SocialGroupDb, SocialGroup} from "./socialGroup-db";
+import {SocialGroup} from "../../interfaces/social-groups";
 import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
+import {OpenhdsDb} from "../database-providers/openhds-db";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -17,7 +17,7 @@ import {Events} from "ionic-angular"
 @Injectable()
 export class SocialGroupProvider {
 
-  private db: SocialGroupDb;
+  private db: OpenhdsDb;
 
   openhdsLogin = {
     username: 'admin',
@@ -26,7 +26,7 @@ export class SocialGroupProvider {
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {
-    this.db = new SocialGroupDb();
+    this.db = new OpenhdsDb();
   }
 
   async initProvider(){

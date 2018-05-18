@@ -2,11 +2,10 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {SystemConfigProvider} from "../system-config/system-config";
 import {NetworkConfigProvider} from "../network-config/network-config";
-import {Location, LocationDb} from "../locations/locations-db";
 import {ErrorsProvider} from "../errors/errors";
-import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
-import {Fieldworker, FieldworkerDb} from "./fieldworker-db";
+import {OpenhdsDb} from "../database-providers/openhds-db";
+import {Fieldworker} from "../../interfaces/fieldworker";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -17,7 +16,7 @@ import {Fieldworker, FieldworkerDb} from "./fieldworker-db";
 @Injectable()
 export class FieldworkerProvider {
 
-  private db: FieldworkerDb;
+  private db: OpenhdsDb;
 
   openhdsLogin = {
     username: 'admin',
@@ -26,7 +25,7 @@ export class FieldworkerProvider {
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {
-    this.db = new FieldworkerDb();
+    this.db = new OpenhdsDb();
   }
 
   async initProvider(){
@@ -53,8 +52,8 @@ export class FieldworkerProvider {
       x.processed = 1;
     });
 
-    await this.db.transaction('rw', this.db.fieldworker, () => {
-      this.db.fieldworker.bulkPut(fw).catch(error => console.log(error))
+    await this.db.transaction('rw', this.db.fieldworkers, () => {
+      this.db.fieldworkers.bulkPut(fw).catch(error => console.log(error))
         .then(() => localStorage.setItem('fwLastUpdate', timestamp));
     })
 
@@ -62,13 +61,13 @@ export class FieldworkerProvider {
 
   //Get all location in the database
   getAllFieldworkers(){
-    return this.db.fieldworker.toArray();
+    return this.db.fieldworkers.toArray();
   }
 
    async getFieldworker(extId: string){
     var fw;
 
-    fw = await this.db.fieldworker.where("extId").equals(extId).toArray();
+    fw = await this.db.fieldworkers.where("extId").equals(extId).toArray();
     console.log(fw);
     return fw;
   }
@@ -79,6 +78,6 @@ export class FieldworkerProvider {
 
   //Abstract Updates and Adds to prevent errors
   async insert(fw: Fieldworker){
-    this.db.fieldworker.add(fw).catch(err => console.log(err));
+    this.db.fieldworkers.add(fw).catch(err => console.log(err));
   }
 }

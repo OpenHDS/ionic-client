@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
 import {Geolocation} from "@ionic-native/geolocation";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
-import {SocialGroup} from "../../providers/social-group/socialGroup-db";
+import {SocialGroup} from "../../interfaces/social-groups";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
