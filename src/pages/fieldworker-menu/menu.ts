@@ -3,6 +3,8 @@ import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular
 import {ErrorDisplayPage} from "../error-display/error-display";
 import {SystemConfigPage} from "../system-config/system-config";
 import {SupervisorModePage} from "../supervisor-mode/supervisor-mode";
+import {UserProvider} from "../../providers/user-provider/user-provider";
+import {LoginPage} from "../login/login";
 
 /**
  * Generated class for the MenuPage page.
@@ -18,7 +20,7 @@ import {SupervisorModePage} from "../supervisor-mode/supervisor-mode";
 })
 export class FieldworkerMenuPage {
 
-  constructor(public viewCtrl: ViewController, public navController: NavController) {
+  constructor(public viewCtrl: ViewController, public navController: NavController, public user: UserProvider) {
   }
 
   goToErrorsPage(){
@@ -35,6 +37,12 @@ export class FieldworkerMenuPage {
       .then(() => this.navController.push(SupervisorModePage)
         .then(() => this.close()));
 
+  }
+
+  logoutUser(){
+    this.user.setUserLogout();
+    this.navController.popAll();
+    this.navController.setRoot(LoginPage);
   }
 
   close(){

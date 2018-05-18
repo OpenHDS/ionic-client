@@ -6,6 +6,7 @@ import {SystemConfigProvider} from "../../providers/system-config/system-config"
 import {Individual} from "../../interfaces/individual";
 import {IndividualProvider} from "../../providers/individual/individual";
 import {SocialGroup} from "../../interfaces/social-groups";
+import {UserProvider} from "../../providers/user-provider/user-provider";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -51,7 +52,7 @@ export class CreateIndividualPage {
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
               public formBuilder: FormBuilder, public individualProvider: IndividualProvider, public netConfig: NetworkConfigProvider,
-              public sysConfig: SystemConfigProvider) {
+              public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
     if(this.navParams.get('createHead'))
       this.createHead = true;

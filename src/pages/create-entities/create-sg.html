@@ -24,7 +24,7 @@
     <form  [formGroup]="sgForm" (ngSubmit)="createHead()">
       <ion-item>
         <ion-label floating> Fieldworker </ion-label>
-        <ion-input type="text" value="{{this.sysConfig.getTestingFieldworker()}}"disabled></ion-input>
+        <ion-input type="text" value="{{this.user.getLoggedInUser()}}"disabled></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating> Location Id </ion-label>

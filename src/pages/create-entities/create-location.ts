@@ -6,6 +6,7 @@ import {NetworkConfigProvider} from "../../providers/network-config/network-conf
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
+import {UserProvider} from "../../providers/user-provider/user-provider";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -48,7 +49,7 @@ export class CreateLocationPage {
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
               public formBuilder: FormBuilder, public locProvider: LocationsProvider,
               public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider,
-              public sysConfig: SystemConfigProvider) {
+              public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
 
    this.locationForm = formBuilder.group({

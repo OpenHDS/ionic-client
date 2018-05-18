@@ -7,6 +7,7 @@ import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {CreateIndividualPage} from "./create-individual";
+import {UserProvider} from "../../providers/user-provider/user-provider";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -43,7 +44,7 @@ export class CreateSocialGroupPage {
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
               public formBuilder: FormBuilder, public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider,
-              public sysConfig: SystemConfigProvider) {
+              public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
 
    this.sgForm = formBuilder.group({

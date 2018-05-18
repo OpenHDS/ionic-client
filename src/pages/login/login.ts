@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 
 import { NavController } from 'ionic-angular';
 
-import {LoginProvider} from "../../providers/login/login";
+import {UserProvider} from "../../providers/user-provider/user-provider";
 import {BaselineCensusPage} from "../baseline-census/baseline-census";
 import {SupervisorModePage} from "../supervisor-mode/supervisor-mode";
 
@@ -19,7 +19,7 @@ export class LoginPage {
   submitted = false;
   loginForm: FormGroup;
 
-  constructor(public navCtrl: NavController, public loginProvider: LoginProvider, public formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, public userProvider: UserProvider, public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
       username: ['', Validators.compose([Validators.required])],
@@ -32,11 +32,11 @@ export class LoginPage {
      this.submitted = true;
      if(this.loginForm.valid){
        if(this.username == "admin" && this.password == "test"){
-         this.navCtrl.push(SupervisorModePage);
+         this.navCtrl.setRoot(SupervisorModePage);
        } else {
-         var loginAttempt = await this.loginProvider.checkPassword(this.username, this.password);
+         var loginAttempt = await this.userProvider.checkPassword(this.username, this.password);
          if(loginAttempt){
-           this.navCtrl.push(BaselineCensusPage);
+           this.navCtrl.setRoot(BaselineCensusPage);
          } else {
            this.submitted = false;
          }
@@ -45,5 +45,6 @@ export class LoginPage {
        this.submitted = false;
      }
 
+     this.userProvider.setLoggedInUser(this.username);
     }
 }

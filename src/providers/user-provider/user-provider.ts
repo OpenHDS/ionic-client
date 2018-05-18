@@ -11,7 +11,7 @@ import {Fieldworker} from "../../interfaces/fieldworker";
   and Angular DI.
 */
 @Injectable()
-export class LoginProvider {
+export class UserProvider {
 
   constructor(public http: HttpClient, public fieldworkerProvider: FieldworkerProvider) {
   }
@@ -26,5 +26,20 @@ export class LoginProvider {
       return status;
 
     return Bcrypt.compareSync(password, fieldworker[0].passwordHash);
+  }
+
+  setLoggedInUser(username){
+    localStorage.setItem("loggedInUser", username);
+    localStorage.setItem("hasLoggedIn", Boolean(true).toString());
+    localStorage.setItem("loggedInTime", Date.now().toString())
+  }
+
+  setUserLogout(){
+    localStorage.setItem("loggedInUser", null);
+    localStorage.setItem("hasLoggedIn", Boolean(false).toString());
+  }
+
+  getLoggedInUser(){
+    return localStorage.getItem("loggedInUser");
   }
 }

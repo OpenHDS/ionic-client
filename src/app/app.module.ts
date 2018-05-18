@@ -30,7 +30,7 @@ import {SocialGroupsPage} from "../pages/entity-lists/social-groups";
 import {CreateSocialGroupPage} from "../pages/create-entities/create-sg";
 import {CreateIndividualPage} from "../pages/create-entities/create-individual";
 import {IndividualListPage} from "../pages/entity-lists/individual-list";
-import { LoginProvider } from '../providers/login/login';
+import { UserProvider } from '../providers/user-provider/user-provider';
 import {LoginPage} from "../pages/login/login";
 import { FieldworkerProvider } from '../providers/fieldworker/fieldworker';
 import { DatabaseProviders } from '../providers/database-providers/database-providers';
@@ -94,7 +94,7 @@ import { DatabaseProviders } from '../providers/database-providers/database-prov
     LocationHierarchiesProvider,
     SocialGroupProvider,
     IndividualProvider,
-    LoginProvider,
+    UserProvider,
     FieldworkerProvider,
     DatabaseProviders
   ]
