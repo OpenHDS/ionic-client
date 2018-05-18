@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {SystemConfigProvider} from "../system-config/system-config";
 import {NetworkConfigProvider} from "../network-config/network-config";
@@ -7,6 +7,7 @@ import {SocialGroup} from "../../interfaces/social-groups";
 import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
 import {OpenhdsDb} from "../database-providers/openhds-db";
+import {DatabaseProviders} from "../database-providers/database-providers";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -15,7 +16,7 @@ import {OpenhdsDb} from "../database-providers/openhds-db";
   and Angular DI.
 */
 @Injectable()
-export class SocialGroupProvider {
+export class SocialGroupProvider extends DatabaseProviders{
 
   private db: OpenhdsDb;
 
@@ -26,44 +27,13 @@ export class SocialGroupProvider {
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {
+    super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
 
-  async initProvider(){
-    let dataUrl = this.systemConfig.getServerURL() + "/socialgroups2";
-    if(localStorage.getItem("sgUpdate") == null){
-      this.loadData(dataUrl);
-    }
-  }
-
-  private async loadData(url: string) {
-    const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
-
-    let sg: SocialGroup[] = [];
-    let timestamp = null;
-    await this.http.get(url, {headers}).toPromise().then((data) => {
-      sg = data['socialGroups'];
-      timestamp = data['timestamp'];
-    }).catch((err) => {
-      throw "Error getting data occurred";
-    });
-
-    sg.forEach(x => {
-      x.collectedBy = {
-        extId: "FWDW1"
-      };
-
-      x.selected = false;
-      x.clientInsert = timestamp;
-      x.processed = 1;
-    });
-
-    await this.db.transaction('rw', this.db.socialGroup, () => {
-      this.db.socialGroup.bulkPut(sg).catch(error => console.log(error))
-        .then(() => localStorage.setItem('sgLastUpdate', timestamp));
-    })
-
+  async loadInitData(){
+    var sg = await this.initProvider("socialGroups");
+    sg.forEach(x => this.insert(x));
   }
 
   //Get all location in the database

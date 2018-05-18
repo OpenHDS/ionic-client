@@ -39,11 +39,11 @@ export class LocationListPage {
     });
 
     this.ev.subscribe('submitLocation', () => {
-      this.locProvider.initProvider().then(async () => await this.getAllLocations()).catch(err => console.log(err));
+      this.locProvider.loadInitData().then(async () => await this.getAllLocations()).catch(err => console.log(err));
     });
 
     this.ev.subscribe('syncDb', () => {
-      this.locProvider.initProvider().then(async () => await this.getAllLocations()).catch(err => console.log(err));
+      this.locProvider.loadInitData().then(async () => await this.getAllLocations()).catch(err => console.log(err));
     });
   }
 
@@ -55,12 +55,6 @@ export class LocationListPage {
   async getAllLocations() {
     let locations = await this.locProvider.getAllLocations();
     this.locationObserver.publishChange(locations);
-  }
-
-  async synchronize() {
-    await this.locProvider.updateLocationsList()
-      .then(() => this.getAllLocations())
-      .then(() => this.locProvider.synchronizeOfflineLocations());
   }
 
   goToCreateLocPage(){

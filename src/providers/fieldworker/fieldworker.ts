@@ -6,6 +6,7 @@ import {ErrorsProvider} from "../errors/errors";
 import {Events} from "ionic-angular"
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {Fieldworker} from "../../interfaces/fieldworker";
+import {DatabaseProviders} from "../database-providers/database-providers";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -14,7 +15,7 @@ import {Fieldworker} from "../../interfaces/fieldworker";
   and Angular DI.
 */
 @Injectable()
-export class FieldworkerProvider {
+export class FieldworkerProvider extends DatabaseProviders{
 
   private db: OpenhdsDb;
 
@@ -25,38 +26,13 @@ export class FieldworkerProvider {
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {
+    super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
 
-  async initProvider(){
-    let dataUrl = this.systemConfig.getServerURL() + "/fieldworkers2";
-    if(localStorage.getItem("fwUpdate") == null){
-      this.loadData(dataUrl);
-    }
-  }
-
-  private async loadData(url: string) {
-    const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
-
-    let fw: Fieldworker[] = [];
-    let timestamp = null;
-    await this.http.get(url, {headers}).toPromise().then((data) => {
-      fw = data['fieldWorkers'];
-      timestamp = data['timestamp'];
-    }).catch((err) => {
-      throw "Error getting data occurred";
-    });
-
-    fw.forEach(x => {
-      x.processed = 1;
-    });
-
-    await this.db.transaction('rw', this.db.fieldworkers, () => {
-      this.db.fieldworkers.bulkPut(fw).catch(error => console.log(error))
-        .then(() => localStorage.setItem('fwLastUpdate', timestamp));
-    })
-
+  async loadInitData(){
+    var fw = await this.initProvider("fieldWorkers");
+    fw.forEach(x => this.insert(x));
   }
 
   //Get all location in the database

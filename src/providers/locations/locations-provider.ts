@@ -8,6 +8,7 @@ import { ErrorsProvider } from "../errors/errors";
 import { EntityErrorLabels } from "../errors/entity-error-labels";
 import { SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
+import {DatabaseProviders} from "../database-providers/database-providers";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -17,7 +18,7 @@ import {OpenhdsDb} from "../database-providers/openhds-db";
 */
 
 @Injectable()
-export class LocationsProvider {
+export class LocationsProvider extends DatabaseProviders{
   private db: OpenhdsDb;
 
   openhdsLogin = {
@@ -25,56 +26,20 @@ export class LocationsProvider {
     password: 'test'
   };
 
-  constructor(public http: HttpClient, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
+  constructor(public http: HttpClient, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {
+    super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
 
-  async initProvider(){
-    let dataUrl = this.systemConfig.getServerURL() + "/locations2";
-    // if(localStorage.getItem('lastUpdate') == null){
-      return await this.loadData(dataUrl);
-    //}
-  }
-
-  private async loadData(url: string) {
-    const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
-
-    let locations: Location[] = [];
-    let timestamp = null;
-    await this.http.get(url, {headers}).toPromise().then((data) => {
-      locations = data['locations'];
-      timestamp = data['timestamp'];
-    }).catch((err)  => {
-      throw "Error getting data occurred";
-    });
-
-    locations.forEach(x => {
-      x.collectedBy = {
-        extId: "FWDW1"
-      };
-
-      x.selected = false;
-      x.clientInsert = timestamp;
-      x.processed = 1;
-    })
-
-    await this.db.transaction('rw', this.db.locations, () => {
-      this.db.locations.bulkPut(locations).catch(error => console.log(error))
-        .then(() => localStorage.setItem('lastUpdate', timestamp));
-    })
+  async loadInitData(){
+    var loc = await this.initProvider("locations");
+    loc.forEach(x => this.insert(x));
   }
 
   //Get all location in the database
   getAllLocations(){
       return this.db.locations.toArray();
-  }
-
-  //Pull updates from the server
-  async updateLocationsList(){
-    const url = this.systemConfig.getServerURL() + "/locations2/pull/" + localStorage.getItem("lastUpdate");
-    return await this.loadData(url);
   }
 
   async saveDataLocally(loc: Location){

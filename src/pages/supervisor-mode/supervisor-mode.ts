@@ -21,10 +21,6 @@ export class SupervisorModePage {
 
   }
 
-  //Synchronize the locations in the database
-  syncLocations(){
-    this.locProvider.updateLocationsList().then(() => this.locProvider.synchronizeOfflineLocations());
-  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SuperviserModePage');

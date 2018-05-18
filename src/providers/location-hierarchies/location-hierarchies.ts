@@ -4,6 +4,8 @@ import {SystemConfigProvider} from "../system-config/system-config";
 import {HierarchyLevels} from "../../interfaces/hierarchy-levels";
 import {Hierarchy} from "../../interfaces/hierarchy";
 import {OpenhdsDb} from "../database-providers/openhds-db";
+import {DatabaseProviders} from "../database-providers/database-providers";
+import {Fieldworker} from "../../interfaces/fieldworker";
 
 /*
   Generated class for the LocationHierarchiesProvider provider.
@@ -12,64 +14,23 @@ import {OpenhdsDb} from "../database-providers/openhds-db";
   and Angular DI.
 */
 @Injectable()
-export class LocationHierarchiesProvider {
+export class LocationHierarchiesProvider extends DatabaseProviders{
 
   db: OpenhdsDb;
 
-  openhdsLogin = {
-    username: 'admin',
-    password: 'test'
-  };
-
   constructor(public http: HttpClient, public systemConfig: SystemConfigProvider) {
+    super(http, systemConfig);
     this.db = new OpenhdsDb()
   }
 
-  async initLevels(){
-    return await this.loadLevels(this.systemConfig.getServerURL() + "/locationhierarchylevels2");
+  async loadLevels(){
+    var levels = await this.initProvider("locationhierarchylevels");
+    levels.forEach(x => this.insertLevels(x));
   }
 
-  async initHierarchy(){
-    return await this.loadLocationHierarchyData(this.systemConfig.getServerURL() + "/locationhierarchies2");
-  }
-
-  private async loadLevels(url: string) {
-    const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
-
-    let levels: HierarchyLevels[] = [];
-    let timestamp = null;
-    await this.http.get(url, {headers}).toPromise().then((data) => {
-      levels = data['locationHierarchies'];
-    }).catch((err)  => {
-      throw "Error getting data occurred";
-    });
-
-    levels.forEach(x => {
-      x.extId = x.name;
-    })
-
-    await this.db.transaction('rw', this.db.levels, () => {
-      this.db.levels.bulkPut(levels).catch(error => console.log(error));
-    })
-  }
-
-
-  private async loadLocationHierarchyData(url: string) {
-    const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
-
-    let hierarchy: Hierarchy[] = [];
-    let timestamp = null;
-    await this.http.get(url, {headers}).toPromise().then((data) => {
-      hierarchy = data['locationHierarchies'];
-    }).catch((err)  => {
-      throw "Error getting data occurred";
-    });
-
-    await this.db.transaction('rw', this.db.locationhierarchies, () => {
-      this.db.locationhierarchies.bulkPut(hierarchy).catch(error => console.log(error));
-    })
+  async loadHierarchy(){
+    var hier = await this.initProvider("locationHierarchies");
+    hier.forEach(x => this.insertHierarchy(x));
   }
 
   getLevels(): Promise<HierarchyLevels[]>{
@@ -78,5 +39,14 @@ export class LocationHierarchiesProvider {
 
   getHierarchy(): Promise<Hierarchy[]>{
     return this.db.locationhierarchies.toArray();
+  }
+
+  //Abstract Updates and Adds to prevent errors
+  async insertLevels(lev: HierarchyLevels){
+    this.db.levels.add(lev).catch(err => console.log(err));
+  }
+
+  async insertHierarchy(hierarchy: Hierarchy){
+    this.db.locationhierarchies.add(hierarchy).catch(err => console.log(err));
   }
 }

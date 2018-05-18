@@ -50,7 +50,7 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.fwProvider.initProvider().catch((err) => { this.fieldworkerSyncSuccess = false; });
+    await this.fwProvider.loadInitData().catch((err) => { this.fieldworkerSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent("fieldworkerSync")
   }
@@ -63,8 +63,8 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.lhProvider.initLevels().catch((err) =>  this.locationLevelsSyncSuccess = false );
-    await this.lhProvider.initHierarchy().catch((err) => this.locationLevelsSyncSuccess = false);
+    await this.lhProvider.loadLevels().catch((err) =>  this.locationLevelsSyncSuccess = false );
+    await this.lhProvider.loadHierarchy().catch((err) => this.locationLevelsSyncSuccess = false);
     loading.dismiss();
     this.publishSynchronizationEvent("hierarchySync")
 
@@ -76,7 +76,7 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.locProvider.initProvider().catch((err) =>  this.locationSyncSuccess = false);
+    await this.locProvider.loadInitData().catch((err) =>  this.locationSyncSuccess = false);
     //await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent("locationSync")
@@ -89,7 +89,7 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.sgProvider.initProvider().catch((err) => { this.sgSyncSuccess = false; });
+    await this.sgProvider.loadInitData().catch((err) => { this.sgSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent("socialGroupSync")
   }
@@ -101,7 +101,7 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.indProvider.initProvider().catch((err) => { this.individualSyncSuccess = false; });
+    await this.indProvider.loadInitData().catch((err) => { this.individualSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent("individualSync")
   }

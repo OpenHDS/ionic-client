@@ -28,7 +28,7 @@ export class IndividualListPage {
 
   constructor(public navCtrl: NavController, public ev: Events, public navParams: NavParams, public indProvider: IndividualProvider) {
     this.ev.subscribe("submitIndividual", (ind) => {
-      this.indProvider.initProvider().then(async () => await this.getAllIndividuals()).catch(err => console.log(err))
+      this.indProvider.loadInitData().then(async () => await this.getAllIndividuals()).catch(err => console.log(err))
         .then(() =>
         {
           this.individuals = this.filterBySGExtId();
@@ -37,7 +37,7 @@ export class IndividualListPage {
     });
 
     this.ev.subscribe('syncDb', () => {
-      this.indProvider.initProvider().then(async () => await this.getAllIndividuals()).catch(err => console.log(err));
+      this.indProvider.loadInitData().then(async () => await this.getAllIndividuals()).catch(err => console.log(err));
     });
 
     this.indObserver.subscribe(async (ind) => {

@@ -28,7 +28,7 @@ export class SocialGroupsPage {
   constructor(public navCtrl: NavController, public ev: Events, public navParams: NavParams, public sgProvider: SocialGroupProvider) {
     this.ev.subscribe("submitSG", (sg) => {
       console.log(sg.sg);
-      this.sgProvider.initProvider().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err))
+      this.sgProvider.loadInitData().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err))
         .then(() =>
           {
             this.socialGroups = this.filterByLocationExtId();
@@ -37,7 +37,7 @@ export class SocialGroupsPage {
     });
 
     this.ev.subscribe('syncDb', () => {
-      this.sgProvider.initProvider().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err));
+      this.sgProvider.loadInitData().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err));
     });
 
     this.sgObserver.subscribe(async (sgs) => {

@@ -7,6 +7,7 @@ import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
 import {Individual} from "../../interfaces/individual";
 import {OpenhdsDb} from "../database-providers/openhds-db";
+import {DatabaseProviders} from "../database-providers/database-providers";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -15,55 +16,20 @@ import {OpenhdsDb} from "../database-providers/openhds-db";
   and Angular DI.
 */
 @Injectable()
-export class IndividualProvider {
+export class IndividualProvider extends DatabaseProviders{
 
   private db: OpenhdsDb;
 
-  openhdsLogin = {
-    username: 'admin',
-    password: 'test'
-  };
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {
+    super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
 
-  async initProvider(){
-    let dataUrl = this.systemConfig.getServerURL() + "/individuals2";
-    if(localStorage.getItem("individualLastUpdate") == null){
-      this.loadData(dataUrl);
-    }
-  }
-
-  private async loadData(url: string) {
-    const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.openhdsLogin.username + ":" + this.openhdsLogin.password));
-
-    let ind: Individual[] = [];
-    let timestamp = null;
-    await this.http.get(url, {headers}).toPromise().then((data) => {
-      ind = data['individuals'];
-      timestamp = data['timestamp'];
-    }).catch((err) => {
-      throw "Error getting data occurred";
-    });
-
-    ind.forEach(x => {
-      x.collectedBy = {
-        extId: "FWDW1"
-      };
-
-      x.selected = false;
-      x.clientInsert = timestamp;
-      x.processed = 1;
-    });
-
-    await this.db.transaction('rw', this.db.individuals, () => {
-      this.db.individuals.bulkPut(ind).catch(error => console.log(error))
-        .then(() => localStorage.setItem('individualLastUpdate', timestamp));
-    })
-
+  async loadInitData(){
+    var ind = await this.initProvider("individuals");
+    ind.forEach(x => this.insert(x));
   }
 
   //Get all location in the database
