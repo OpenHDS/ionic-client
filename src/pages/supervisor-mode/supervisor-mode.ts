@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams, PopoverController} from 'ionic-angular';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {LocationsProvider} from "../../providers/locations/locations-provider";
-import {SupervisorMenuPage} from "../supervisor-menu/supervisor-menu";
 
 /**
  * Generated class for the SuperviserModePage page.
@@ -17,7 +16,7 @@ import {SupervisorMenuPage} from "../supervisor-menu/supervisor-menu";
 })
 export class SupervisorModePage {
 
-  constructor(public menuPopover: PopoverController, public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider) {
 
   }
 
@@ -26,11 +25,5 @@ export class SupervisorModePage {
     console.log('ionViewDidLoad SuperviserModePage');
   }
 
-  displayMenu(event){
-    let popover = this.menuPopover.create(SupervisorMenuPage);
-    popover.present({
-      ev: event
-    });
-  }
 
 }

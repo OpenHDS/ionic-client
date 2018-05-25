@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
-import { MyApp } from './app.component';
+import { OpenHDSApp} from './app.component';
 import { BaselineCensusPage } from "../pages/baseline-census/baseline-census";
 import { LocationListPage } from "../pages/entity-lists/location-list";
 import { LocationsProvider } from '../providers/locations/locations-provider';
@@ -14,14 +14,12 @@ import { NetworkConfigProvider } from "../providers/network-config/network-confi
 import { CreateLocationPage } from "../pages/create-entities/create-location";
 import { Geolocation } from "@ionic-native/geolocation";
 import { ErrorsProvider } from '../providers/errors/errors';
-import { FieldworkerMenuPage } from "../pages/fieldworker-menu/menu";
 import { ErrorDisplayPage } from "../pages/error-display/error-display";
 import { SystemConfigProvider } from '../providers/system-config/system-config';
 import { SystemConfigPage } from "../pages/system-config/system-config";
 import {File} from "@ionic-native/file";
 import { SupervisorModePage } from "../pages/supervisor-mode/supervisor-mode";
 import { SynchronizeDbPage } from "../pages/synchronize-db/synchronize-db";
-import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
 import { LocationHierarchiesProvider } from '../providers/location-hierarchies/location-hierarchies';
 import {LocationHierarchyPage} from "../pages/entity-lists/location-hierarchy";
 import { SocialGroupProvider } from '../providers/social-group/social-group';
@@ -34,50 +32,51 @@ import { UserProvider } from '../providers/user-provider/user-provider';
 import {LoginPage} from "../pages/login/login";
 import { FieldworkerProvider } from '../providers/fieldworker/fieldworker';
 import { DatabaseProviders } from '../providers/database-providers/database-providers';
+import { CensusSubmissionProvider } from '../providers/census-submission/census-submission';
+import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
 
 @NgModule({
   declarations: [
-    MyApp,
-    FieldworkerMenuPage,
+    OpenHDSApp,
     BaselineCensusPage,
     LocationListPage,
     CreateLocationPage,
     ErrorDisplayPage,
     SystemConfigPage,
     SupervisorModePage,
-    SupervisorMenuPage,
     SynchronizeDbPage,
     LocationHierarchyPage,
     SocialGroupsPage,
     CreateSocialGroupPage,
     CreateIndividualPage,
     IndividualListPage,
-    LoginPage
+    LoginPage,
+    ApproveEntriesPage
   ],
 
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(OpenHDSApp)
   ],
 
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    FieldworkerMenuPage,
+    OpenHDSApp,
     BaselineCensusPage,
     CreateLocationPage,
     ErrorDisplayPage,
     SystemConfigPage,
     SupervisorModePage,
-    SupervisorMenuPage,
     SynchronizeDbPage,
     LocationHierarchyPage,
     LocationListPage,
     SocialGroupsPage,
     CreateSocialGroupPage,
     CreateIndividualPage,
-    IndividualListPage, LoginPage
+    IndividualListPage,
+    LoginPage,
+    ApproveEntriesPage
   ],
 
   providers: [
@@ -96,7 +95,8 @@ import { DatabaseProviders } from '../providers/database-providers/database-prov
     IndividualProvider,
     UserProvider,
     FieldworkerProvider,
-    DatabaseProviders
+    DatabaseProviders,
+    CensusSubmissionProvider
   ]
 })
 

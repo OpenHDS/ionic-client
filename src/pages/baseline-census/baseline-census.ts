@@ -1,8 +1,6 @@
 import {Component, OnInit, Input, ViewChild, AfterViewInit} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams, PopoverController} from 'ionic-angular';
-import { LocationListPage } from "../entity-lists/location-list";
 import { Location } from "../../interfaces/locations";
-import {FieldworkerMenuPage} from "../fieldworker-menu/menu";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {Hierarchy} from "../../interfaces/hierarchy";
 import {SocialGroup} from "../../interfaces/social-groups";
@@ -28,20 +26,13 @@ export class BaselineCensusPage implements OnInit{
   selectedLocation: Location;
   selectedSocialGrp: SocialGroup;
   selectedIndividuals: Individual[] = [];
-  constructor(public navCtrl: NavController, public navParams: NavParams, public menuPopover: PopoverController, public ev: Events,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public ev: Events,
               public prop: SystemConfigProvider) {
   }
 
+
   ngOnInit(){
   }
-
-
-  displayMenu(event){
-    let popover = this.menuPopover.create(FieldworkerMenuPage);
-    popover.present({
-      ev: event
-    });
-  };
 
   setSelectedHierarchy(hierarchy: Hierarchy){
     console.log(hierarchy);
@@ -59,6 +50,13 @@ export class BaselineCensusPage implements OnInit{
 
   setSelectedIndividuals(ind: Individual){
     this.selectedIndividuals.push(ind);
+  }
+
+  completeBaselineCensus(){
+    this.selectedHierarchy = [];
+    this.selectedLocation = null;
+    this.selectedSocialGrp = null;
+    this.selectedIndividuals = null;
   }
 }
 

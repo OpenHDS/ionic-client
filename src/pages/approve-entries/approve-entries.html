@@ -7,12 +7,20 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>approve-entries</ion-title>
+    <ion-title>Data Entry Approval</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <ion-card>
+    <ion-card-header>Individuals</ion-card-header>
+    <ion-card-content>
+      <ion-item *ngFor="let ind of this.needApproval">
+          {{ind.individual.firstName}} {{ind.individual.lastName}}
+        <button ion-button (click)="this.approveAndSend(ind)">Approve Entry</button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

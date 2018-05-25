@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {SystemConfigProvider} from "../system-config/system-config";
 import {NetworkConfigProvider} from "../network-config/network-config";
@@ -37,18 +37,16 @@ export class IndividualProvider extends DatabaseProviders{
     return this.db.individuals.toArray();
   }
 
-  async saveDataLocally(ind: Individual){
-    ind.collectedBy = {
-      extId: "FWEK1D"
-    };
+  async findIndividualByExtId(extId: string){
+    return await this.db.individuals.where("extId").equals(extId).toArray()[0];
+  }
 
+  async saveDataLocally(ind: Individual){
     if(!ind.uuid)
-      ind.uuid = UUID.UUID();
+      ind.uuid = UUID.UUID().toString();
 
     ind.deleted = false;
-    ind.selected = false;
-    ind.processed = 0;
-    ind.clientInsert = new Date().getTime();
+
 
     await this.insert(ind);
   }

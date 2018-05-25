@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 
-import { NavController } from 'ionic-angular';
+import {MenuController, NavController} from 'ionic-angular';
 
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {BaselineCensusPage} from "../baseline-census/baseline-census";
@@ -19,13 +19,24 @@ export class LoginPage {
   submitted = false;
   loginForm: FormGroup;
 
-  constructor(public navCtrl: NavController, public userProvider: UserProvider, public formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, public menu: MenuController, public userProvider: UserProvider,
+              public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
       username: ['', Validators.compose([Validators.required])],
       password:['', Validators.compose([Validators.required])],
     });
 
+  }
+
+  ionViewWillEnter() {
+    // the root left menu should be disabled on this page
+    this.menu.enable(false);
+  }
+
+  ionViewWillLeave() {
+    // enable the root left menu when leaving this page
+    this.menu.enable(true);
   }
 
   async onLogin() {

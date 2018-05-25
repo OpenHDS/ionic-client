@@ -6,12 +6,7 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>Baseline Census
-      <button ion-button small color="dark" float-right icon-right (click)="displayMenu($event)">
-        Menu
-        <ion-icon float-sm-right name="arrow-dropdown"></ion-icon>
-      </button>
-    </ion-title>
+    <ion-title>Baseline Census</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -46,11 +41,12 @@
                      [parentLevel]="this.selectedHierarchy[this.selectedHierarchy.length-1]"></location-list>
       <social-groups (selectedSg)="this.setSocialGroup($event)" [sgLocation]="this.selectedLocation"
                       *ngIf="this.selectedLocation != undefined && this.selectedSocialGrp == undefined"></social-groups>
-      <individual-list (selectedIndividuals)="this.setSelectedIndividuals($event)" [sg]="this.selectedSocialGrp"
+      <individual-list (selectedIndividuals)="this.setSelectedIndividuals($event)" [sg]="this.selectedSocialGrp" [loc]="this.selectedLocation"
                      *ngIf="this.selectedSocialGrp != undefined && this.selectedIndividuals.length >= 0"></individual-list>
 
     </ion-col>
-
   </ion-row>
+
+  <button ion-button full (click)="this.completeBaselineCensus()" [disabled]="this.selectedIndividuals.length < 0">Finish Baseline Census</button>
 
 </ion-content>

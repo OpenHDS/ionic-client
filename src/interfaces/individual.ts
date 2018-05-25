@@ -1,22 +1,17 @@
-import {SocialGroup} from "./social-groups";
+import {Fieldworker} from "./fieldworker";
 
 export interface Individual{
   extId: string;
-  dob: Date;
-  dobAspect: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  gender: string;
-  father: Individual;
-  mother: Individual;
-  socialGroup: SocialGroup;
-  collectedBy: {};
-  deleted: boolean;
-  insertDate: Date;
-  clientInsert: number;
+  dob?: Date;
+  dobAspect?: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  gender?: string;
+  father?: Individual;
+  mother?: Individual;
+  collectedBy?: Fieldworker;
+  deleted?: boolean;
+  insertDate?: Date;
   uuid: string;
-  bIsToA: number;
-  processed: number; //0 for not sent, 1 for sent, 2 for sent, but with error
-  selected: boolean;
 }

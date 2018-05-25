@@ -5,6 +5,7 @@ import {SocialGroup} from "../../interfaces/social-groups";
 import {Individual} from "../../interfaces/individual";
 import {CreateIndividualPage} from "../create-entities/create-individual";
 import {IndividualProvider} from "../../providers/individual/individual";
+import {Location} from "../../interfaces/locations";
 
 /**
  * Generated class for the IndividualListPage page.
@@ -22,13 +23,14 @@ import {IndividualProvider} from "../../providers/individual/individual";
 export class IndividualListPage {
   indObserver: RefreshObservable = new RefreshObservable();
   @Input() sg: SocialGroup;
+  @Input() loc: Location;
   @Output() selectedIndividual = new EventEmitter<Individual>();
   selectedIndDisplay: Individual;
   individuals: Individual[];
 
   constructor(public navCtrl: NavController, public ev: Events, public navParams: NavParams, public indProvider: IndividualProvider) {
-    this.ev.subscribe("submitIndividual", (ind) => {
-      this.indProvider.loadInitData().then(async () => await this.getAllIndividuals()).catch(err => console.log(err))
+    this.ev.subscribe("submitIndividual", async (ind) => {
+     await this.getAllIndividuals().catch(err => console.log(err))
         .then(() =>
         {
           this.individuals = this.filterBySGExtId();
@@ -46,6 +48,7 @@ export class IndividualListPage {
   }
 
   async ngOnInit() {
+    this.indProvider.loadInitData();
     await this.getAllIndividuals().catch(err => console.log(err));
   }
 
@@ -61,14 +64,10 @@ export class IndividualListPage {
   }
 
   selectIndividual(ind){
-    if(this.selectedIndDisplay != null)
-      this.individuals[this.individuals.indexOf(this.selectedIndDisplay)].selected = false;
-    this.selectedIndDisplay = ind;
-    ind.selected = true;
     this.selectedIndividual.emit(ind);
   }
 
   goToCreateIndividualPage(){
-    this.navCtrl.push(CreateIndividualPage, {sg: this.sg});
+    this.navCtrl.push(CreateIndividualPage, {sg: this.sg, loc: this.loc});
   }
 }

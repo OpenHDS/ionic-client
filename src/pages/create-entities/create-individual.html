@@ -95,18 +95,26 @@
       </ion-item>
       <ion-item>
         <ion-label floating>Relationship to Group Head</ion-label>
-        <ion-select formControlName="bIsToA" [(ngModel)]="this.individual.bIsToA" interface="popover">
-          <ion-option val="1">1 - Head</ion-option>
-          <ion-option val="2">2 - Spouse</ion-option>
-          <ion-option val="3">3 - Son/Daughter</ion-option>
-          <ion-option val="4">4 - Brother/Sister</ion-option>
-          <ion-option val="5">5 - Parent</ion-option>
-          <ion-option val="6">6 - Grandchild</ion-option>
-          <ion-option val="7">7 - Not Related</ion-option>
-          <ion-option val="8">8 - Other Relative</ion-option>
-          <ion-option val="9">9 - Don't Know</ion-option>
+        <ion-select formControlName="bIsToA" [(ngModel)]="this.bIsToA" interface="popover">
+          <ion-option value="1">1 - Head</ion-option>
+          <ion-option value="2">2 - Spouse</ion-option>
+          <ion-option value="3">3 - Son/Daughter</ion-option>
+          <ion-option value="4">4 - Brother/Sister</ion-option>
+          <ion-option value="5">5 - Parent</ion-option>
+          <ion-option value="6">6 - Grandchild</ion-option>
+          <ion-option value="7">7 - Not Related</ion-option>
+          <ion-option value="8">8 - Other Relative</ion-option>
+          <ion-option value="9">9 - Don't Know</ion-option>
         </ion-select>
       </ion-item>
+      <ion-item>
+        <ion-label floating> Spouse (If one, enter the spouses external id)</ion-label>
+        <ion-input type="text" formControlName="spouse" name="spouse"[(ngModel)]="this.spouse"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="individualForm.controls.spouse.hasError('pattern') && individualForm.controls.spouse.dirty">
+        <p ion-text color="danger">A individual external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
+      </ion-item>
+
       <div *ngIf="this.createHead; else indButtonBlock">
         <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Head </button>
       </div>

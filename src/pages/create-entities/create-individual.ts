@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -7,6 +7,9 @@ import {Individual} from "../../interfaces/individual";
 import {IndividualProvider} from "../../providers/individual/individual";
 import {SocialGroup} from "../../interfaces/social-groups";
 import {UserProvider} from "../../providers/user-provider/user-provider";
+import {Location} from "../../interfaces/locations";
+import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
+import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -21,12 +24,12 @@ import {UserProvider} from "../../providers/user-provider/user-provider";
   templateUrl: 'create-individual.html',
 })
 export class CreateIndividualPage {
-
   edit: boolean;
   errorFix: boolean;
   createHead: boolean;
   individualForm: FormGroup;
   sg: SocialGroup;
+  loc: Location;
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   individual: Individual = {
@@ -39,20 +42,18 @@ export class CreateIndividualPage {
     gender: null,
     father: null,
     mother: null,
-    socialGroup: null,
-    bIsToA: null,
-    collectedBy: {},
+    collectedBy: null,
     deleted: null,
     insertDate: null,
-    clientInsert: null,
-    uuid: null,
-    processed: null,
-    selected: false
+    uuid: null
   };
 
-  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
+  spouseExtId: string;
+  bIsToA: string;
+
+  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams,
               public formBuilder: FormBuilder, public individualProvider: IndividualProvider, public netConfig: NetworkConfigProvider,
-              public sysConfig: SystemConfigProvider, public user: UserProvider) {
+               public user: UserProvider, public fieldProvider: FieldworkerProvider, public censusSub: CensusSubmissionProvider) {
 
     if(this.navParams.get('createHead'))
       this.createHead = true;
@@ -60,7 +61,9 @@ export class CreateIndividualPage {
       this.createHead = false;
     }
 
-    this.sg = this.navParams.get('indSg');
+    this.sg = this.navParams.data["sg"];
+
+    this.loc = this.navParams.data["loc"];
 
 
 
@@ -73,7 +76,8 @@ export class CreateIndividualPage {
       dobAspect: ['', Validators.compose([Validators.required, Validators.min(1),
                     Validators.max(2)])],
       gender: ['', Validators.compose([Validators.required])],
-      bIsToA: ['', Validators.compose([Validators.required])]
+      bIsToA: ['', Validators.compose([Validators.required])],
+      spouse:['', Validators.compose([Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]
     });
 
     //Determine if error is being fixed.
@@ -88,7 +92,22 @@ export class CreateIndividualPage {
   //Dismiss the modal. Pass back the created or fixed location.
   //TODO: Prevent popping of page if form has errors.
   async popView() {
+    //Set fieldworker and save individual locally
+    await this.fieldProvider.getFieldworker(localStorage.getItem("loggedInUser")).then(x => this.individual.collectedBy = x[0]);
     await this.individualProvider.saveDataLocally(this.individual);
+
+    //After saving individual locally, create a census individual submission for server approval.
+    var censusInd = {};
+    censusInd["uuid"] = this.individual.uuid;
+    censusInd["locationExtId"] = this.loc.extId;
+    censusInd["socialGroupExtId"] = this.sg.extId;
+    censusInd["socialGroupHeadExtId"] = this.sg.groupHead.extId;
+    censusInd["individual"] = this.individual;
+    censusInd["bIsToA"] = this.bIsToA;
+
+    censusInd["spouse"] =  this.spouseExtId != undefined ? await this.individualProvider.findIndividualByExtId(this.spouseExtId): null;
+    censusInd["collectedBy"] = {extId: this.individual.collectedBy.extId, "uuid": this.individual.collectedBy.uuid};
+    await this.censusSub.saveCensusInformationForApproval(censusInd);
     if(this.createHead)
       await this.publishHeadCreationEvent();
     else
@@ -103,6 +122,5 @@ export class CreateIndividualPage {
 
   async publishIndividualCreation(){
     this.ev.publish('submitIndividual', {ind: this.individual, head: false});
-
   }
 }
