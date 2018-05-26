@@ -25,7 +25,6 @@ export class IndividualListPage {
   @Input() sg: SocialGroup;
   @Input() loc: Location;
   @Output() selectedIndividual = new EventEmitter<Individual>();
-  selectedIndDisplay: Individual;
   individuals: Individual[];
 
   constructor(public navCtrl: NavController, public ev: Events, public navParams: NavParams, public indProvider: IndividualProvider) {
@@ -48,7 +47,6 @@ export class IndividualListPage {
   }
 
   async ngOnInit() {
-    this.indProvider.loadInitData();
     await this.getAllIndividuals().catch(err => console.log(err));
   }
 

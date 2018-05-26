@@ -46,8 +46,6 @@ export class IndividualProvider extends DatabaseProviders{
       ind.uuid = UUID.UUID().toString();
 
     ind.deleted = false;
-
-
     await this.insert(ind);
   }
 
