@@ -1,9 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { File } from "@ionic-native/file";
-import { FileError } from "@ionic-native/file";
 import {ConfigLabels} from "./config-labels";
-import {FilePath} from "@ionic-native/file-path";
 
 /*
   Generated class for the SystemConfigProvider provider.
