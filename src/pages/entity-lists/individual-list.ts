@@ -33,7 +33,7 @@ export class IndividualListPage {
         .then(() =>
         {
           this.individuals = this.filterBySGExtId();
-          this.selectIndividual(ind.ind);
+          this.selectIndividual(ind["ind"]);
         });
     });
 
@@ -62,6 +62,7 @@ export class IndividualListPage {
   }
 
   selectIndividual(ind){
+    console.log("EMIT")
     this.selectedIndividual.emit(ind);
   }
 

@@ -5,6 +5,9 @@ import {SystemConfigProvider} from "../../providers/system-config/system-config"
 import {Hierarchy} from "../../interfaces/hierarchy";
 import {SocialGroup} from "../../interfaces/social-groups";
 import {Individual} from "../../interfaces/individual";
+import {CreateVisitPage} from "../create-entities/create-visit";
+import {UserProvider} from "../../providers/user-provider/user-provider";
+import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 
 /**
  * Generated class for the BaselineCensusPage page.
@@ -16,22 +19,23 @@ import {Individual} from "../../interfaces/individual";
 @IonicPage()
 @Component({
   selector: 'baseline-census',
-  templateUrl: 'baseline-census.html',
+  templateUrl: 'baseline-census.html'
 })
 
 export class BaselineCensusPage implements OnInit{
   levels = ["Region", "District", "Village", "Subvillage"];
-
+  collectedBy;
   selectedHierarchy: Hierarchy[] = [];
   selectedLocation: Location;
   selectedSocialGrp: SocialGroup;
   selectedIndividuals: Individual[] = [];
   constructor(public navCtrl: NavController, public navParams: NavParams, public ev: Events,
-              public prop: SystemConfigProvider) {
+              public prop: SystemConfigProvider, public userData: UserProvider, public fieldworkerProvider: FieldworkerProvider) {
   }
 
-
-  ngOnInit(){
+  async ngOnInit(){
+    this.collectedBy = await this.fieldworkerProvider.getFieldworker(this.userData.getLoggedInUser());
+    console.log(this,this.collectedBy);
   }
 
   setSelectedHierarchy(hierarchy: Hierarchy){
@@ -52,11 +56,14 @@ export class BaselineCensusPage implements OnInit{
     this.selectedIndividuals.push(ind);
   }
 
-  completeBaselineCensus(){
+  async completeBaselineCensus(){
+    await this.navCtrl.push(CreateVisitPage, {visitLocation: this.selectedLocation, collectedBy: this.collectedBy[0]});
+
+    //Reset for new census collection.
     this.selectedHierarchy = [];
-    this.selectedLocation = null;
-    this.selectedSocialGrp = null;
-    this.selectedIndividuals = null;
+    this.selectedLocation = undefined;
+    this.selectedSocialGrp = undefined;
+    this.selectedIndividuals = [];
   }
 }
 

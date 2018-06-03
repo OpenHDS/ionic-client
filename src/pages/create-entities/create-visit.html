@@ -1,0 +1,74 @@
+<!--
+  Generated template for the CreateVisitPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>Visit Information</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!this.netConfig.isConnected()">
+    <ion-card color="danger">
+      <ion-card-content>
+        <p>There is currently no network connection. You data will be uploaded to the server when there
+          is a connection!</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <div padding-left padding-right>
+    <!-- Visit Entry Form -->
+    <form  [formGroup]="visitForm" (ngSubmit)="popView()">
+      <ion-item>
+        <ion-label floating> Fieldworker </ion-label>
+        <ion-input type="text" value="{{this.collectedBy.extId}}"disabled></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Location Id </ion-label>
+        <ion-input type="text" value="{{this.visitLocation.extId}}"disabled></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label> Visit Date </ion-label>
+        <ion-input type="date" value="{{this.visitLocation.visitDate}}" formControlName="visitDate"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="visitForm.controls.visitDate.hasError('required') && visitForm.controls.visitDate.dirty">
+        <p ion-text color="danger">The visit date is required for a visit.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> External Id </ion-label>
+        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.visit.extId"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="visitForm.controls.extId.hasError('required') && visitForm.controls.extId.dirty">
+        <p ion-text color="danger">An external ID is required for a visit.</p>
+      </ion-item>
+      <ion-item *ngIf="visitForm.controls.extId.hasError('pattern') && visitForm.controls.extId.dirty">
+        <p ion-text color="danger">An external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Real Visit </ion-label>
+        <ion-input name="realVisit" formControlName="realVisit" [(ngModel)]="this.visit.realVisit"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="visitForm.controls.realVisit.hasError('required') && visitForm.controls.realVisit.touched">
+        <p ion-text color="danger">The type of the visit is required.</p>
+      </ion-item>
+
+      <ion-item *ngIf="visitForm.controls.realVisit.hasError('pattern') && visitForm.controls.realVisit.touched">
+        <p ion-text color="danger">A real visit must be 0 or 1.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label floating> Round Number </ion-label>
+        <ion-input ion-text formControlName="roundNumber" type="text" name="roundNumber"  [(ngModel)]="this.visit.roundNumber"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="visitForm.controls.roundNumber.hasError('required') && visitForm.controls.roundNumber.dirty">
+        <p ion-text color="danger">A round number is required.</p>
+      </ion-item>
+      <ion-item *ngIf="visitForm.controls.roundNumber.hasError('min') && visitForm.controls.roundNumber.dirty">
+        <p ion-text color="danger">A round number should be greater than or equal to 0</p>
+      </ion-item>
+      <button ion-button round color="dark" [disabled]="!visitForm.valid" type="submit"> Submit Visit </button>
+    </form>
+  </div>
+</ion-content>

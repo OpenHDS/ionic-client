@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import {CreateSocialGroupPage} from "./create-sg";
+import {CreateVisitPage} from "./create-visit";
 
 @NgModule({
   declarations: [
-    CreateSocialGroupPage,
+    CreateVisitPage,
   ],
   imports: [
-    IonicPageModule.forChild(CreateSocialGroupPage),
+    IonicPageModule.forChild(CreateVisitPage),
   ],
 })
 export class CreateSgModule {}

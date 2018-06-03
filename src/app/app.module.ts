@@ -34,6 +34,8 @@ import { FieldworkerProvider } from '../providers/fieldworker/fieldworker';
 import { DatabaseProviders } from '../providers/database-providers/database-providers';
 import { CensusSubmissionProvider } from '../providers/census-submission/census-submission';
 import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
+import { VisitsProvider } from '../providers/visits/visits';
+import {CreateVisitPage} from "../pages/create-entities/create-visit";
 
 @NgModule({
   declarations: [
@@ -51,7 +53,8 @@ import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
     CreateIndividualPage,
     IndividualListPage,
     LoginPage,
-    ApproveEntriesPage
+    ApproveEntriesPage,
+    CreateVisitPage
   ],
 
   imports: [
@@ -76,7 +79,8 @@ import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
     CreateIndividualPage,
     IndividualListPage,
     LoginPage,
-    ApproveEntriesPage
+    ApproveEntriesPage,
+    CreateVisitPage
   ],
 
   providers: [
@@ -96,7 +100,8 @@ import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
     UserProvider,
     FieldworkerProvider,
     DatabaseProviders,
-    CensusSubmissionProvider
+    CensusSubmissionProvider,
+    VisitsProvider
   ]
 })
 
