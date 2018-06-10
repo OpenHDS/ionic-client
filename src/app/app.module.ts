@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
 
 import { OpenHDSApp} from './app.component';
 import { BaselineCensusPage } from "../pages/baseline-census/baseline-census";
@@ -36,6 +35,10 @@ import { CensusSubmissionProvider } from '../providers/census-submission/census-
 import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
 import { VisitsProvider } from '../providers/visits/visits';
 import {CreateVisitPage} from "../pages/create-entities/create-visit";
+import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
+import {LocationSearch} from "../pages/search-entities/location-search";
+import {SocialGroupSearch} from "../pages/search-entities/sg-search";
+import {IndividualSearch} from "../pages/search-entities/ind-search";
 
 @NgModule({
   declarations: [
@@ -54,7 +57,11 @@ import {CreateVisitPage} from "../pages/create-entities/create-visit";
     IndividualListPage,
     LoginPage,
     ApproveEntriesPage,
-    CreateVisitPage
+    CreateVisitPage,
+    SearchEntitiesPage,
+    LocationSearch,
+    SocialGroupSearch,
+    IndividualSearch
   ],
 
   imports: [
@@ -80,11 +87,14 @@ import {CreateVisitPage} from "../pages/create-entities/create-visit";
     IndividualListPage,
     LoginPage,
     ApproveEntriesPage,
-    CreateVisitPage
+    CreateVisitPage,
+    SearchEntitiesPage,
+    LocationSearch,
+    SocialGroupSearch,
+    IndividualSearch
   ],
 
   providers: [
-    StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Network,
@@ -105,5 +115,5 @@ import {CreateVisitPage} from "../pages/create-entities/create-visit";
   ]
 })
 
-export class AppModule {}
+export class OpenHdsAppModule {}
 

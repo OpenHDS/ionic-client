@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {ConfigLabels} from "./config-labels";
+import {Platform} from "ionic-angular";
 
 /*
   Generated class for the SystemConfigProvider provider.
@@ -13,20 +14,27 @@ import {ConfigLabels} from "./config-labels";
 export class SystemConfigProvider {
   private testingFieldworker= "FWDW1";
   private testingLocLevel: string = "MBI";
+  private propertiesUrl: string;
   private url: string;
-  constructor(public http: HttpClient) {
+
+  constructor(public http: HttpClient, public platform: Platform) {
+    if(this.platform.is("ipad") || this.platform.is("tablet")){
+      this.propertiesUrl = "../www/assets/resources/config.json"
+    } else {
+      this.propertiesUrl = "../../assets/resources/config.json"
+    }
     if(localStorage.getItem("propertiesLoaded") != "Y")
       this.loadPropertiesFile();
   }
 
   private async loadPropertiesFile(){
 
-    let properties = this.http.get("../www/assets/resources/config.json").toPromise();
+    let properties = this.http.get(this.propertiesUrl).toPromise();
     let info = await properties;
 
     for(var prop in info){
-        console.log(prop);
-        localStorage.setItem(prop, info[prop]);
+      console.log(prop);
+      localStorage.setItem(prop, info[prop]);
     }
 
     localStorage.setItem("propertiesLoaded", "Y");

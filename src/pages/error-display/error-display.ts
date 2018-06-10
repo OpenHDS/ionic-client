@@ -33,22 +33,21 @@ export class ErrorDisplayPage {
   convertTimestampToDate(timestamp: number){
     return new Date(timestamp).toString();
   }
+  //
+  // //Fix errors that occur with creation or saving of a location.
+  // fixLocationErrors(locError: Errors){
+  //   const createPage = this.modalCtrl.create(CreateLocationPage, {fixError: true, location: locError.entity});
+  //   createPage.present();
+  //
+  //   createPage.onDidDismiss(data => {
+  //     if(data != null) {
+  //       locError.entity = data.loc;
+  //     }
+  //   });
+  // }
 
-  //Fix errors that occur with creation or saving of a location.
-  fixLocationErrors(locError: Errors){
-    const createPage = this.modalCtrl.create(CreateLocationPage, {fixError: true, location: locError.entity});
-    createPage.present();
-
-    createPage.onDidDismiss(data => {
-      if(data != null) {
-        locError.entity = data.loc;
-        this.locProvider.resolveErrors(locError);
-      }
-    });
-  }
-
-  getEntityModal(error){
-    if(error.entityType === EntityErrorLabels.LOCATION_ERROR)
-      this.fixLocationErrors(error);
-  }
+  // getEntityModal(error){
+  //   if(error.entityType === EntityErrorLabels.LOCATION_ERROR)
+  //     this.fixLocationErrors(error);
+  // }
 }

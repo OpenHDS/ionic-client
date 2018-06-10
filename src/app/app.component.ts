@@ -9,6 +9,7 @@ import {SupervisorModePage} from "../pages/supervisor-mode/supervisor-mode";
 import {SynchronizeDbPage} from "../pages/synchronize-db/synchronize-db";
 import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
 import {SystemConfigPage} from "../pages/system-config/system-config";
+import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
 
 export interface PageInterface {
   title: string;
@@ -22,6 +23,7 @@ export interface PageInterface {
 }
 
 @Component({
+  selector: `ion-app`,
   templateUrl: 'app.html'
 })
 export class OpenHDSApp {
@@ -30,10 +32,12 @@ export class OpenHDSApp {
   fieldworkerPages: PageInterface[] = [
     { title: 'Dashboard', name: 'DashboardPage', component: BaselineCensusPage },
     { title: 'Baseline Census', name: 'BaselineCensusPage', component: BaselineCensusPage},
+    { title: 'Search For a Record', name: 'SearchEntitiesPage', component: SearchEntitiesPage},
   ];
   adminPages: PageInterface[] = [
     { title: 'Dashboard', name: 'AdminDashboardPage', component: SupervisorModePage},
     { title: 'Baseline Census', name: 'BaselineCensusPage', component: BaselineCensusPage},
+    { title: 'Search For a Record', name: 'SearchEntitiesPage', component: SearchEntitiesPage},
     { title: 'Synchronization', name: 'SynchronizeDbPage', component: SynchronizeDbPage},
     { title: 'Data Entry Approval', name: 'ApproveEntriesPage', component: ApproveEntriesPage},
     { title: 'System Configurations', name: 'SystemConfigPage', component: SystemConfigPage},
@@ -41,7 +45,7 @@ export class OpenHDSApp {
 
   rootPage: any;
 
-  constructor( public events: Events,  public menu: MenuController,  public platform: Platform, public splashScreen: SplashScreen,
+  constructor( public events: Events,  public platform: Platform, public splashScreen: SplashScreen,
                public userData: UserProvider, public appCtrl: App) {
 
     if(this.userData.hasLoggedIn()){
@@ -49,6 +53,7 @@ export class OpenHDSApp {
     } else {
       this.rootPage = LoginPage;
     }
+
     this.platformReady();
   }
 
@@ -64,7 +69,7 @@ export class OpenHDSApp {
   platformReady() {
     // Call any initial plugins when ready
     this.platform.ready().then(() => {
-      this.splashScreen.hide();
+
     });
   }
 }
