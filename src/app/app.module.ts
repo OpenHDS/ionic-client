@@ -36,9 +36,7 @@ import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
 import { VisitsProvider } from '../providers/visits/visits';
 import {CreateVisitPage} from "../pages/create-entities/create-visit";
 import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
-import {LocationSearch} from "../pages/search-entities/location-search";
-import {SocialGroupSearch} from "../pages/search-entities/sg-search";
-import {IndividualSearch} from "../pages/search-entities/ind-search";
+
 
 @NgModule({
   declarations: [
@@ -58,10 +56,7 @@ import {IndividualSearch} from "../pages/search-entities/ind-search";
     LoginPage,
     ApproveEntriesPage,
     CreateVisitPage,
-    SearchEntitiesPage,
-    LocationSearch,
-    SocialGroupSearch,
-    IndividualSearch
+    SearchEntitiesPage
   ],
 
   imports: [
@@ -88,10 +83,7 @@ import {IndividualSearch} from "../pages/search-entities/ind-search";
     LoginPage,
     ApproveEntriesPage,
     CreateVisitPage,
-    SearchEntitiesPage,
-    LocationSearch,
-    SocialGroupSearch,
-    IndividualSearch
+    SearchEntitiesPage
   ],
 
   providers: [

@@ -15,21 +15,76 @@
 <ion-content padding>
   <div padding>
     <ion-segment [(ngModel)]="entityType">
-      <ion-segment-button value="locations">
+      <ion-segment-button value="locations" (click)="loadList()">
         Locations
       </ion-segment-button>
-      <ion-segment-button value="socialgroups">
+      <ion-segment-button value="socialgroups" (click)="loadList()">
         Social Groups
       </ion-segment-button>
-      <ion-segment-button value="individuals">
+      <ion-segment-button value="individuals" (click)="loadList()">
         Individuals
       </ion-segment-button>
     </ion-segment>
   </div>
 
   <div [ngSwitch]="entityType">
-    <location-search *ngSwitchCase="'locations'"></location-search>
-    <social-group-search *ngSwitchCase="'socialgroups'"></social-group-search>
-    <individual-search *ngSwitchCase="'individuals'"></individual-search>
+    <div *ngSwitchCase="'locations'">
+      <div>
+        <ion-item>
+          <ion-searchbar placeholder="Search By Location External Id or Location Name"
+                         (ionInput)="getResults($event)"></ion-searchbar>
+        </ion-item>
+      </div>
+      <div>
+        <ion-list no-lines>
+          <ion-card *ngFor="let loc of this.filteredLocations">
+            <ion-item>
+              <h1>{{loc.locationName}}</h1>
+              <h5> Ext Id: {{loc.extId}}</h5>
+              <button ion-button outline click="select(loc)">Select</button>
+            </ion-item>
+          </ion-card>
+        </ion-list>
+      </div>
+    </div>
+    <div *ngSwitchCase="'socialgroups'">
+      <div>
+        <ion-item>
+          <ion-searchbar placeholder="Search By Social Group External Id, Group Head External Id, or Social Group Name"
+                         (ionInput)="getResults($event)"></ion-searchbar>
+        </ion-item>
+      </div>
+      <div>
+        <ion-list no-lines>
+          <ion-card *ngFor="let sg of this.filteredSocialGroups">
+            <ion-item>
+              <h1>{{sg.groupName}}</h1>
+              <h5> Group Head: {{sg.groupHead.firstName}} {{sg.groupHead.lastName}}</h5>
+              <h5> Ext Id: {{sg.extId}}</h5>
+              <button ion-button outline click="select(sg)">Select</button>
+            </ion-item>
+          </ion-card>
+        </ion-list>
+      </div>
+    </div>
+    <div *ngSwitchCase="'individuals'">
+      <div>
+        <ion-item>
+          <ion-searchbar placeholder="Search By Individual External Id, or by Individuals Name"
+                         (ionInput)="getResults($event)"></ion-searchbar>
+        </ion-item>
+      </div>
+      <div>
+        <ion-list no-lines>
+          <ion-card *ngFor="let ind of this.filteredIndividuals">
+            <ion-item>
+              <h1>{{ind.firstName}} {{ind.lastName}}</h1>
+              <h5> Ext Id: {{ind.extId}}</h5>
+              <button ion-button outline click="select(ind)">Select</button>
+            </ion-item>
+          </ion-card>
+        </ion-list>
+      </div>
+    </div>
   </div>
 </ion-content>
