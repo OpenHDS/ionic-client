@@ -32,7 +32,7 @@
       <div>
         <ion-item>
           <ion-searchbar placeholder="Search By Location External Id or Location Name"
-                         (ionInput)="getResults($event)"></ion-searchbar>
+                         (ionInput)="this.search($event)"></ion-searchbar>
         </ion-item>
       </div>
       <div>
@@ -51,7 +51,7 @@
       <div>
         <ion-item>
           <ion-searchbar placeholder="Search By Social Group External Id, Group Head External Id, or Social Group Name"
-                         (ionInput)="getResults($event)"></ion-searchbar>
+                         (ionInput)="this.search($event)"></ion-searchbar>
         </ion-item>
       </div>
       <div>
@@ -61,7 +61,7 @@
               <h1>{{sg.groupName}}</h1>
               <h5> Group Head: {{sg.groupHead.firstName}} {{sg.groupHead.lastName}}</h5>
               <h5> Ext Id: {{sg.extId}}</h5>
-              <button ion-button outline click="select(sg)">Select</button>
+              <button ion-button outline click="this.select(sg)">Select</button>
             </ion-item>
           </ion-card>
         </ion-list>
@@ -71,7 +71,7 @@
       <div>
         <ion-item>
           <ion-searchbar placeholder="Search By Individual External Id, or by Individuals Name"
-                         (ionInput)="getResults($event)"></ion-searchbar>
+                         (ionInput)="this.search($event)"></ion-searchbar>
         </ion-item>
       </div>
       <div>
@@ -80,7 +80,7 @@
             <ion-item>
               <h1>{{ind.firstName}} {{ind.lastName}}</h1>
               <h5> Ext Id: {{ind.extId}}</h5>
-              <button ion-button outline click="select(ind)">Select</button>
+              <button ion-button outline click="this.select(ind)">Select</button>
             </ion-item>
           </ion-card>
         </ion-list>
