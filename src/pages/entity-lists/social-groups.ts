@@ -5,6 +5,7 @@ import {RefreshObservable} from "../../providers/RefreshObservable";
 import {SocialGroup} from "../../interfaces/social-groups";
 import {Location} from "../../interfaces/locations";
 import {CreateSocialGroupPage} from "../create-entities/create-sg";
+import {SystemConfigProvider} from "../../providers/system-config/system-config";
 
 /**
  * Generated class for the SocialGroupsPage page.
@@ -25,7 +26,8 @@ export class SocialGroupsPage {
   @Output() selectedSg = new EventEmitter<SocialGroup>();
   selectedSGDisplay: SocialGroup;
 
-  constructor(public navCtrl: NavController, public ev: Events, public navParams: NavParams, public sgProvider: SocialGroupProvider) {
+  constructor(public navCtrl: NavController, public ev: Events, public navParams: NavParams, public sgProvider: SocialGroupProvider,
+              public systemConfig: SystemConfigProvider) {
     this.ev.subscribe("submitSG", (sg) => {
       console.log(sg.sg);
       this.sgProvider.loadInitData().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err))
@@ -62,7 +64,8 @@ export class SocialGroupsPage {
     if(this.socialGroups == null)
       return [];
 
-    return this.socialGroups.filter(sg => sg.extId.substring(0, this.sgLocation.extId.length) == this.sgLocation.extId);
+    return this.socialGroups.filter(sg => sg.extId.substring(0, this.sgLocation.extId.length) == this.sgLocation.extId
+      && this.sgLocation.locationLevel.level.keyIdentifier == this.systemConfig.getSocialLookupLevel());
   }
 
   selectSocialGroup(socialGroup){

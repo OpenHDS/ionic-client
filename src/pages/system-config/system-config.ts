@@ -105,4 +105,5 @@ export class SystemConfigPage {
   displayURL(){
     this.showURL = !this.showURL;
   }
+
 }

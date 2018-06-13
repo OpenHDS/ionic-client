@@ -12,17 +12,16 @@ import {Platform} from "ionic-angular";
 
 @Injectable()
 export class SystemConfigProvider {
-  private testingFieldworker= "FWDW1";
-  private testingLocLevel: string = "MBI";
   private propertiesUrl: string;
-  private url: string;
 
   constructor(public http: HttpClient, public platform: Platform) {
+    //Location of config file, dependent on device the application is running on.
     if(this.platform.is("ipad") || this.platform.is("tablet")){
       this.propertiesUrl = "../www/assets/resources/config.json"
     } else {
       this.propertiesUrl = "../../assets/resources/config.json"
     }
+
     if(localStorage.getItem("propertiesLoaded") != "Y")
       this.loadPropertiesFile();
   }
@@ -71,12 +70,9 @@ export class SystemConfigProvider {
     }
   }
 
-  getTestingFieldworker(){
-    return this.testingFieldworker;
-  }
 
-  getTestingLocLevel(){
-    return this.testingLocLevel;
+  getSocialLookupLevel(){
+    return Number(localStorage.getItem("socialGroupLookupLevel"));
   }
 
   saveServerURL(url){
