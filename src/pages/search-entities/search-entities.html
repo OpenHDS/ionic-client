@@ -15,13 +15,13 @@
 <ion-content padding>
   <div padding>
     <ion-segment [(ngModel)]="entityType">
-      <ion-segment-button value="locations" (click)="loadList()">
+      <ion-segment-button value="locations" (click)="this.loadList()">
         Locations
       </ion-segment-button>
-      <ion-segment-button value="socialgroups" (click)="loadList()">
+      <ion-segment-button value="socialgroups" (click)="this.loadList()">
         Social Groups
       </ion-segment-button>
-      <ion-segment-button value="individuals" (click)="loadList()">
+      <ion-segment-button value="individuals" (click)="this.loadList()">
         Individuals
       </ion-segment-button>
     </ion-segment>
@@ -41,7 +41,7 @@
             <ion-item>
               <h1>{{loc.locationName}}</h1>
               <h5> Ext Id: {{loc.extId}}</h5>
-              <button ion-button outline click="select(loc)">Select</button>
+              <button ion-button outline click="this.select(loc)">Select</button>
             </ion-item>
           </ion-card>
         </ion-list>

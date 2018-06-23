@@ -20,9 +20,9 @@ export class UserProvider {
     let status = false;
     let fieldworker = await this.fieldworkerProvider.getFieldworker(username);
 
-    console.log(fieldworker);
+    console.log(fieldworker.length);
 
-    if (fieldworker == undefined || fieldworker == null)
+    if (fieldworker.length == 0)
       return status;
 
     return Bcrypt.compareSync(password, fieldworker[0].passwordHash);

@@ -18,6 +18,7 @@ export class LoginPage {
   password: string;
   submitted = false;
   loginForm: FormGroup;
+  showLoginError = false;
 
   constructor(public navCtrl: NavController, public menu: MenuController, public userProvider: UserProvider,
               public formBuilder: FormBuilder) {
@@ -56,6 +57,12 @@ export class LoginPage {
        this.submitted = false;
      }
 
-     this.userProvider.setLoggedInUser(this.username);
+     if(this.submitted) {
+       this.userProvider.setLoggedInUser(this.username);
+       this.showLoginError = false;
+     } else {
+       this.showLoginError = true
+     }
+
     }
 }
