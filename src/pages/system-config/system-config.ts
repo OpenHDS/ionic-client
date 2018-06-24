@@ -1,5 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import { SystemConfigProvider} from "../../providers/system-config/system-config";
 
 /**
@@ -26,10 +26,15 @@ export class SystemConfigPage {
   editingLH: boolean;
   editingCodes: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public configuration: SystemConfigProvider) {
+  constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams,
+              public configuration: SystemConfigProvider) {
     this.setServerUrl();
     this.setHierarchy();
     this.setCodes();
+  }
+
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
   }
 
   ionViewDidLoad() {

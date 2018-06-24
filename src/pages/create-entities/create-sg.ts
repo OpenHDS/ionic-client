@@ -42,7 +42,7 @@ export class CreateSocialGroupPage {
     selected: false
   };
 
-  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
+  constructor(public ev: Events, public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public loadingCtrl: LoadingController,
               public formBuilder: FormBuilder, public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider,
               public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
@@ -66,6 +66,10 @@ export class CreateSocialGroupPage {
       this.sg.groupHead = ind.ind;
       this.popView();
     })
+  }
+
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
   }
 
 

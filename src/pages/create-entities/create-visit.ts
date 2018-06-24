@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IonicPage, Events, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, Events, NavController, NavParams, ViewController} from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
@@ -39,7 +39,7 @@ export class CreateVisitPage {
     collectedBy: null
   };
 
-  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams,
+  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
               public formBuilder: FormBuilder, public visitProvider: VisitsProvider, public netConfig: NetworkConfigProvider,
               public user: UserProvider, public fwProvider: FieldworkerProvider) {
 
@@ -51,6 +51,10 @@ export class CreateVisitPage {
       realVisit:['', Validators.compose([Validators.required, Validators.pattern('0|1+')])],
       roundNumber: ['', Validators.compose([Validators.required, Validators.min(0)])]
     });
+  }
+
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
   }
 
   //Dismiss the modal. Pass back the created or fixed location.

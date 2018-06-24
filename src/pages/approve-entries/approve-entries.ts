@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import {IndividualProvider} from "../../providers/individual/individual";
 import {Individual} from "../../interfaces/individual";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
@@ -17,13 +17,17 @@ import {CensusIndividual} from "../../interfaces/census-individual";
   selector: 'page-approve-entries',
   templateUrl: 'approve-entries.html',
 })
-export class ApproveEntriesPage {
-  constructor(public navCtrl: NavController, public navParams: NavParams, public indProvider: IndividualProvider,
+export class ApproveEntriesPage{
+  constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController, public indProvider: IndividualProvider,
               public censusSub: CensusSubmissionProvider) {
     this.loadIndividuals();
   }
 
   needApproval: Array<CensusIndividual> = [];
+
+  ionViewWillEnter() {
+    this.view.showBackButton(false);
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ApproveEntriesPage');

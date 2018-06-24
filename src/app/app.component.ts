@@ -27,7 +27,7 @@ export interface PageInterface {
   templateUrl: 'app.html'
 })
 export class OpenHDSApp {
-  @ViewChild(Nav) nav: Nav
+  @ViewChild(Nav) nav: Nav;
 
   fieldworkerPages: PageInterface[] = [
     { title: 'Dashboard', name: 'DashboardPage', component: BaselineCensusPage },
@@ -58,11 +58,11 @@ export class OpenHDSApp {
   }
 
   openPage(page){
-    this.appCtrl.getRootNav().push(page.component);
+    this.nav.push(page.component);
   }
 
   logoutUser() {
-    this.appCtrl.getRootNav().setRoot(LoginPage, {canSwipeBack: false});
+    this.appCtrl.getRootNav().setRoot(LoginPage, );
     this.userData.setUserLogout();
   }
 

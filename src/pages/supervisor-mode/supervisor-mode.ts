@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 
 /**
@@ -16,10 +16,14 @@ import {LocationsProvider} from "../../providers/locations/locations-provider";
 })
 export class SupervisorModePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public locProvider: LocationsProvider) {
+  constructor(public navCtrl: NavController, public viewCtrl: ViewController,
+              public navParams: NavParams, public locProvider: LocationsProvider) {
 
   }
 
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SuperviserModePage');

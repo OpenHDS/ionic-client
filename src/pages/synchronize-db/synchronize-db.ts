@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { Events, IonicPage, LoadingController } from 'ionic-angular';
+import {Events, IonicPage, LoadingController, ViewController} from 'ionic-angular';
 import { LocationsProvider } from "../../providers/locations/locations-provider";
 import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/location-hierarchies";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {IndividualProvider} from "../../providers/individual/individual";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
+import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 
 /**
  * Generated class for the SynchronizeDbPage page.
@@ -25,13 +26,18 @@ export class SynchronizeDbPage {
   sgSyncSuccess: boolean;
   individualSyncSuccess: boolean;
 
-  constructor(public events: Events, public loadingCtrl: LoadingController,
+  constructor(public events: Events, public loadingCtrl: LoadingController, public networkConfig: NetworkConfigProvider,
+              public viewCtrl: ViewController,
               public lhProvider: LocationHierarchiesProvider, public locProvider: LocationsProvider,
               public sgProvider: SocialGroupProvider, public indProvider: IndividualProvider, public fwProvider: FieldworkerProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SynchronizeDbPage');
+  }
+
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
   }
 
   async syncDatabase(){

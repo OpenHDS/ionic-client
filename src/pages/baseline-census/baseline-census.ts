@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, ViewChild, AfterViewInit} from '@angular/core';
-import {Events, IonicPage, NavController, NavParams, PopoverController} from 'ionic-angular';
+import {Events, IonicPage, NavController, NavParams, PopoverController, ViewController} from 'ionic-angular';
 import { Location } from "../../interfaces/locations";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {Hierarchy} from "../../interfaces/hierarchy";
@@ -29,8 +29,12 @@ export class BaselineCensusPage implements OnInit{
   selectedLocation: Location;
   selectedSocialGrp: SocialGroup;
   selectedIndividuals: Individual[] = [];
-  constructor(public navCtrl: NavController, public navParams: NavParams, public ev: Events,
+  constructor(public navCtrl: NavController, public view: ViewController ,public navParams: NavParams, public ev: Events,
               public prop: SystemConfigProvider, public userData: UserProvider, public fieldworkerProvider: FieldworkerProvider) {
+  }
+
+  ionViewWillEnter() {
+    this.view.showBackButton(false);
   }
 
   async ngOnInit(){

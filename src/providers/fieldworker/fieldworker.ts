@@ -19,10 +19,6 @@ export class FieldworkerProvider extends DatabaseProviders{
 
   private db: OpenhdsDb;
 
-  openhdsLogin = {
-    username: 'admin',
-    password: 'test'
-  };
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
               public systemConfig: SystemConfigProvider) {

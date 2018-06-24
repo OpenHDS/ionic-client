@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {IndividualProvider} from "../../providers/individual/individual";
@@ -25,12 +25,16 @@ export class SearchEntitiesPage implements OnInit {
   filteredIndividuals: Individual[];
   entityType: string = 'locations';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public sgProvider: SocialGroupProvider,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public sgProvider: SocialGroupProvider,
               public locProvider: LocationsProvider, public indProvider: IndividualProvider) {
   }
 
   async ngOnInit() {
     await this.loadList()
+  }
+
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
   }
 
   async loadList() {

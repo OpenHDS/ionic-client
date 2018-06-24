@@ -1,12 +1,13 @@
 <ion-header>
-
   <ion-navbar>
     <ion-title>Synchonize OpenHDS Database</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content>
+  <ion-card [hidden]="this.networkConfig.isConnected()">
+    <ion-card-content>There is no network connection. A network connection is required to sync with the database.</ion-card-content>
+  </ion-card>
   <ion-row>
     <ion-col col-4>
       <button ion-button full>Synchronize Database</button>

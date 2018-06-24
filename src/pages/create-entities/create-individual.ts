@@ -51,7 +51,7 @@ export class CreateIndividualPage {
   spouseExtId: string;
   bIsToA: string;
 
-  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams,
+  constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public view: ViewController,
               public formBuilder: FormBuilder, public individualProvider: IndividualProvider, public netConfig: NetworkConfigProvider,
                public user: UserProvider, public fieldProvider: FieldworkerProvider, public censusSub: CensusSubmissionProvider) {
 
@@ -87,6 +87,10 @@ export class CreateIndividualPage {
       //If error being fixed, set the location for the modal to the location being fixed.
       this.individual = this.navParams.get("individual");
     }
+  }
+
+  ionViewWillEnter() {
+    this.view.showBackButton(false);
   }
 
   //Dismiss the modal. Pass back the created or fixed location.

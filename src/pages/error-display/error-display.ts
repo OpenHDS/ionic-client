@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, ModalController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {ErrorsProvider} from "../../providers/errors/errors";
 import {EntityErrorLabels} from "../../providers/errors/entity-error-labels";
 import {Errors} from "../../interfaces/data-errors"
@@ -21,9 +21,13 @@ import {LocationsProvider} from "../../providers/locations/locations-provider";
 export class ErrorDisplayPage {
   locationErrors: Promise<Errors[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
               public errorProvider: ErrorsProvider, public modalCtrl: ModalController, public locProvider: LocationsProvider) {
     this.getLocationErrors().then(() => console.log("Location errors loaded"));
+  }
+
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
   }
 
   async getLocationErrors(){
@@ -33,6 +37,8 @@ export class ErrorDisplayPage {
   convertTimestampToDate(timestamp: number){
     return new Date(timestamp).toString();
   }
+
+
   //
   // //Fix errors that occur with creation or saving of a location.
   // fixLocationErrors(locError: Errors){

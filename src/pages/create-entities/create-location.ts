@@ -70,6 +70,10 @@ export class CreateLocationPage {
     }
   }
 
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
+  }
+
   getGeolocationInfo(){
     let loading = this.loadingCtrl.create({
       content: "Gathering geolocation information..."
