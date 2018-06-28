@@ -6,6 +6,7 @@ import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {IndividualProvider} from "../../providers/individual/individual";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
+import {ErrorsProvider} from "../../providers/errors/errors";
 
 /**
  * Generated class for the SynchronizeDbPage page.
@@ -25,9 +26,10 @@ export class SynchronizeDbPage {
   locationSyncSuccess: boolean;
   sgSyncSuccess: boolean;
   individualSyncSuccess: boolean;
+  errors: Object[] = [];
 
   constructor(public events: Events, public loadingCtrl: LoadingController, public networkConfig: NetworkConfigProvider,
-              public viewCtrl: ViewController,
+              public viewCtrl: ViewController, public errProvider: ErrorsProvider,
               public lhProvider: LocationHierarchiesProvider, public locProvider: LocationsProvider,
               public sgProvider: SocialGroupProvider, public indProvider: IndividualProvider, public fwProvider: FieldworkerProvider) {
   }
@@ -56,7 +58,9 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.fwProvider.loadInitData().catch((err) => { this.fieldworkerSyncSuccess = false; });
+    await this.fwProvider.loadInitData().catch((err) => {
+      this.errors.push("Fieldworker Sync: " + this.errProvider.mapErrorMessage(err.status));
+      this.fieldworkerSyncSuccess = false });
     loading.dismiss();
     this.publishSynchronizationEvent("fieldworkerSync")
   }
@@ -69,20 +73,29 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.lhProvider.loadLevels().catch((err) =>  this.locationLevelsSyncSuccess = false );
-    await this.lhProvider.loadHierarchy().catch((err) => this.locationLevelsSyncSuccess = false);
+    await this.lhProvider.loadLevels().catch((err) =>  {
+      this.errors.push("Location Hierachy Level Sync: " + this.errProvider.mapErrorMessage(err.status));
+      this.locationLevelsSyncSuccess = false
+    });
+    await this.lhProvider.loadHierarchy().catch((err) => {
+      this.errors.push("Location Hierarchy Sync: " + this.errProvider.mapErrorMessage(err.status));
+      this.locationLevelsSyncSuccess = false
+    });
     loading.dismiss();
     this.publishSynchronizationEvent("hierarchySync")
 
   }
-  async syncLocations(){
+  async syncLocations() {
     this.locationSyncSuccess = true;
     let loading = this.loadingCtrl.create({
       content: "Synchronizing location... Please wait"
     });
 
     loading.present();
-    await this.locProvider.loadInitData().catch((err) =>  this.locationSyncSuccess = false);
+    await this.locProvider.loadInitData().catch((err) => {
+      this.errors.push("Location Sync: " + this.errProvider.mapErrorMessage(err.status));
+      this.locationSyncSuccess = false
+    });
     //await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
     loading.dismiss();
     this.publishSynchronizationEvent("locationSync")
@@ -95,7 +108,10 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.sgProvider.loadInitData().catch((err) => { this.sgSyncSuccess = false; });
+    await this.sgProvider.loadInitData().catch((err) => {
+      this.errors.push("Social Group Sync: " + this.errProvider.mapErrorMessage(err.status));
+      this.sgSyncSuccess = false;
+    });
     loading.dismiss();
     this.publishSynchronizationEvent("socialGroupSync")
   }
@@ -107,7 +123,10 @@ export class SynchronizeDbPage {
     });
 
     loading.present();
-    await this.indProvider.loadInitData().catch((err) => { this.individualSyncSuccess = false; });
+    await this.indProvider.loadInitData().catch((err) => {
+      this.errors.push("Individual Sync: " + this.errProvider.mapErrorMessage(err.status));
+      this.individualSyncSuccess = false;
+    });
     loading.dismiss();
     this.publishSynchronizationEvent("individualSync")
   }

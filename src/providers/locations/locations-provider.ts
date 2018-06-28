@@ -33,7 +33,7 @@ export class LocationsProvider extends DatabaseProviders{
   }
 
   async loadInitData(){
-    var loc = await this.initProvider("locations");
+    var loc = await this.initProvider("locations").catch(error => {console.log(error); throw error});
     loc.forEach(x => this.insert(x));
   }
 
@@ -63,6 +63,6 @@ export class LocationsProvider extends DatabaseProviders{
 
   //Abstract Updates and Adds to prevent errors
   async insert(loc: Location){
-    this.db.locations.add(loc).catch(err => console.log(err));
+    this.db.locations.add(loc);
   }
 }

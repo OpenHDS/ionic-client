@@ -1,13 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Location} from "../../interfaces/locations";
-import { NetworkConfigProvider } from "../network-config/network-config";
-import { UUID } from "angular2-uuid";
-import {Errors} from "../../interfaces/data-errors";
-import { ErrorsProvider } from "../errors/errors";
-import { EntityErrorLabels } from "../errors/entity-error-labels";
 import { SystemConfigProvider} from "../system-config/system-config";
-import {OpenhdsDb} from "../database-providers/openhds-db";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -31,9 +24,11 @@ export class DatabaseProviders {
   private async loadData(url: string, entityTypeString: string) {
     if(entityTypeString == "locationhierarchylevels")
       entityTypeString = "locationHierarchies";
-    const headers = new HttpHeaders().set('authorization',
+
+    const headers = new HttpHeaders().set('Authorization',
       "Basic " + btoa(this.systemConfig.getDefaultUser() + ":" + this.systemConfig.getDefaultPassword()));
 
+    headers.append('Content-Type', "application/json");
     let entity: any[] = [];
     let timestamp = null;
 
@@ -41,7 +36,7 @@ export class DatabaseProviders {
       entity = data[entityTypeString];
       timestamp = data['timestamp'];
     }).catch((err)  => {
-      throw "Error getting data occurred";
+      throw err;
     });
 
     entity.forEach(x => {

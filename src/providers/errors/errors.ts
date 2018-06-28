@@ -35,4 +35,12 @@ export class ErrorsProvider {
 
     return false;
   }
+
+  mapErrorMessage(code){
+    if(code == 404){
+      return "The data resource trying to be accessed was not found. Check URL for database."
+    }
+
+    return "An unknown error has occurred."
+  }
 }
