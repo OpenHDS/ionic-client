@@ -4,10 +4,11 @@ import {Geolocation} from "@ionic-native/geolocation";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {SocialGroup} from "../../interfaces/social-groups";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
-import { FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder,  NgForm} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {CreateIndividualPage} from "./create-individual";
 import {UserProvider} from "../../providers/user-provider/user-provider";
+import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -23,11 +24,9 @@ import {UserProvider} from "../../providers/user-provider/user-provider";
 })
 export class CreateSocialGroupPage {
 
-  edit: boolean;
-  errorFix: boolean;
-  sgForm: FormGroup;
+  formSubmitted: boolean = false;
+  sgForm: SocialGroupFormGroup;
 
-  //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   sg: SocialGroup = {
     uuid: null,
     extId: null,
@@ -47,24 +46,12 @@ export class CreateSocialGroupPage {
               public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
 
-   this.sgForm = formBuilder.group({
-     name: ['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
-     extId:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
-     type: ['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
-   });
+   this.sgForm = new SocialGroupFormGroup(this.user.getLoggedInUser(), this.navParams.get('sgLocation').extId);
 
-    //Determine if error is being fixed.
-    this.errorFix = this.navParams.get('fixError');
-
-    if(this.errorFix){
-      //If error being fixed, set the location for the modal to the location being fixed.
-      this.sg = this.navParams.get("socialGrp");
-    }
 
     this.ev.subscribe("submitHeadIndividual", (ind) => {
-      console.log("SOCIAL GROUP" + ind.ind);
       this.sg.groupHead = ind.ind;
-      this.popView();
+
     })
   }
 
@@ -73,12 +60,22 @@ export class CreateSocialGroupPage {
   }
 
 
-  //Dismiss the modal. Pass back the created or fixed location.
-  //TODO: Prevent popping of page if form has errors.
-  async popView() {
-    await this.sgProvider.saveDataLocally(this.sg);
-    await this.publishCreationEvent();
+  //Dismiss the modal. Note: Data is not saved if the form is not completed!
+  async dismissForm() {
     this.navCtrl.pop()
+  }
+
+  async submitForm(form: NgForm){
+    this.formSubmitted = true;
+    if(form.valid){
+      await this.sgProvider.saveDataLocally(this.sg);
+      this.formSubmitted = false;
+      await this.createHead().then(async () => {
+        await this.publishCreationEvent();
+        form.reset();
+        this.formSubmitted = false;
+      });
+    }
   }
 
   async createHead(){

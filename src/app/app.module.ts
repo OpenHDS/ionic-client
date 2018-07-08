@@ -36,6 +36,7 @@ import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
 import { VisitsProvider } from '../providers/visits/visits';
 import {CreateVisitPage} from "../pages/create-entities/create-visit";
 import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(OpenHDSApp)
+    IonicModule.forRoot(OpenHDSApp),
+    FormsModule, ReactiveFormsModule
   ],
 
   bootstrap: [IonicApp],

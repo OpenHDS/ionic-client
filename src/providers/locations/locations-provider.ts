@@ -53,7 +53,7 @@ export class LocationsProvider extends DatabaseProviders{
 
     loc.deleted = false;
     loc.selected = false;
-    loc.processed = 0;
+    loc.processed = true;
     loc.clientInsert = new Date().getTime();
 
     await this.insert(loc);

@@ -22,49 +22,36 @@
       </ion-card-content>
     </ion-card>
   </div>
-  <div padding-left padding-right>
-    <!-- Social Group Entry Form -->
-    <form  [formGroup]="sgForm" (ngSubmit)="createHead()">
-      <ion-item>
-        <ion-label floating> Fieldworker </ion-label>
-        <ion-input type="text" value="{{this.user.getLoggedInUser()}}"disabled></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> Location Id </ion-label>
-        <ion-input type="text" value="{{this.navParams.get('sgLocation')}}"disabled></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> External Id </ion-label>
-        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.sg.extId"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="sgForm.controls.extId.hasError('required') && sgForm.controls.extId.dirty">
-        <p ion-text color="danger">A social group external ID is required.</p>
-      </ion-item>
-      <ion-item *ngIf="sgForm.controls.extId.hasError('pattern') && sgForm.controls.extId.dirty">
-        <p ion-text color="danger">A social group external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
-      </ion-item>
-      <ion-item>
-        <ion-label floating>Group Type </ion-label>
-        <ion-input name="type" formControlName="type" [(ngModel)]="this.sg.groupType"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="sgForm.controls.type.hasError('required') && sgForm.controls.type.touched">
-        <p ion-text color="danger">A social group type is required.</p>
-      </ion-item>
 
-      <ion-item *ngIf="sgForm.controls.type.hasError('pattern') && sgForm.controls.type.touched">
-        <p ion-text color="danger">A social group type must be Urban (URB) or Rural (RUR) and not begin with spaces.</p>
-      </ion-item>
+  <form novalidate [formGroup]="sgForm" (ngSubmit)="submitForm(sgForm)">
+    <ion-item color="danger" *ngIf="formSubmitted && sgForm.invalid">
+      There are problems with the form
+      <ion-list>
+        <ion-item color="danger" *ngFor="let error of sgForm.getFormValidationMessages(sgForm)">
+          {{error}}
+        </ion-item>
+      </ion-list>
+    </ion-item>
+
+
+    <!------  Form Fields --------->
+    <div class="form-group" *ngFor="let control of sgForm.socialGroupControls">
       <ion-item>
-        <ion-label floating> Group Name </ion-label>
-        <ion-input ion-text formControlName="name" type="text" name="name"  [(ngModel)]="this.sg.groupName"></ion-input>
+        <ion-label floating>{{control.label}}</ion-label>
+        <ion-input class="form-control"
+                   [(ngModel)]="sg[control.modelProperty]"
+                   formControlName="{{control.modelProperty}}"></ion-input>
       </ion-item>
-      <ion-item *ngIf="sgForm.controls.name.hasError('required') && sgForm.controls.name.dirty">
-        <p ion-text color="danger">A social group name is required.</p>
+      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
+        <p color="danger" *ngFor="let error of control.getValidationMessages()">
+          {{error}}
+        </p>
       </ion-item>
-      <ion-item *ngIf="sgForm.controls.name.hasError('pattern') && sgForm.controls.name.dirty">
-        <p ion-text color="danger">A social group name must match this pattern [a-zA-Z] and not begin with spaces..</p>
-      </ion-item>
-      <button ion-button round color="dark" [disabled]="!sgForm.valid" type="submit"> Create Head of Social Group </button>
-    </form>
-  </div>
+    </div>
+
+    <br/>
+    <button ion-button round color="dark" [disabled]="formSubmitted && sgForm.invalid" type="submit">Create Social Group Head</button>
+  </form>
+  <br/>
+  <button ion-button round color="dark" (click)="this.dismissForm()"> Close Form </button>
 </ion-content>

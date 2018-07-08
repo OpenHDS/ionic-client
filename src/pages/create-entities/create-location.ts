@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
+import { NgForm } from "@angular/forms";
 import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
 import {Geolocation} from "@ionic-native/geolocation";
 import {Location} from "../../interfaces/locations";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
-import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {UserProvider} from "../../providers/user-provider/user-provider";
+import {LocationFormControl, LocationFormGroup} from "../../census-forms/location-form";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -22,10 +23,10 @@ import {UserProvider} from "../../providers/user-provider/user-provider";
 })
 export class CreateLocationPage {
 
-  edit: boolean;
   geoloc: boolean = false;
   errorFix: boolean;
-  locationForm: FormGroup;
+  formSubmitted: boolean = false;
+  form: LocationFormGroup;
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   loc: Location = {
@@ -42,32 +43,16 @@ export class CreateLocationPage {
     deleted: null,
     insertDate: null,
     clientInsert: null,
-    processed: 0,
+    processed: false,
     selected: false
   };
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
-              public formBuilder: FormBuilder, public locProvider: LocationsProvider,
-              public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider,
+              public locProvider: LocationsProvider, public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider,
               public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
-
-   this.locationForm = formBuilder.group({
-     name: ['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
-     extId:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
-     type: ['', Validators.compose([Validators.required, Validators.pattern("^[^-\\s]*[Rr][Uu][Rr]|^[^-\\s]*[Uu][Rr][Bb]")])],
-     latitude:['', Validators.compose([Validators.required, Validators.pattern("(-?(\\d*\\.\\d{1}?\\d*|\\d{1,}))"), Validators.min(-90), Validators.max(90)])],
-     longitude:['', Validators.compose([Validators.required, Validators.pattern("(-?(\\d*\\.\\d{1}?\\d*|\\d{1,}))"), Validators.min(-180), Validators.max(180)])],
-   });
-
-    //Determine if error is being fixed.
-    this.errorFix = this.navParams.get('fixError');
     this.loc.locationLevel = this.navParams.get("parentLevel");
-    if(this.errorFix){
-      //If error being fixed, set the location for the modal to the location being fixed.
-      this.loc = this.navParams.get("location");
-
-    }
+    this.form = new LocationFormGroup(this.user.getLoggedInUser(), this.loc.locationLevel.name);
   }
 
   ionViewWillEnter() {
@@ -92,18 +77,23 @@ export class CreateLocationPage {
     });
   }
 
+  async submitForm(form: NgForm){
+    this.formSubmitted = true;
+    if(form.valid){
+      this.locProvider.saveDataLocally(this.loc);
+      form.reset();
+      this.formSubmitted = false;
+      await this.publishCreationEvent();
+    }
+  }
 
   //Dismiss the modal. Pass back the created or fixed location.
-  //TODO: Prevent popping of page if form has errors.
-  async popView() {
-    await this.locProvider.saveDataLocally(this.loc);
-    await this.publishCreationEvent();
+  async dismissForm() {
     this.navCtrl.pop()
   }
 
   publishCreationEvent(){
     this.ev.publish('submitLocation', true);
   }
-
 
 }
