@@ -10,10 +10,10 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <div *ngIf="this.createHead; else elseBlock">
-      <ion-title>Create Social Group Head</ion-title>
+      <ion-title>Create Social Group Head  <ion-icon name="close"(click)="dismissForm()" float-right></ion-icon></ion-title>
     </div>
     <ng-template #elseBlock>
-      <ion-title>Create an Individual</ion-title>
+      <ion-title>Create an Individual  <ion-icon name="close"(click)="dismissForm()" float-right></ion-icon> </ion-title>
     </ng-template>
   </ion-navbar>
 </ion-header>
@@ -27,103 +27,43 @@
       </ion-card-content>
     </ion-card>
   </div>
-  <div padding-left padding-right>
-    <!-- Social Group Entry Form -->
-    <form  [formGroup]="individualForm" (ngSubmit)="popView()">
-      <ion-item>
-        <ion-label floating> Fieldworker </ion-label>
-        <ion-input type="text" value="{{this.user.getLoggedInUser()}}"disabled></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> External Id </ion-label>
-        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.individual.extId"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.extId.hasError('required') && individualForm.controls.extId.dirty">
-        <p ion-text color="danger">A individual external ID is required.</p>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.extId.hasError('pattern') && individualForm.controls.extId.dirty">
-        <p ion-text color="danger">A individual external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
-      </ion-item>
-      <ion-item>
-        <ion-label floating>First Name </ion-label>
-        <ion-input name="type" formControlName="firstName" [(ngModel)]="this.individual.firstName"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.firstName.hasError('required') && individualForm.controls.firstName.touched">
-        <p ion-text color="danger">A first name is required.</p>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.firstName.hasError('pattern') && individualForm.controls.firstName.touched">
-        <p ion-text color="danger">The first name of an individual can only contain characters a-z and A-Z</p>
-      </ion-item>
-      <ion-item>
-      <ion-label floating> Middle Name </ion-label>
-      <ion-input ion-text formControlName="middleName" type="text" name="name"  [(ngModel)]="this.individual.middleName"></ion-input>
-    </ion-item>
-      <ion-item *ngIf="individualForm.controls.middleName.hasError('pattern') && individualForm.controls.middleName.dirty">
-        <p ion-text color="danger">A middle name must match this pattern [a-zA-Z] and not begin with spaces.</p>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> Last Name </ion-label>
-        <ion-input ion-text formControlName="lastName" type="text" name="name"  [(ngModel)]="this.individual.lastName"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.lastName.hasError('required') && individualForm.controls.lastName.touched">
-        <p ion-text color="danger">A last name is required.</p>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.lastName.hasError('pattern') && individualForm.controls.lastName.dirty">
-        <p ion-text color="danger">A last name must match this pattern [a-zA-Z] and not begin with spaces.</p>
-      </ion-item>
-      <ion-item>
-        <ion-label> Date of Birth </ion-label>
-        <ion-input ion-text formControlName="dob" type="date" name="name"  [(ngModel)]="this.individual.dob"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.dob.hasError('required') && individualForm.controls.dob.dirty">
-        <p ion-text color="danger">A date of birth is required.</p>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> Partial Date </ion-label>
-        <ion-input ion-text formControlName="dobAspect" type="text" name="name"  [(ngModel)]="this.individual.dobAspect"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.dobAspect.hasError('required') && individualForm.controls.dobAspect.dirty">
-        <p ion-text color="danger">A partial date is required.</p>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.dobAspect.hasError('min') && individualForm.controls.dobAspect.hasError('max')
-          && individualForm.controls.dobAspect.dirty">
-        <p ion-text color="danger">A partial date is (1) for exact, and (2) for approximate</p>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> Gender </ion-label>
-        <ion-input ion-text formControlName="gender" type="text" name="gender"  [(ngModel)]="this.individual.gender"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.gender.hasError('required') && individualForm.controls.gender.dirty">
-        <p ion-text color="danger">A gender is required.</p>
-      </ion-item>
-      <ion-item>
-        <ion-label floating>Relationship to Group Head</ion-label>
-        <ion-select formControlName="bIsToA" [(ngModel)]="this.bIsToA" interface="popover">
-          <ion-option value="1">1 - Head</ion-option>
-          <ion-option value="2">2 - Spouse</ion-option>
-          <ion-option value="3">3 - Son/Daughter</ion-option>
-          <ion-option value="4">4 - Brother/Sister</ion-option>
-          <ion-option value="5">5 - Parent</ion-option>
-          <ion-option value="6">6 - Grandchild</ion-option>
-          <ion-option value="7">7 - Not Related</ion-option>
-          <ion-option value="8">8 - Other Relative</ion-option>
-          <ion-option value="9">9 - Don't Know</ion-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> Spouse (If one, enter the spouses external id)</ion-label>
-        <ion-input type="text" formControlName="spouse" name="spouse"[(ngModel)]="this.spouse"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="individualForm.controls.spouse.hasError('pattern') && individualForm.controls.spouse.dirty">
-        <p ion-text color="danger">A individual external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
-      </ion-item>
 
-      <div *ngIf="this.createHead; else indButtonBlock">
-        <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Head </button>
-      </div>
-      <ng-template #indButtonBlock>
-        <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Individual </button>
-      </ng-template>
-    </form>
-  </div>
+  <form novalidate [formGroup]="individualForm" (ngSubmit)="submitForm(individualForm)">
+    <ion-item color="danger" *ngIf="formSubmitted && individualForm.invalid">
+      There are problems with the form
+      <ion-list>
+        <ion-item color="danger" *ngFor="let error of individualForm.getFormValidationMessages(individualForm)">
+          {{error}}
+        </ion-item>
+      </ion-list>
+    </ion-item>
+
+    <!------  Form Fields --------->
+    <div class="form-group" *ngFor="let control of individualForm.individualFormControls">
+      <ion-item>
+        <ion-label>{{control.label}}</ion-label>
+
+        <ion-input type="date" float-right *ngIf="control.label == 'Date of Birth'" formControlName="{{control.modelProperty}}"
+                   [(ngModel)]="individual[control.modelProperty]" ></ion-input>
+
+        <!---- Other form fields that aren't selection based ---->
+        <ion-input *ngIf="control.label != 'Date of Birth'"
+                   [(ngModel)]="individual[control.modelProperty]"
+                   formControlName="{{control.modelProperty}}"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
+        <p color="danger" *ngFor="let error of control.getValidationMessages()">
+          {{error}}
+        </p>
+      </ion-item>
+    </div>
+
+    <div *ngIf="this.createHead; else indButtonBlock">
+      <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Head</button>
+    </div>
+    <ng-template #indButtonBlock>
+      <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Individual</button>
+    </ng-template>
+  </form>
+
 </ion-content>

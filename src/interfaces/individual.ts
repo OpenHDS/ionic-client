@@ -1,6 +1,6 @@
 import {Fieldworker} from "./fieldworker";
 
-export interface Individual{
+export class Individual{
   extId: string;
   dob?: Date;
   dobAspect?: string;
@@ -13,5 +13,7 @@ export interface Individual{
   collectedBy?: Fieldworker;
   deleted?: boolean;
   insertDate?: Date;
+  spouse?: string;
+  bIsToA?: string;
   uuid: string;
 }

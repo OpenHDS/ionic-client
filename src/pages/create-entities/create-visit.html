@@ -22,56 +22,35 @@
       </ion-card-content>
     </ion-card>
   </div>
-  <div padding-left padding-right>
-    <!-- Visit Entry Form -->
-    <form  [formGroup]="visitForm" (ngSubmit)="popView()">
-      <ion-item>
-        <ion-label floating> Fieldworker </ion-label>
-        <ion-input type="text" value="{{this.collectedBy.extId}}"disabled></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> Location Id </ion-label>
-        <ion-input type="text" value="{{this.visitLocation.extId}}"disabled></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label> Visit Date </ion-label>
-        <ion-input type="date" value="{{this.visitLocation.visitDate}}" formControlName="visitDate"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="visitForm.controls.visitDate.hasError('required') && visitForm.controls.visitDate.dirty">
-        <p ion-text color="danger">The visit date is required for a visit.</p>
-      </ion-item>
-      <ion-item>
-        <ion-label floating> External Id </ion-label>
-        <ion-input type="text" formControlName="extId" name="extId"[(ngModel)]="this.visit.extId"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="visitForm.controls.extId.hasError('required') && visitForm.controls.extId.dirty">
-        <p ion-text color="danger">An external ID is required for a visit.</p>
-      </ion-item>
-      <ion-item *ngIf="visitForm.controls.extId.hasError('pattern') && visitForm.controls.extId.dirty">
-        <p ion-text color="danger">An external ID must match this pattern [a-zA-Z] and not begin with spaces.</p>
-      </ion-item>
-      <ion-item>
-        <ion-label floating>Real Visit </ion-label>
-        <ion-input name="realVisit" formControlName="realVisit" [(ngModel)]="this.visit.realVisit"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="visitForm.controls.realVisit.hasError('required') && visitForm.controls.realVisit.touched">
-        <p ion-text color="danger">The type of the visit is required.</p>
-      </ion-item>
 
-      <ion-item *ngIf="visitForm.controls.realVisit.hasError('pattern') && visitForm.controls.realVisit.touched">
-        <p ion-text color="danger">A real visit must be 0 or 1.</p>
-      </ion-item>
+  <form novalidate [formGroup]="visitForm" (ngSubmit)="submitForm(visitForm)">
+    <ion-item color="danger" *ngIf="formSubmitted && visitForm.invalid">
+      There are problems with the form
+      <ion-list>
+        <ion-item color="danger" *ngFor="let error of visitForm.getFormValidationMessages(visitForm)">
+          {{error}}
+        </ion-item>
+      </ion-list>
+    </ion-item>
+
+    <!------  Form Fields --------->
+    <div class="form-group" *ngFor="let control of visitForm.visitFormControls">
       <ion-item>
-        <ion-label floating> Round Number </ion-label>
-        <ion-input ion-text formControlName="roundNumber" type="text" name="roundNumber"  [(ngModel)]="this.visit.roundNumber"></ion-input>
+        <ion-label floating>{{control.label}}</ion-label>
+        <ion-input class="form-control"
+                   [(ngModel)]="visit[control.modelProperty]"
+                   formControlName="{{control.modelProperty}}"></ion-input>
       </ion-item>
-      <ion-item *ngIf="visitForm.controls.roundNumber.hasError('required') && visitForm.controls.roundNumber.dirty">
-        <p ion-text color="danger">A round number is required.</p>
+      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
+        <p color="danger" *ngFor="let error of control.getValidationMessages()">
+          {{error}}
+        </p>
       </ion-item>
-      <ion-item *ngIf="visitForm.controls.roundNumber.hasError('min') && visitForm.controls.roundNumber.dirty">
-        <p ion-text color="danger">A round number should be greater than or equal to 0</p>
-      </ion-item>
-      <button ion-button round color="dark" [disabled]="!visitForm.valid" type="submit"> Submit Visit </button>
-    </form>
-  </div>
+    </div>
+
+    <br/>
+    <button ion-button round color="dark" [disabled]="formSubmitted && visitForm.invalid" type="submit">Create Visit and Submit Census</button>
+  </form>
+  <br/>
+  <button ion-button round color="dark" (click)="this.dismissForm()"> Close Form </button>
 </ion-content>

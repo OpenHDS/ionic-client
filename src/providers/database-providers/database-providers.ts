@@ -40,9 +40,8 @@ export class DatabaseProviders {
     });
 
     entity.forEach(x => {
-      x.selected = false;
       x.clientInsert = timestamp;
-      x.processed = 1;
+      x.processed = true;
     });
 
     return entity;

@@ -9,7 +9,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Create a Social Group</ion-title>
+    <ion-title>Create a Social Group  <ion-icon name="close"(click)="dismissForm()" float-right></ion-icon></ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -37,7 +37,7 @@
     <!------  Form Fields --------->
     <div class="form-group" *ngFor="let control of sgForm.socialGroupControls">
       <ion-item>
-        <ion-label floating>{{control.label}}</ion-label>
+        <ion-label>{{control.label}}</ion-label>
         <ion-input class="form-control"
                    [(ngModel)]="sg[control.modelProperty]"
                    formControlName="{{control.modelProperty}}"></ion-input>

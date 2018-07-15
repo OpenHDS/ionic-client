@@ -11,6 +11,3 @@ export interface CensusIndividual {
   bIsToA?: string;
   spouse?: Individual;
 }
-
-
-

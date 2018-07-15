@@ -68,9 +68,9 @@ export class CreateSocialGroupPage {
   async submitForm(form: NgForm){
     this.formSubmitted = true;
     if(form.valid){
-      await this.sgProvider.saveDataLocally(this.sg);
       this.formSubmitted = false;
       await this.createHead().then(async () => {
+        await this.sgProvider.saveDataLocally(this.sg);
         await this.publishCreationEvent();
         form.reset();
         this.formSubmitted = false;

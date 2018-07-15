@@ -9,6 +9,7 @@ import {VisitsProvider} from "../../providers/visits/visits";
 import {Fieldworker} from "../../interfaces/fieldworker";
 import {Individual} from "../../interfaces/individual";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
+import {VisitFormGroup} from "../../census-forms/visit-form";
 
 /**
  * Generated class for the CreateVisitPage page.
@@ -26,7 +27,7 @@ export class CreateVisitPage {
 
   collectedBy: Fieldworker;
   visitLocation: Location;
-  visitForm: FormGroup;
+  visitForm: VisitFormGroup;
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   visit: Visit = {
@@ -45,12 +46,7 @@ export class CreateVisitPage {
 
     this.collectedBy = this.navParams.data["collectedBy"];
     this.visitLocation = this.navParams.data["visitLocation"];
-    this.visitForm = formBuilder.group({
-      extId:['', Validators.compose([Validators.required, Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])],
-      visitDate:['', Validators.compose([Validators.required])],
-      realVisit:['', Validators.compose([Validators.required, Validators.pattern('0|1+')])],
-      roundNumber: ['', Validators.compose([Validators.required, Validators.min(0)])]
-    });
+    this.visitForm = new VisitFormGroup();
   }
 
   ionViewWillEnter() {
