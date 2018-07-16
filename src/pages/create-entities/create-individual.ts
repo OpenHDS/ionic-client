@@ -42,8 +42,8 @@ export class CreateIndividualPage {
 
     this.loc = this.navParams.data["loc"];
 
-    this.individualForm = new CensusIndividualFormGroup(this.user.getLoggedInUser(), this.sg.extId);
-
+    this.individualForm = new CensusIndividualFormGroup();
+    this.individual.collectedBy = this.user.getLoggedInUser();
     if (this.navParams.get('createHead')) {
       this.createHead = true;
     } else {
@@ -55,20 +55,23 @@ export class CreateIndividualPage {
     this.view.showBackButton(false);
   }
 
-  async submitForm(form: NgForm){
+  async submitForm(form: NgForm) {
+
     this.formSubmitted = true;
-    if(form.valid){
+    if (form.valid) {
+      this.formSubmitted = false;
+      await this.individualProvider.saveDataLocally(this.individual)
+      await this.createAndSaveCensusIndividual()
+      if (this.createHead)
+        await this.publishHeadCreationEvent();
+      else
+        await this.publishIndividualCreation();
+
+      this.dismissForm();
     }
   }
 
-  //Dismiss the modal. Pass back the created or fixed location.
-  //TODO: Prevent popping of page if form has errors.
-  async popView() {
-    //Set fieldworker and save individual locally
-    await this.fieldProvider.getFieldworker(localStorage.getItem("loggedInUser")).then(x => this.individual.collectedBy = x[0]);
-    await this.individualProvider.saveDataLocally(this.individual);
-
-    //After saving individual locally, create a census individual submission for server approval.
+  async createAndSaveCensusIndividual() {
     var censusInd = {};
     censusInd["uuid"] = this.individual.uuid;
     censusInd["locationExtId"] = this.loc.extId;
@@ -77,22 +80,21 @@ export class CreateIndividualPage {
     censusInd["individual"] = this.individual;
     censusInd["bIsToA"] = this.individual.bIsToA;
 
-    censusInd["spouse"] =  this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse): null;
-    censusInd["collectedBy"] = {extId: this.individual.collectedBy.extId, "uuid": this.individual.collectedBy.uuid};
+    censusInd["spouse"] = this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse) : null;
+    let fieldworker = await this.fieldProvider.getFieldworker(this.user.getLoggedInUser());
+    censusInd["collectedBy"] = {extId: fieldworker[0].extId, "uuid": fieldworker[0].uuid};
     await this.censusSub.saveCensusInformationForApproval(censusInd);
-    if(this.createHead)
-      await this.publishHeadCreationEvent();
-    else
-      await this.publishIndividualCreation();
+  }
 
+  async dismissForm() {
     this.navCtrl.pop()
   }
 
-  async publishHeadCreationEvent(){
+  async publishHeadCreationEvent() {
     this.ev.publish('submitHeadIndividual', {ind: this.individual, head: false});
   }
 
-  async publishIndividualCreation(){
+  async publishIndividualCreation() {
     this.ev.publish('submitIndividual', {ind: this.individual, head: false});
   }
 }

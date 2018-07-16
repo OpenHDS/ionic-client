@@ -1,14 +1,12 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {IonicPage, Events, NavController, NavParams, ViewController} from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
-import { FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {SystemConfigProvider} from "../../providers/system-config/system-config";
+import {NgForm} from "@angular/forms";
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {Visit} from "../../interfaces/visit";
 import {VisitsProvider} from "../../providers/visits/visits";
 import {Fieldworker} from "../../interfaces/fieldworker";
-import {Individual} from "../../interfaces/individual";
-import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
+import {Location} from "../../interfaces/locations";
 import {VisitFormGroup} from "../../census-forms/visit-form";
 
 /**
@@ -28,34 +26,50 @@ export class CreateVisitPage {
   collectedBy: Fieldworker;
   visitLocation: Location;
   visitForm: VisitFormGroup;
+  formSubmitted: boolean = false;
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   visit: Visit = {
     uuid: null,
+    collectedBy: null,
+    visitLocation: null,
     extId: null,
     realVisit: null,
     roundNumber: null,
     visitDate: null,
-    visitLocation: null,
-    collectedBy: null
+
   };
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
-              public formBuilder: FormBuilder, public visitProvider: VisitsProvider, public netConfig: NetworkConfigProvider,
-              public user: UserProvider, public fwProvider: FieldworkerProvider) {
+              public visitProvider: VisitsProvider, public netConfig: NetworkConfigProvider,
+              public user: UserProvider) {
 
-    this.collectedBy = this.navParams.data["collectedBy"];
-    this.visitLocation = this.navParams.data["visitLocation"];
-    this.visitForm = new VisitFormGroup();
+      //Set fields that are passed from parent, and aren't filled in by fieldworker.
+      this.visit.visitLocation = this.navParams.data["visitLocation"].extId;
+      this.visit.collectedBy =  this.user.getLoggedInUser();
+
+      this.visitForm = new VisitFormGroup();
   }
 
   ionViewWillEnter() {
     this.viewCtrl.showBackButton(false);
   }
 
-  //Dismiss the modal. Pass back the created or fixed location.
-  async popView() {
-    await this.visitProvider.saveDataLocally(this.visit);
+  async submitForm(form: NgForm){
+    this.formSubmitted = true;
+    if(form.valid){
+      this.visitProvider.saveDataLocally(this.visit);
+      form.reset();
+      this.formSubmitted = false;
+
+      //Dismiss if valid, one visit per household.
+      this.dismissForm()
+    }
+
+
+  }
+
+  dismissForm(){
     this.navCtrl.pop()
   }
 }

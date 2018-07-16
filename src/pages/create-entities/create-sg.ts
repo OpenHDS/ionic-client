@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
-import {Geolocation} from "@ionic-native/geolocation";
+import {IonicPage, Events, NavController, NavParams, ViewController} from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {SocialGroup} from "../../interfaces/social-groups";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
-import {FormBuilder,  NgForm} from "@angular/forms";
-import {SystemConfigProvider} from "../../providers/system-config/system-config";
+import {NgForm} from "@angular/forms";
 import {CreateIndividualPage} from "./create-individual";
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
@@ -41,17 +39,16 @@ export class CreateSocialGroupPage {
     selected: false
   };
 
-  constructor(public ev: Events, public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, public loadingCtrl: LoadingController,
-              public formBuilder: FormBuilder, public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider,
-              public sysConfig: SystemConfigProvider, public user: UserProvider) {
+  constructor(public ev: Events, public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams,
+              public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider,
+              public user: UserProvider) {
 
-
-   this.sgForm = new SocialGroupFormGroup(this.user.getLoggedInUser(), this.navParams.get('sgLocation').extId);
+   this.sg.collectedBy = this.user.getLoggedInUser();
+   this.sgForm = new SocialGroupFormGroup();
 
 
     this.ev.subscribe("submitHeadIndividual", (ind) => {
       this.sg.groupHead = ind.ind;
-
     })
   }
 

@@ -59,10 +59,10 @@
     </div>
 
     <div *ngIf="this.createHead; else indButtonBlock">
-      <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Head</button>
+      <button ion-button outline color="dark" [disabled]="!individualForm.valid" type="submit"> Create Head</button>
     </div>
     <ng-template #indButtonBlock>
-      <button ion-button round color="dark" [disabled]="!individualForm.valid" type="submit"> Create Individual</button>
+      <button ion-button outline color="dark" [disabled]="!individualForm.valid" type="submit"> Create Individual</button>
     </ng-template>
   </form>
 

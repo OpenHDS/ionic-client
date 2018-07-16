@@ -10,7 +10,7 @@ export class Individual{
   gender?: string;
   father?: Individual;
   mother?: Individual;
-  collectedBy?: Fieldworker;
+  collectedBy?: string;
   deleted?: boolean;
   insertDate?: Date;
   spouse?: string;

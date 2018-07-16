@@ -19,7 +19,13 @@ export class LocationFormControl extends FormControl {
             messages.push(`You must enter a ${this.label}`);
             break;
           case "pattern":
-            messages.push(`The ${this.label} contains illegal characters`);
+            let message = (`${this.label} contains illegal characters. Characters should be alphabetical or numeric.`);
+
+            if(this.modelProperty == "type"){
+              message += " Location Type should be RUR (Rural) or URB (Urban). Click the help (?) icon for more information.";
+            }
+
+            messages.push(message);
             break;
         }
       }
@@ -32,10 +38,10 @@ export class LocationFormControl extends FormControl {
 
 export class LocationFormGroup extends FormGroup {
   //Form group, fieldworker and locationLevel are auto-populated fields!
-  constructor(fieldworker, locationLevel) {
+  constructor() {
       super({
-        fieldworker: new LocationFormControl("Fieldworker", "fieldworker", fieldworker , [], true),
-        subvillage: new LocationFormControl("Subvillage", "subvillage", locationLevel, [], true),
+        collectedBy: new LocationFormControl("Fieldworker", "collectedBy", "" , [], true),
+        locationLevel: new LocationFormControl("Subvillage", "locationLevel", "", [], true),
         locationName: new LocationFormControl("Location Name", "locationName", "",
           [Validators.compose([Validators.required,
             Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
@@ -44,7 +50,7 @@ export class LocationFormGroup extends FormGroup {
             Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
         type: new LocationFormControl("Location Type", "type", "",
           [Validators.compose([Validators.required,
-            Validators.pattern("^[^-\\s]*[Rr][Uu][Rr]|^[^-\\s]*[Uu][Rr][Bb]")])])
+            Validators.pattern("(URB|RUR)")])])
       });
   }
 

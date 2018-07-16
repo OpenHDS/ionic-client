@@ -19,12 +19,19 @@ export class SocialGroupFormControl extends FormControl {
             messages.push(`You must enter a ${this.label}`);
             break;
           case "pattern":
-            messages.push(`The ${this.label} contains illegal characters`);
+            let message = (`${this.label} contains illegal characters.`);
+
+            if(this.modelProperty == 'extId' || this.modelProperty == 'groupName'){
+              message += " Characters should be alphabetic or numeric."
+            } else if(this.modelProperty == 'groupType'){
+              message += " Possible values include FAM (Family) or COH (Cohort)."
+            }
+
+            messages.push(message);
             break;
         }
       }
     }
-
 
     return messages;
   }
@@ -32,11 +39,9 @@ export class SocialGroupFormControl extends FormControl {
 
 export class SocialGroupFormGroup extends FormGroup {
   //Form group, fieldworker and locationId are auto-populated fields!
-  constructor(fieldworker, locationId) {
+  constructor() {
     super({
-      fieldworker: new SocialGroupFormControl("Fieldworker", "fieldworker", fieldworker , [], true),
-      locationId: new SocialGroupFormControl("Location Id", "locationId", locationId, [], true),
-
+      collectedBy: new SocialGroupFormControl("Fieldworker", "collectedBy", "" , [], true),
       extId: new SocialGroupFormControl("External Id", "extId", "",
         [Validators.compose([Validators.required,
           Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
@@ -45,7 +50,7 @@ export class SocialGroupFormGroup extends FormGroup {
           Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
       groupType: new SocialGroupFormControl("Group Type", "groupType", "",
         [Validators.compose([Validators.required,
-          Validators.pattern("^[^-\\s]*[Rr][Uu][Rr]|^[^-\\s]*[Uu][Rr][Bb]")])])
+          Validators.pattern("(FAM | COH)")])])
     });
   }
 

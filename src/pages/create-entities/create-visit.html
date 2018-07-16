@@ -1,15 +1,10 @@
-<!--
-  Generated template for the CreateVisitPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Visit Information</ion-title>
+    <ion-title>Create a Visit <ion-icon name="close"(click)="dismissForm()" float-right></ion-icon></ion-title>
+
   </ion-navbar>
 </ion-header>
 
@@ -25,7 +20,7 @@
 
   <form novalidate [formGroup]="visitForm" (ngSubmit)="submitForm(visitForm)">
     <ion-item color="danger" *ngIf="formSubmitted && visitForm.invalid">
-      There are problems with the form
+      There are problems with the form:
       <ion-list>
         <ion-item color="danger" *ngFor="let error of visitForm.getFormValidationMessages(visitForm)">
           {{error}}
@@ -33,10 +28,11 @@
       </ion-list>
     </ion-item>
 
+
     <!------  Form Fields --------->
-    <div class="form-group" *ngFor="let control of visitForm.visitFormControls">
+    <div class="form-group" *ngFor="let control of visitForm.visitControls">
       <ion-item>
-        <ion-label floating>{{control.label}}</ion-label>
+        <ion-label>{{control.label}}</ion-label>
         <ion-input class="form-control"
                    [(ngModel)]="visit[control.modelProperty]"
                    formControlName="{{control.modelProperty}}"></ion-input>
@@ -49,8 +45,8 @@
     </div>
 
     <br/>
-    <button ion-button round color="dark" [disabled]="formSubmitted && visitForm.invalid" type="submit">Create Visit and Submit Census</button>
+    <button ion-button outline color="dark" [disabled]="formSubmitted && visitForm.invalid" type="submit">Create Visit and Submit Census</button>
   </form>
   <br/>
-  <button ion-button round color="dark" (click)="this.dismissForm()"> Close Form </button>
+
 </ion-content>

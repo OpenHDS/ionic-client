@@ -1,5 +1,3 @@
-import {Hierarchy} from "./hierarchy";
-
 export interface Location{
   extId: string;
   locationName: string;
@@ -8,8 +6,8 @@ export interface Location{
   latitude: number;
   accuracy: number;
   altitude: number;
-  collectedBy: {};
-  locationLevel: Hierarchy;
+  collectedBy: string;
+  locationLevel: string;
   deleted: boolean;
   insertDate: Date;
   clientInsert: number;

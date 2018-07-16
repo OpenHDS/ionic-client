@@ -51,8 +51,9 @@ export class CreateLocationPage {
               public locProvider: LocationsProvider, public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider,
               public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
-    this.loc.locationLevel = this.navParams.get("parentLevel");
-    this.form = new LocationFormGroup(this.user.getLoggedInUser(), this.loc.locationLevel.name);
+    this.loc.collectedBy = this.user.getLoggedInUser();
+    this.loc.locationLevel = this.navParams.get("parentLevel").extId
+    this.form = new LocationFormGroup();
   }
 
   ionViewWillEnter() {

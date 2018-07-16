@@ -24,10 +24,9 @@ export class IndividualFormControl extends FormControl {
             //Add custom message to the default based on property.
             if(this.modelProperty == "gender"){
               message += " Please enter M (Male) or F (Female).";
-            } else if(this.modelProperty == "bIsToA"){
+            } else if(this.modelProperty == "bIsToA" || this.modelProperty == "partialDate"){
               message += " Click on the help (?) icon for valid inputs."
             }
-
             messages.push(message);
             break;
         }
@@ -39,10 +38,9 @@ export class IndividualFormControl extends FormControl {
 
 export class IndividualFormGroup extends FormGroup {
   //Form group, fieldworker and socialId are auto-populated fields!
-  constructor(fieldworker, socialId) {
+  constructor() {
     super({
-      collectedBy: new IndividualFormControl("Fieldworker", "collectedBy", fieldworker , Validators.compose([]), true),
-      sgExtId: new IndividualFormControl("Social Group External Id", "sgExtId", socialId, Validators.compose([]), true),
+      collectedBy: new IndividualFormControl("Fieldworker", "collectedBy", "" , Validators.compose([]), true),
       extId: new IndividualFormControl("External Id", "extId", "",
        [Validators.compose([Validators.required,
          Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
@@ -60,7 +58,7 @@ export class IndividualFormGroup extends FormGroup {
           Validators.pattern('(M|F)')])]),
       dob: new IndividualFormControl("Date of Birth", "dob", "",
         [Validators.compose([Validators.required])]),
-      partialDate: new IndividualFormControl("Partial Date", "partialDate", "", Validators.compose([]))
+      partialDate: new IndividualFormControl("Partial Date", "partialDate", "", Validators.compose([Validators.required, Validators.pattern("(1|2)")]))
     });
   }
 
@@ -81,8 +79,8 @@ export class IndividualFormGroup extends FormGroup {
 }
 
 export class CensusIndividualFormGroup extends IndividualFormGroup{
-  constructor(fieldworker, socialId){
-    super(fieldworker, socialId);
+  constructor(){
+    super();
     super.addControl("bIsToA", new IndividualFormControl("Relationship to Head", "bIsToA",
       "", Validators.compose([Validators.pattern("([1-9])")])))
     super.addControl("spouse", new IndividualFormControl("Spouse (if one)", "spouse",
