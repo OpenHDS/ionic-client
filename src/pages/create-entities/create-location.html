@@ -39,10 +39,18 @@
     <!------  Form Fields --------->
     <div class="form-group" *ngFor="let control of form.locationControls">
       <ion-item>
-        <ion-label>{{control.label}}</ion-label>
+        <ion-label>
+          {{control.label}}
+        </ion-label>
         <ion-input class="form-control"
                    [(ngModel)]="loc[control.modelProperty]"
-                   formControlName="{{control.modelProperty}}"></ion-input>
+                   formControlName="{{control.modelProperty}}">
+        </ion-input>
+          <button type="button" ion-button outline clear default item-end
+                  [hidden]="control.label != 'Location Type'" (click)="helpPopup(control.label)">
+            <ion-icon name="help-circle" ></ion-icon>
+          </button>
+
       </ion-item>
       <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
         <p color="danger" *ngFor="let error of control.getValidationMessages()">
@@ -52,7 +60,7 @@
     </div>
 
     <br/>
-    <button ion-button outline color="dark" [disabled]="formSubmitted && form.invalid" type="submit">Create Location</button>
+    <button type="submit" ion-button outline color="dark" [disabled]="formSubmitted && form.invalid" type="submit">Create Location</button>
   </form>
   <br/>
 

@@ -1,13 +1,22 @@
 import { Component } from '@angular/core';
 import { NgForm } from "@angular/forms";
-import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
+import {
+  IonicPage,
+  Events,
+  NavController,
+  NavParams,
+  ViewController,
+  LoadingController,
+  PopoverController
+} from 'ionic-angular';
+
 import {Geolocation} from "@ionic-native/geolocation";
 import {Location} from "../../interfaces/locations";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {UserProvider} from "../../providers/user-provider/user-provider";
-import {LocationFormControl, LocationFormGroup} from "../../census-forms/location-form";
+import {LocationFormGroup} from "../../census-forms/location-form";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -48,7 +57,8 @@ export class CreateLocationPage {
   };
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
-              public locProvider: LocationsProvider, public viewCtrl: ViewController, private geo: Geolocation, public netConfig: NetworkConfigProvider,
+              public locProvider: LocationsProvider, public viewCtrl: ViewController, private geo: Geolocation,
+              public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
               public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
     this.loc.collectedBy = this.user.getLoggedInUser();
@@ -97,4 +107,41 @@ export class CreateLocationPage {
     this.ev.publish('submitLocation', true);
   }
 
+  helpPopup(labelName){
+    let helpMessage = this.form.getFormHelpMessage(labelName);
+    const popover = this.popoverCtrl.create(LocationPopoverHelp,
+      {label: labelName, message: helpMessage});
+
+    popover.present();
+  }
+
+}
+
+
+
+@Component({
+  template: `
+    <ion-header>
+      <ion-navbar>
+        <ion-title>Help: {{this.labelName}} </ion-title>
+      </ion-navbar>
+    </ion-header>
+    <ion-content>
+      <ion-item>Valid inputs for this field are:</ion-item>
+        <ion-list>
+          <ion-item *ngFor="let message of this.helpMessage">
+            {{message}}
+          </ion-item>
+        </ion-list>
+    </ion-content>
+  `
+})
+
+export class LocationPopoverHelp{
+  labelName: string
+  helpMessage;
+  constructor(public navParams: NavParams){
+    this.labelName = this.navParams.get("label");
+    this.helpMessage = this.navParams.data["message"];
+  }
 }

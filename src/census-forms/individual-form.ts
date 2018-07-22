@@ -37,6 +37,12 @@ export class IndividualFormControl extends FormControl {
 }
 
 export class IndividualFormGroup extends FormGroup {
+  formHelpMessages = {
+    "Gender": ["F - Female", "M - Male"],
+    "Partial Date": ["1 - Exact", "2 - Approximate"]
+
+  };
+
   //Form group, fieldworker and socialId are auto-populated fields!
   constructor() {
     super({
@@ -62,6 +68,10 @@ export class IndividualFormGroup extends FormGroup {
     });
   }
 
+  get helpFields(){
+    return Object.keys(this.formHelpMessages)
+  }
+
   get individualFormControls(): IndividualFormControl[] {
     return Object.keys(this.controls)
       .map(k => this.controls[k] as IndividualFormControl);
@@ -79,12 +89,14 @@ export class IndividualFormGroup extends FormGroup {
 }
 
 export class CensusIndividualFormGroup extends IndividualFormGroup{
+
   constructor(){
     super();
     super.addControl("bIsToA", new IndividualFormControl("Relationship to Head", "bIsToA",
       "", Validators.compose([Validators.pattern("([1-9])")])))
     super.addControl("spouse", new IndividualFormControl("Spouse (if one)", "spouse",
       "", Validators.compose([])))
+    this.formHelpMessages["Relationship to Head"] = this.relationToHeadFields;
   }
 
   get relationToHeadFields(): string[] {
@@ -94,5 +106,9 @@ export class CensusIndividualFormGroup extends IndividualFormGroup{
 
   getFormValidationMessages(form: any): string[] {
     return super.getFormValidationMessages(self);
+  }
+
+  getFormHelpMessage(label){
+    return this.formHelpMessages[label];
   }
 }

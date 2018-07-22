@@ -50,6 +50,11 @@
         <ion-input *ngIf="control.label != 'Date of Birth'"
                    [(ngModel)]="individual[control.modelProperty]"
                    formControlName="{{control.modelProperty}}"></ion-input>
+        <button type="button" ion-button outline clear default item-end
+                [hidden]="control.label != 'Gender' && control.label != 'Partial Date' && control.label != 'Relationship to Head'"
+                (click)="helpPopup(control.label)">
+          <ion-icon name="help-circle" ></ion-icon>
+        </button>
       </ion-item>
       <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
         <p color="danger" *ngFor="let error of control.getValidationMessages()">

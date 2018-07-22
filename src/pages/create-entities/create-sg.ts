@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, Events, NavController, NavParams, ViewController} from 'ionic-angular';
+import {IonicPage, Events, NavController, NavParams, ViewController, PopoverController} from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {SocialGroup} from "../../interfaces/social-groups";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
@@ -7,6 +7,7 @@ import {NgForm} from "@angular/forms";
 import {CreateIndividualPage} from "./create-individual";
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
+import {LocationPopoverHelp} from "./create-location";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -40,7 +41,7 @@ export class CreateSocialGroupPage {
   };
 
   constructor(public ev: Events, public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams,
-              public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider,
+              public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
               public user: UserProvider) {
 
    this.sg.collectedBy = this.user.getLoggedInUser();
@@ -81,5 +82,41 @@ export class CreateSocialGroupPage {
 
   publishCreationEvent(){
     this.ev.publish('submitSG', {sg: this.sg, reload: true});
+  }
+
+  helpPopup(labelName){
+    let helpMessage = this.sgForm.getFormHelpMessage(labelName);
+    const popover = this.popoverCtrl.create(SocialGroupPopoverHelp,
+      {label: labelName, message: helpMessage});
+
+    popover.present();
+  }
+
+}
+
+@Component({
+  template: `
+    <ion-header>
+      <ion-navbar>
+        <ion-title>Help: {{this.labelName}} </ion-title>
+      </ion-navbar>
+    </ion-header>
+    <ion-content>
+      <ion-item>Valid inputs for this field are:</ion-item>
+        <ion-list>
+          <ion-item *ngFor="let message of this.helpMessage">
+            {{message}}
+          </ion-item>
+        </ion-list>
+    </ion-content>
+  `
+})
+
+export class SocialGroupPopoverHelp{
+  labelName: string
+  helpMessage;
+  constructor(public navParams: NavParams){
+    this.labelName = this.navParams.get("label");
+    this.helpMessage = this.navParams.data["message"];
   }
 }

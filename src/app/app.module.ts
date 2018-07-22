@@ -10,7 +10,7 @@ import { LocationsProvider } from '../providers/locations/locations-provider';
 import { HttpClientModule } from "@angular/common/http";
 import { Network } from "@ionic-native/network";
 import { NetworkConfigProvider } from "../providers/network-config/network-config";
-import { CreateLocationPage } from "../pages/create-entities/create-location";
+import {CreateLocationPage, LocationPopoverHelp} from "../pages/create-entities/create-location";
 import { Geolocation } from "@ionic-native/geolocation";
 import { ErrorsProvider } from '../providers/errors/errors';
 import { ErrorDisplayPage } from "../pages/error-display/error-display";
@@ -24,8 +24,8 @@ import {LocationHierarchyPage} from "../pages/entity-lists/location-hierarchy";
 import { SocialGroupProvider } from '../providers/social-group/social-group';
 import { IndividualProvider } from '../providers/individual/individual';
 import {SocialGroupsPage} from "../pages/entity-lists/social-groups";
-import {CreateSocialGroupPage} from "../pages/create-entities/create-sg";
-import {CreateIndividualPage} from "../pages/create-entities/create-individual";
+import {CreateSocialGroupPage, SocialGroupPopoverHelp} from "../pages/create-entities/create-sg";
+import {CreateIndividualPage, IndividualPopoverHelp} from "../pages/create-entities/create-individual";
 import {IndividualListPage} from "../pages/entity-lists/individual-list";
 import { UserProvider } from '../providers/user-provider/user-provider';
 import {LoginPage} from "../pages/login/login";
@@ -44,6 +44,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     OpenHDSApp,
     BaselineCensusPage,
     LocationListPage,
+    LocationPopoverHelp,
     CreateLocationPage,
     ErrorDisplayPage,
     SystemConfigPage,
@@ -51,8 +52,10 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     SynchronizeDbPage,
     LocationHierarchyPage,
     SocialGroupsPage,
+    SocialGroupPopoverHelp,
     CreateSocialGroupPage,
     CreateIndividualPage,
+    IndividualPopoverHelp,
     IndividualListPage,
     LoginPage,
     ApproveEntriesPage,
@@ -78,9 +81,12 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     SynchronizeDbPage,
     LocationHierarchyPage,
     LocationListPage,
+    LocationPopoverHelp,
     SocialGroupsPage,
+    SocialGroupPopoverHelp,
     CreateSocialGroupPage,
     CreateIndividualPage,
+    IndividualPopoverHelp,
     IndividualListPage,
     LoginPage,
     ApproveEntriesPage,

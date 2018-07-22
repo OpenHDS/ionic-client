@@ -1,4 +1,6 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import {Component} from "@angular/core";
+import {NavParams} from "ionic-angular";
 
 export class SocialGroupFormControl extends FormControl {
   label: string;
@@ -38,6 +40,10 @@ export class SocialGroupFormControl extends FormControl {
 }
 
 export class SocialGroupFormGroup extends FormGroup {
+  formHelpMessages = {
+    type: ["COH - Cohort", "FAM - Family"]
+  };
+
   //Form group, fieldworker and locationId are auto-populated fields!
   constructor() {
     super({
@@ -50,7 +56,7 @@ export class SocialGroupFormGroup extends FormGroup {
           Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
       groupType: new SocialGroupFormControl("Group Type", "groupType", "",
         [Validators.compose([Validators.required,
-          Validators.pattern("(FAM | COH)")])])
+          Validators.pattern("(FAM|COH)")])])
     });
   }
 
@@ -63,9 +69,11 @@ export class SocialGroupFormGroup extends FormGroup {
     let messages: string[] = [];
     this.socialGroupControls.forEach(c => c.getValidationMessages()
       .forEach(m => messages.push(m)));
-
-    console.log(messages);
     return messages;
+  }
 
+  getFormHelpMessage(formLabel){
+    return this.formHelpMessages.type;
   }
 }
+

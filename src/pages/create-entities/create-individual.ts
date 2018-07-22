@@ -1,5 +1,13 @@
 import {Component} from '@angular/core';
-import {IonicPage, Events, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
+import {
+  IonicPage,
+  Events,
+  NavController,
+  NavParams,
+  ViewController,
+  LoadingController,
+  PopoverController
+} from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {NgForm} from "@angular/forms";
 import {Individual} from "../../interfaces/individual";
@@ -10,6 +18,7 @@ import {Location} from "../../interfaces/locations";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
+import {SocialGroupPopoverHelp} from "./create-sg";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -35,7 +44,7 @@ export class CreateIndividualPage {
 
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public view: ViewController,
-              public individualProvider: IndividualProvider, public netConfig: NetworkConfigProvider,
+              public individualProvider: IndividualProvider, public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
               public user: UserProvider, public fieldProvider: FieldworkerProvider, public censusSub: CensusSubmissionProvider) {
 
     this.sg = this.navParams.data["sg"];
@@ -86,7 +95,7 @@ export class CreateIndividualPage {
     await this.censusSub.saveCensusInformationForApproval(censusInd);
   }
 
-  async dismissForm() {
+  async dismissForm(){
     this.navCtrl.pop()
   }
 
@@ -96,5 +105,41 @@ export class CreateIndividualPage {
 
   async publishIndividualCreation() {
     this.ev.publish('submitIndividual', {ind: this.individual, head: false});
+  }
+
+  helpPopup(labelName){
+    let helpMessage = this.individualForm.getFormHelpMessage(labelName);
+    const popover = this.popoverCtrl.create(IndividualPopoverHelp,
+      {label: labelName, message: helpMessage});
+
+    popover.present();
+  }
+
+}
+
+@Component({
+  template: `
+    <ion-header>
+      <ion-navbar>
+        <ion-title>Help: {{this.labelName}} </ion-title>
+      </ion-navbar>
+    </ion-header>
+    <ion-content>
+      <ion-item>Valid inputs for this field are:</ion-item>
+        <ion-list>
+          <ion-item *ngFor="let message of this.helpMessage">
+            {{message}}
+          </ion-item>
+        </ion-list>
+    </ion-content>
+  `
+})
+
+export class IndividualPopoverHelp{
+  labelName: string
+  helpMessage;
+  constructor(public navParams: NavParams){
+    this.labelName = this.navParams.get("label");
+    this.helpMessage = this.navParams.data["message"];
   }
 }

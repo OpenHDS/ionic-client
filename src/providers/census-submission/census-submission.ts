@@ -25,11 +25,11 @@ export class CensusSubmissionProvider {
     //Transform specific data to format for submission to server.
     censusInd.uuid = censusInd.uuid.replace(/-/g, "");
     if (censusInd.individual.collectedBy == null) {
-      censusInd.collectedBy = {extId: "UNK", uuid: "UnknownFieldWorker"};
-      censusInd.individual.collectedBy = {extId: "UNK", uuid: "UnknownFieldWorker"};
+      censusInd.collectedBy = "UNK";
+      censusInd.individual.collectedBy = "UNK";
     } else {
-      censusInd.collectedBy = {extId: censusInd.collectedBy.extId, uuid: censusInd.collectedBy.uuid}
-      censusInd.individual.collectedBy = {extId: censusInd.collectedBy.extId, uuid: censusInd.collectedBy.uuid}
+      censusInd.collectedBy = censusInd.collectedBy
+      censusInd.individual.collectedBy =  censusInd.collectedBy
 
     }
 

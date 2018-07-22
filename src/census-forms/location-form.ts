@@ -31,12 +31,15 @@ export class LocationFormControl extends FormControl {
       }
     }
 
-
     return messages;
   }
 }
 
 export class LocationFormGroup extends FormGroup {
+  formHelpMessages = {
+    type: ["RUR - Rural", "URB - Urban"]
+  };
+
   //Form group, fieldworker and locationLevel are auto-populated fields!
   constructor() {
       super({
@@ -66,6 +69,9 @@ export class LocationFormGroup extends FormGroup {
 
     console.log(messages);
     return messages;
+  }
 
+  getFormHelpMessage(formLabel){
+    return this.formHelpMessages.type;
   }
 }
