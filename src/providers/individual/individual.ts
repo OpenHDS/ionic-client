@@ -51,6 +51,6 @@ export class IndividualProvider extends DatabaseProviders{
 
   //Abstract Updates and Adds to prevent errors
   async insert(ind: Individual){
-    this.db.individuals.add(ind).catch(err => console.log(err));
+    this.db.individuals.put(ind).catch(err => console.log(err));
   }
 }

@@ -48,8 +48,11 @@ export class CreateSocialGroupPage {
    this.sgForm = new SocialGroupFormGroup();
 
 
-    this.ev.subscribe("submitHeadIndividual", (ind) => {
+    this.ev.subscribe("submitHeadIndividual", async (ind) => {
       this.sg.groupHead = ind.ind;
+      await this.sgProvider.saveDataLocally(this.sg);
+      await this.publishCreationEvent();
+      this.formSubmitted = false;
     })
   }
 
@@ -63,21 +66,16 @@ export class CreateSocialGroupPage {
     this.navCtrl.pop()
   }
 
-  async submitForm(form: NgForm){
+  async submitForm(form: NgForm) {
     this.formSubmitted = true;
-    if(form.valid){
+    if (form.valid) {
       this.formSubmitted = false;
-      await this.createHead().then(async () => {
-        await this.sgProvider.saveDataLocally(this.sg);
-        await this.publishCreationEvent();
-        form.reset();
-        this.formSubmitted = false;
-      });
+      console.log(this.sg);
+      await this.createHead();
     }
   }
-
   async createHead(){
-    await this.navCtrl.push(CreateIndividualPage, {sg: this.sg, createHead: true});
+    await this.navCtrl.push(CreateIndividualPage, {sg: this.sg, loc: this.navParams.get("sgLocation"), createHead: true});
   }
 
   publishCreationEvent(){

@@ -59,6 +59,6 @@ export class SocialGroupProvider extends DatabaseProviders{
 
   //Abstract Updates and Adds to prevent errors
   async insert(sg: SocialGroup){
-    this.db.socialGroup.add(sg).catch(err => console.log(err));
+    this.db.socialGroup.put(sg).catch(err => console.log(err));
   }
 }

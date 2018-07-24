@@ -41,6 +41,9 @@ export class LocationHierarchiesProvider extends DatabaseProviders{
     return this.db.locationhierarchies.toArray();
   }
 
+  findHierarchy(extId): Hierarchy {
+    return this.db.locationhierarchies.where("extId").equals(extId)[0];
+  }
   //Abstract Updates and Adds to prevent errors
   async insertLevels(lev: HierarchyLevels){
     this.db.levels.add(lev).catch(err => console.log(err));

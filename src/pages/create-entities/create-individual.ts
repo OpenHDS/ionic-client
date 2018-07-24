@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {
   IonicPage,
   Events,
@@ -18,7 +18,6 @@ import {Location} from "../../interfaces/locations";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
-import {SocialGroupPopoverHelp} from "./create-sg";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -47,8 +46,8 @@ export class CreateIndividualPage {
               public individualProvider: IndividualProvider, public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
               public user: UserProvider, public fieldProvider: FieldworkerProvider, public censusSub: CensusSubmissionProvider) {
 
-    this.sg = this.navParams.data["sg"];
 
+    this.sg = this.navParams.data["sg"];
     this.loc = this.navParams.data["loc"];
 
     this.individualForm = new CensusIndividualFormGroup();
@@ -69,14 +68,14 @@ export class CreateIndividualPage {
     this.formSubmitted = true;
     if (form.valid) {
       this.formSubmitted = false;
-      await this.individualProvider.saveDataLocally(this.individual)
-      await this.createAndSaveCensusIndividual()
-      if (this.createHead)
-        await this.publishHeadCreationEvent();
-      else
-        await this.publishIndividualCreation();
+      await this.individualProvider.saveDataLocally(this.individual);
+      await this.createAndSaveCensusIndividual();
+        if (this.createHead)
+          await this.publishHeadCreationEvent();
+        else
+          await this.publishIndividualCreation();
 
-      this.dismissForm();
+        this.dismissForm();
     }
   }
 
@@ -85,7 +84,10 @@ export class CreateIndividualPage {
     censusInd["uuid"] = this.individual.uuid;
     censusInd["locationExtId"] = this.loc.extId;
     censusInd["socialGroupExtId"] = this.sg.extId;
-    censusInd["socialGroupHeadExtId"] = this.sg.groupHead.extId;
+    if(this.createHead)
+      censusInd["socialGroupHeadExtId"] = this.individual.extId;
+    else
+      censusInd["socialGroupHeadExtId"] = this.sg.groupHead.extId;
     censusInd["individual"] = this.individual;
     censusInd["bIsToA"] = this.individual.bIsToA;
 

@@ -50,6 +50,7 @@ export class CensusSubmissionProvider {
   }
 
   saveCensusInformationForApproval(censusInd: CensusIndividual){
+    console.log(censusInd);
     this.db.censusIndividuals.add(censusInd).catch(err => console.log(err));
   }
 

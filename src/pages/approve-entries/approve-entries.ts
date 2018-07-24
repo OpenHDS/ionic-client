@@ -20,10 +20,11 @@ import {CensusIndividual} from "../../interfaces/census-individual";
 export class ApproveEntriesPage{
   constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController, public indProvider: IndividualProvider,
               public censusSub: CensusSubmissionProvider) {
-    this.loadIndividuals();
+    // this.loadIndividuals();
   }
 
   needApproval: Array<CensusIndividual> = [];
+  selectedForReview: string = "locations";
 
   ionViewWillEnter() {
     this.view.showBackButton(false);
@@ -40,6 +41,10 @@ export class ApproveEntriesPage{
 
   approveAndSend(ind){
     this.censusSub.sendCensusIndividual(ind);
+  }
+
+  setSelectedForReview(selected){
+    this.selectedForReview = selected
   }
 
 

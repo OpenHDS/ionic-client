@@ -9,6 +9,7 @@ import { EntityErrorLabels } from "../errors/entity-error-labels";
 import { SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
+import {LocationHierarchiesProvider} from "../location-hierarchies/location-hierarchies";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -27,7 +28,7 @@ export class LocationsProvider extends DatabaseProviders{
   };
 
   constructor(public http: HttpClient, public errorsProvider: ErrorsProvider,
-              public systemConfig: SystemConfigProvider) {
+              public systemConfig: SystemConfigProvider, public locHierarchyProvider: LocationHierarchiesProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
@@ -47,7 +48,6 @@ export class LocationsProvider extends DatabaseProviders{
       extId: "FWEK1D"
     };
 
-
     if(!loc.uuid)
       loc.uuid = UUID.UUID();
 
@@ -63,6 +63,6 @@ export class LocationsProvider extends DatabaseProviders{
 
   //Abstract Updates and Adds to prevent errors
   async insert(loc: Location){
-    this.db.locations.add(loc);
+    this.db.locations.put(loc);
   }
 }

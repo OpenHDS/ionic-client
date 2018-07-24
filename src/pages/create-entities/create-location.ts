@@ -62,7 +62,7 @@ export class CreateLocationPage {
               public sysConfig: SystemConfigProvider, public user: UserProvider) {
 
     this.loc.collectedBy = this.user.getLoggedInUser();
-    this.loc.locationLevel = this.navParams.get("parentLevel").extId
+    this.loc.locationLevel = this.navParams.get("parentLevel").extId;
     this.form = new LocationFormGroup();
   }
 
@@ -91,10 +91,11 @@ export class CreateLocationPage {
   async submitForm(form: NgForm){
     this.formSubmitted = true;
     if(form.valid){
-      this.locProvider.saveDataLocally(this.loc);
-      form.reset();
+      this.loc.locationLevel = this.navParams.get("parentLevel");
+      await this.locProvider.saveDataLocally(this.loc);
       this.formSubmitted = false;
       await this.publishCreationEvent();
+      this.dismissForm();
     }
   }
 
@@ -138,7 +139,7 @@ export class CreateLocationPage {
 })
 
 export class LocationPopoverHelp{
-  labelName: string
+  labelName: string;
   helpMessage;
   constructor(public navParams: NavParams){
     this.labelName = this.navParams.get("label");

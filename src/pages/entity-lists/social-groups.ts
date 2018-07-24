@@ -20,6 +20,7 @@ import {SystemConfigProvider} from "../../providers/system-config/system-config"
   templateUrl: 'social-groups.html',
 })
 export class SocialGroupsPage {
+  hierarchyLookupLevel;
   sgObserver: RefreshObservable = new RefreshObservable();
   @Input() sgLocation: Location;
   socialGroups: SocialGroup[];
@@ -45,6 +46,8 @@ export class SocialGroupsPage {
     this.sgObserver.subscribe(async (sgs) => {
       this.socialGroups = sgs;
     });
+
+    this.hierarchyLookupLevel = this.systemConfig.getSocialLookupLevel();
   }
 
   async ngOnInit() {
@@ -65,7 +68,7 @@ export class SocialGroupsPage {
       return [];
 
     return this.socialGroups.filter(sg => sg.extId.substring(0, this.sgLocation.extId.length) == this.sgLocation.extId
-      && this.sgLocation.locationLevel.level.keyIdentifier == this.systemConfig.getSocialLookupLevel());
+      && this.sgLocation.locationLevel.level.keyIdentifier == this.hierarchyLookupLevel);
   }
 
   selectSocialGroup(socialGroup){
@@ -78,5 +81,21 @@ export class SocialGroupsPage {
 
   goToCreateSgPage(){
     this.navCtrl.push(CreateSocialGroupPage, {sgLocation: this.sgLocation});
+  }
+
+  moveUpLevel(){
+    //Don't want to past 1st level in hierarchy
+    if(this.hierarchyLookupLevel > 1) {
+      this.hierarchyLookupLevel = this.hierarchyLookupLevel - 1;
+      this.filterByLocationExtId();
+    }
+  }
+
+  moveDownLevel(){
+    //Don't want to past 1st level in hierarchy
+    if(this.hierarchyLookupLevel < 5) {
+      this.hierarchyLookupLevel = this.hierarchyLookupLevel + 1;
+      this.filterByLocationExtId();
+    }
   }
 }
