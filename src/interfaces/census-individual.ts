@@ -9,4 +9,6 @@ export interface CensusIndividual {
   individual?: Individual;
   bIsToA?: string;
   spouse?: Individual;
+  processed?: boolean;
+  errorReported?: boolean;
 }

@@ -1,5 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
+import {
+  AlertController,
+  Events,
+  IonicPage,
+  NavController,
+  NavParams,
+  PopoverController,
+  ViewController
+} from 'ionic-angular';
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {IndividualProvider} from "../../providers/individual/individual";
@@ -23,11 +31,21 @@ export class SearchEntitiesPage implements OnInit {
   filteredLocations: Location[];
   filteredSocialGroups: SocialGroup[];
   filteredIndividuals: Individual[];
+
+  //Option for looking up head of social group
+  searchForHead: boolean;
   entityType: string = 'locations';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public sgProvider: SocialGroupProvider,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
+              public sgProvider: SocialGroupProvider, public ev: Events, public alertCtrl: AlertController,
               public locProvider: LocationsProvider, public indProvider: IndividualProvider) {
-  }
+
+    if(this.navParams.get("lookup") != null)
+      this.entityType = this.navParams.get("lookup");
+
+    if(this.navParams.get("headLookup") != null)
+      this.searchForHead = this.navParams.get("headLookup");
+    }
 
   async ngOnInit() {
     await this.loadList()
@@ -89,4 +107,33 @@ export class SearchEntitiesPage implements OnInit {
     })
   }
 
+  async returnSelection(item){
+    switch (this.entityType) {
+      case 'locations':
+       this.ev.publish("locationSearch", item);
+      case 'socialgroups':
+        await this.ev.publish("socialGroupSearch", item);
+      case 'individuals':
+        if (this.searchForHead)
+          this.ev.publish("socialGroupHeadSearch", item);
+        else
+          this.ev.publish("individualSearch", item);
+    }
+    this.navCtrl.pop();
+  }
+
+  confirmSelection(item){
+    let alert = this.alertCtrl.create({
+      title: "Confirm",
+      subTitle: "Select and exit?",
+      buttons: [{
+        text: "Yes, select",
+        handler: () => {this.returnSelection(item)}
+      }, {
+        text: "No"
+      }]
+    });
+
+    alert.present();
+  }
 }

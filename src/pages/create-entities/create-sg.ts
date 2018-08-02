@@ -8,6 +8,7 @@ import {CreateIndividualPage} from "./create-individual";
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
 import {LocationPopoverHelp} from "./create-location";
+import {SearchEntitiesPage} from "../search-entities/search-entities";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -25,6 +26,7 @@ export class CreateSocialGroupPage {
 
   formSubmitted: boolean = false;
   sgForm: SocialGroupFormGroup;
+  lookupSGHead: boolean = false;
 
   sg: SocialGroup = {
     uuid: null,
@@ -36,7 +38,7 @@ export class CreateSocialGroupPage {
     deleted: null,
     insertDate: null,
     clientInsert: null,
-    processed: 0,
+    processed: false,
     selected: false
   };
 
@@ -50,9 +52,12 @@ export class CreateSocialGroupPage {
 
     this.ev.subscribe("submitHeadIndividual", async (ind) => {
       this.sg.groupHead = ind.ind;
-      await this.sgProvider.saveDataLocally(this.sg);
-      await this.publishCreationEvent();
-      this.formSubmitted = false;
+      this.saveFormAndExit()
+    })
+
+    this.ev.subscribe("socialGroupHeadSearch", async (individual) => {
+      this.sg.groupHead = individual;
+      this.saveFormAndExit();
     })
   }
 
@@ -70,12 +75,26 @@ export class CreateSocialGroupPage {
     this.formSubmitted = true;
     if (form.valid) {
       this.formSubmitted = false;
-      console.log(this.sg);
-      await this.createHead();
+      if(this.lookupSGHead == false){
+        await this.createHead();
+      } else {
+        this.lookupHead();
+      }
     }
+  }
+
+  async saveFormAndExit(){
+    await this.sgProvider.saveDataLocally(this.sg);
+    await this.publishCreationEvent();
+    this.formSubmitted = false;
+    this.navCtrl.pop();
   }
   async createHead(){
     await this.navCtrl.push(CreateIndividualPage, {sg: this.sg, loc: this.navParams.get("sgLocation"), createHead: true});
+  }
+
+  async lookupHead(){
+    await this.navCtrl.push(SearchEntitiesPage, {lookup: "individuals", headLookup: true})
   }
 
   publishCreationEvent(){

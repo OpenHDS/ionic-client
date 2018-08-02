@@ -10,6 +10,7 @@ import {SynchronizeDbPage} from "../pages/synchronize-db/synchronize-db";
 import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
 import {SystemConfigPage} from "../pages/system-config/system-config";
 import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
+import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
 
 export interface PageInterface {
   title: string;
@@ -49,7 +50,7 @@ export class OpenHDSApp {
                public userData: UserProvider, public appCtrl: App) {
 
     if(this.userData.hasLoggedIn()){
-      this.rootPage = BaselineCensusPage;
+      this.rootPage = FieldworkerModePage;
     } else {
       this.rootPage = LoginPage;
     }
@@ -62,7 +63,7 @@ export class OpenHDSApp {
   }
 
   logoutUser() {
-    this.appCtrl.getRootNav().setRoot(LoginPage, );
+    this.appCtrl.getRootNav().setRoot(LoginPage);
     this.userData.setUserLogout();
   }
 

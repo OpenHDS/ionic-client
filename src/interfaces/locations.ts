@@ -8,12 +8,13 @@ export interface Location{
   latitude: number;
   accuracy: number;
   altitude: number;
-  collectedBy: {};
+  collectedBy: string;
   locationLevel: Hierarchy;
   deleted: boolean;
   insertDate: Date;
   clientInsert: number;
   uuid: string;
-  processed: boolean; //false, if error or not approved, true otherwise.
-  selected: boolean;
+  processed?: boolean; //false, if error or not approved, true otherwise.
+  errorReported?: boolean;
+  selected?: boolean;
 }

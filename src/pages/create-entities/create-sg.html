@@ -55,5 +55,6 @@
 
     <br/>
     <button ion-button outline color="dark" [disabled]="formSubmitted && sgForm.invalid" type="submit">Create Social Group Head</button>
+    <button ion-button outline color="dark" [disabled]="formSubmitted && sgForm.invalid" type="submit" (click)="lookupSGHead = true">Search for a Social Group Head</button>
   </form>
 </ion-content>

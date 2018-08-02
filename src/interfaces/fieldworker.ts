@@ -4,5 +4,5 @@ export interface Fieldworker{
   lastName?: string;
   passwordHash?: string;
   uuid: string;
-  processed?: number; //0 for not sent, 1 for sent, 2 for sent, but with error
+  processed?: boolean; //0 for not sent, 1 for sent, 2 for sent, but with error
 }

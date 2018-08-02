@@ -44,7 +44,7 @@
             <ion-item>
               <h1>{{loc.locationName}}</h1>
               <h5> Ext Id: {{loc.extId}}</h5>
-              <button ion-button outline click="this.select(loc)">Select</button>
+              <button ion-button outline click="this.confirmSelection(loc)">Select</button>
             </ion-item>
           </ion-card>
         </ion-list>
@@ -64,7 +64,7 @@
               <h1>{{sg.groupName}}</h1>
               <h5> Group Head: {{sg.groupHead.firstName}} {{sg.groupHead.lastName}}</h5>
               <h5> Ext Id: {{sg.extId}}</h5>
-              <button ion-button outline click="this.select(sg)">Select</button>
+              <button ion-button outline (click)="this.confirmSelection(sg)">Select</button>
             </ion-item>
           </ion-card>
         </ion-list>
@@ -74,7 +74,7 @@
       <div>
         <ion-item>
           <ion-searchbar placeholder="Search By Individual External Id, or by Individuals Name"
-                         (ionInput)="this.search($event)"></ion-searchbar>
+                         (click)="this.search($event)"></ion-searchbar>
         </ion-item>
       </div>
       <div>
@@ -83,7 +83,7 @@
             <ion-item>
               <h1>{{ind.firstName}} {{ind.lastName}}</h1>
               <h5> Ext Id: {{ind.extId}}</h5>
-              <button ion-button outline click="this.select(ind)">Select</button>
+              <button ion-button outline (click)="this.confirmSelection(ind)">Select</button>
             </ion-item>
           </ion-card>
         </ion-list>

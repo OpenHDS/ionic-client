@@ -5,11 +5,12 @@ export interface SocialGroup{
   groupName: string;
   groupType: string;
   groupHead: Individual;
-  collectedBy: {};
+  collectedBy: string;
   deleted: boolean;
   insertDate: Date;
   clientInsert: number;
   uuid: string;
-  processed: number; //0 for not sent, 1 for sent, 2 for sent, but with error
+  processed: boolean;
+  errorReported?: boolean;
   selected: boolean;
 }

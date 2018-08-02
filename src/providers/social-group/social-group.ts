@@ -8,6 +8,7 @@ import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
+import {UserProvider} from "../user-provider/user-provider";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -26,7 +27,7 @@ export class SocialGroupProvider extends DatabaseProviders{
   };
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
-              public systemConfig: SystemConfigProvider) {
+              public systemConfig: SystemConfigProvider, public userProvider: UserProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
@@ -42,16 +43,14 @@ export class SocialGroupProvider extends DatabaseProviders{
   }
 
   async saveDataLocally(sg: SocialGroup){
-    sg.collectedBy = {
-      extId: "FWEK1D"
-    };
+    sg.collectedBy = this.userProvider.getLoggedInUser();
 
     if(!sg.uuid)
       sg.uuid = UUID.UUID();
 
     sg.deleted = false;
     sg.selected = false;
-    sg.processed = 0;
+    sg.processed = false;
     sg.clientInsert = new Date().getTime();
 
     await this.insert(sg);
@@ -59,6 +58,11 @@ export class SocialGroupProvider extends DatabaseProviders{
 
   //Abstract Updates and Adds to prevent errors
   async insert(sg: SocialGroup){
+    this.db.socialGroup.put(sg).catch(err => console.log(err));
+  }
+
+  async update(sg: SocialGroup){
+    console.log("Updating SOCIAL GROUP...");
     this.db.socialGroup.put(sg).catch(err => console.log(err));
   }
 }

@@ -6,4 +6,6 @@ export interface Visit {
   visitDate: Date;
   collectedBy: string;
   visitLocation: string;
+  processed?: boolean;
+  errorReported?: boolean;
 }

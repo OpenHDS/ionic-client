@@ -10,6 +10,7 @@ import { SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
 import {LocationHierarchiesProvider} from "../location-hierarchies/location-hierarchies";
+import {UserProvider} from "../user-provider/user-provider";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -22,12 +23,7 @@ import {LocationHierarchiesProvider} from "../location-hierarchies/location-hier
 export class LocationsProvider extends DatabaseProviders{
   private db: OpenhdsDb;
 
-  openhdsLogin = {
-    username: 'admin',
-    password: 'test'
-  };
-
-  constructor(public http: HttpClient, public errorsProvider: ErrorsProvider,
+  constructor(public http: HttpClient, public errorsProvider: ErrorsProvider, public userProvider: UserProvider,
               public systemConfig: SystemConfigProvider, public locHierarchyProvider: LocationHierarchiesProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
@@ -44,25 +40,25 @@ export class LocationsProvider extends DatabaseProviders{
   }
 
   async saveDataLocally(loc: Location){
-    loc.collectedBy = {
-      extId: "FWEK1D"
-    };
+    loc.collectedBy = this.userProvider.getLoggedInUser();
 
     if(!loc.uuid)
       loc.uuid = UUID.UUID();
 
     loc.deleted = false;
     loc.selected = false;
-    loc.processed = true;
+    loc.processed = false;
     loc.clientInsert = new Date().getTime();
 
     await this.insert(loc);
   }
 
-
-
   //Abstract Updates and Adds to prevent errors
   async insert(loc: Location){
-    this.db.locations.put(loc);
+    this.db.locations.put(loc).catch(err => console.log(err));
+  }
+
+  async update(loc: Location){
+    this.db.locations.put(loc).catch(err => console.log(err));
   }
 }

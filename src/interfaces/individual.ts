@@ -13,6 +13,8 @@ export class Individual{
   collectedBy?: string;
   deleted?: boolean;
   insertDate?: Date;
+  processed?: boolean;
+  errorReported?: boolean;
   spouse?: string;
   bIsToA?: string;
   uuid: string;

@@ -37,11 +37,13 @@ import { VisitsProvider } from '../providers/visits/visits';
 import {CreateVisitPage} from "../pages/create-entities/create-visit";
 import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
 
 
 @NgModule({
   declarations: [
     OpenHDSApp,
+    FieldworkerModePage,
     BaselineCensusPage,
     LocationListPage,
     LocationPopoverHelp,
@@ -73,6 +75,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
   bootstrap: [IonicApp],
   entryComponents: [
     OpenHDSApp,
+    FieldworkerModePage,
     BaselineCensusPage,
     CreateLocationPage,
     ErrorDisplayPage,

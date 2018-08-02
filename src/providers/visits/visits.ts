@@ -35,12 +35,18 @@ export class VisitsProvider extends DatabaseProviders {
   saveDataLocally(v: Visit){
     if(!v.uuid)
       v.uuid = UUID.UUID();
+
+    v.processed = false;
     this.insert(v);
   }
 
   //Abstract Updates and Adds to prevent errors
   async insert(visit: Visit){
     this.db.visits.add(visit).catch(err => console.log(err));
+  }
+
+  async update(visit: Visit){
+    this.db.visits.put(visit).catch(err => console.log(err));
   }
 
 }
