@@ -1,16 +1,12 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Location} from "../../interfaces/locations";
-import { NetworkConfigProvider } from "../network-config/network-config";
 import { UUID } from "angular2-uuid";
-import {Errors} from "../../interfaces/data-errors";
-import { ErrorsProvider } from "../errors/errors";
-import { EntityErrorLabels } from "../errors/entity-error-labels";
 import { SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
-import {LocationHierarchiesProvider} from "../location-hierarchies/location-hierarchies";
 import {UserProvider} from "../user-provider/user-provider";
+
 
 /*
   Generated class for the LocationsProvider provider.
@@ -21,10 +17,10 @@ import {UserProvider} from "../user-provider/user-provider";
 
 @Injectable()
 export class LocationsProvider extends DatabaseProviders{
-  private db: OpenhdsDb;
+  public db: OpenhdsDb;
 
-  constructor(public http: HttpClient, public errorsProvider: ErrorsProvider, public userProvider: UserProvider,
-              public systemConfig: SystemConfigProvider, public locHierarchyProvider: LocationHierarchiesProvider) {
+  constructor(public http: HttpClient, public userProvider: UserProvider,
+              public systemConfig: SystemConfigProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
@@ -41,6 +37,13 @@ export class LocationsProvider extends DatabaseProviders{
 
   async saveDataLocally(loc: Location){
     loc.collectedBy = this.userProvider.getLoggedInUser();
+
+    //Check to see if location already exists!
+    let find = await this.db.locations.where('extId').equals(loc.extId).toArray();
+
+    if(find.length != 0){
+      throw ("Location with given external Id already exists.");
+    }
 
     if(!loc.uuid)
       loc.uuid = UUID.UUID();

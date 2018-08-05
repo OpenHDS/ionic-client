@@ -21,7 +21,7 @@ export class DatabaseProviders {
     return await this.loadData(dataUrl, entityTypeString);
   }
 
-  private async loadData(url: string, entityTypeString: string) {
+   async loadData(url: string, entityTypeString: string) {
     if(entityTypeString == "locationhierarchylevels")
       entityTypeString = "locationHierarchies";
 
