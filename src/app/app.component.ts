@@ -31,7 +31,7 @@ export class OpenHDSApp {
   @ViewChild(Nav) nav: Nav;
 
   fieldworkerPages: PageInterface[] = [
-    { title: 'Dashboard', name: 'DashboardPage', component: BaselineCensusPage },
+    { title: 'Dashboard', name: 'DashboardPage', component: FieldworkerModePage },
     { title: 'Baseline Census', name: 'BaselineCensusPage', component: BaselineCensusPage},
     { title: 'Search For a Record', name: 'SearchEntitiesPage', component: SearchEntitiesPage},
   ];
@@ -49,13 +49,19 @@ export class OpenHDSApp {
   constructor( public events: Events,  public platform: Platform, public splashScreen: SplashScreen,
                public userData: UserProvider, public appCtrl: App) {
 
-    if(this.userData.hasLoggedIn()){
-      this.rootPage = FieldworkerModePage;
-    } else {
+    console.log("Checking logged in status....");
+    if(this.userData.hasLoggedIn() == false || this.userData.getLoggedInUser() == null){
       this.rootPage = LoginPage;
+    } else {
+      this.rootPage = FieldworkerModePage;
     }
 
+
     this.platformReady();
+  }
+
+  ionViewWillEnter() {
+
   }
 
   openPage(page){

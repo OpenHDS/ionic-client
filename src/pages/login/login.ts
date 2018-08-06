@@ -6,6 +6,7 @@ import {MenuController, NavController} from 'ionic-angular';
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {BaselineCensusPage} from "../baseline-census/baseline-census";
 import {SupervisorModePage} from "../supervisor-mode/supervisor-mode";
+import {FieldworkerModePage} from "../fieldworker-mode/fieldworker-mode";
 
 
 
@@ -48,7 +49,7 @@ export class LoginPage {
        } else {
          var loginAttempt = await this.userProvider.checkPassword(this.username, this.password);
          if(loginAttempt){
-           this.navCtrl.setRoot(BaselineCensusPage);
+           this.navCtrl.setRoot(FieldworkerModePage);
          } else {
            this.submitted = false;
          }
