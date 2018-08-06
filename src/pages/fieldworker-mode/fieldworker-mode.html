@@ -1,0 +1,46 @@
+<!--
+  Generated template for the FieldworkerModePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Fieldworker Home</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <ion-row>
+    <ion-col col-6>
+      <ion-card>
+        <ion-card-header class="card">
+         Incomplete Forms
+        </ion-card-header>
+        <ion-card-content *ngIf="this.incompleteForms == undefined || this.incompleteForms.length == 0; else elseBlock">
+          There are no incomplete forms.
+        </ion-card-content>
+        <ng-template #elseBlock>
+          <ion-list>
+            <ion-item *ngFor="let incompleteForms of this.incompleteForms">
+              {{incompleteForms.extId}}
+            </ion-item>
+          </ion-list>
+        </ng-template>
+      </ion-card>
+    </ion-col>
+    <ion-col col-6>
+      <ion-card>
+        <ion-card-header class="card">
+          Messages/Alerts
+        </ion-card-header>
+        <ion-card-content>
+          There are currently no new messages to view.
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>
