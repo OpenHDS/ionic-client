@@ -8,6 +8,7 @@ import {Events} from "ionic-angular"
 import {Individual} from "../../interfaces/individual";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
+import {CensusSubmissionProvider} from "../census-submission/census-submission";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -22,7 +23,7 @@ export class IndividualProvider extends DatabaseProviders{
 
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider, public errorsProvider: ErrorsProvider,
-              public systemConfig: SystemConfigProvider) {
+              public systemConfig: SystemConfigProvider, public censusProvider: CensusSubmissionProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
@@ -46,11 +47,34 @@ export class IndividualProvider extends DatabaseProviders{
       ind.uuid = UUID.UUID().toString();
 
     ind.deleted = false;
+    ind.processed = false;
     await this.insert(ind);
   }
 
   //Abstract Updates and Adds to prevent errors
   async insert(ind: Individual){
+    this.db.individuals.add(ind).catch(err => console.log(err));
+  }
+
+  async update(ind: Individual){
     this.db.individuals.put(ind).catch(err => console.log(err));
+    this.censusProvider.updateCensusInformationForApproval(this.shallowCopy(ind));
+  }
+
+  shallowCopy(ind): Individual{
+    let copy = new Individual();
+    copy.uuid = ind.uuid;
+    copy.extId = ind.extId;
+    copy.collectedBy = ind.collectedBy;
+    copy.firstName = ind.firstName;
+    copy.middleName = ind.middleName;
+    copy.lastName = ind.lastName;
+    copy.gender = ind.gender;
+    copy.dob = ind.dob;
+    copy.dobAspect = ind.dobAspect;
+    copy.mother = ind.mother;
+    copy.father = ind.father;
+
+    return copy;
   }
 }

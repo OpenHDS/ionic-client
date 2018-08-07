@@ -10,7 +10,7 @@ export class Individual{
   gender?: string;
   father?: Individual;
   mother?: Individual;
-  collectedBy?: string;
+  collectedBy?: any; //String for db storage. Fieldworker object for sending to server.
   deleted?: boolean;
   insertDate?: Date;
   processed?: boolean;

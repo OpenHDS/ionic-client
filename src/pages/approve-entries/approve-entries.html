@@ -79,7 +79,7 @@
           <ion-card *ngIf="this.filteredIndividuals != undefined && this.filteredIndividuals.length != 0; else elseIndBlock">
             <ion-card-content>
               <ion-item *ngFor="let ind of this.filteredIndividuals">
-                {{ind.individual.firstName}} {{ind.individual.lastName}}
+                {{ind.firstName}} {{ind.lastName}}
                 <ion-icon name="alert" color="danger" *ngIf="this.ind.errorReported" float-right></ion-icon>
                 <ion-icon name="checkbox-outline" color="dark" *ngIf="this.ind.processed" float-right></ion-icon>
                 <br>

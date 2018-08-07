@@ -1,11 +1,10 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   IonicPage,
   Events,
   NavController,
   NavParams,
   ViewController,
-  LoadingController,
   PopoverController
 } from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
@@ -18,6 +17,7 @@ import {Location} from "../../interfaces/locations";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
+import {CensusIndividual} from "../../interfaces/census-individual";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -41,7 +41,6 @@ export class CreateIndividualPage {
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   individual: Individual = new Individual();
 
-
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public view: ViewController,
               public individualProvider: IndividualProvider, public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
               public user: UserProvider, public fieldProvider: FieldworkerProvider, public censusSub: CensusSubmissionProvider) {
@@ -64,7 +63,6 @@ export class CreateIndividualPage {
   }
 
   async submitForm(form: NgForm) {
-
     this.formSubmitted = true;
     if (form.valid) {
       this.formSubmitted = false;
@@ -80,20 +78,21 @@ export class CreateIndividualPage {
   }
 
   async createAndSaveCensusIndividual() {
-    var censusInd = {};
-    censusInd["uuid"] = this.individual.uuid;
-    censusInd["locationExtId"] = this.loc.extId;
-    censusInd["socialGroupExtId"] = this.sg.extId;
+    var censusInd = new CensusIndividual();
+    censusInd.uuid = this.individual.uuid;
+    censusInd.locationExtId = this.loc.extId;
+    censusInd.socialGroupExtId = this.sg.extId;
     if(this.createHead)
-      censusInd["socialGroupHeadExtId"] = this.individual.extId;
+      censusInd.socialGroupHeadExtId = this.individual.extId;
     else
-      censusInd["socialGroupHeadExtId"] = this.sg.groupHead.extId;
-    censusInd["individual"] = this.individual;
-    censusInd["bIsToA"] = this.individual.bIsToA;
+      censusInd.socialGroupHeadExtId= this.sg.groupHead.extId;
+    censusInd.individual = this.individualProvider.shallowCopy(this.individual);
+    censusInd.bIsToA= this.individual.bIsToA;
+    censusInd.spouse = this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse) : null;
 
-    censusInd["spouse"] = this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse) : null;
     let fieldworker = await this.fieldProvider.getFieldworker(this.user.getLoggedInUser());
-    censusInd["collectedBy"] = {extId: fieldworker[0].extId, "uuid": fieldworker[0].uuid};
+    censusInd.collectedBy = fieldworker[0].extId;
+    censusInd.individual.collectedBy = {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
     await this.censusSub.saveCensusInformationForApproval(censusInd);
   }
 
@@ -116,7 +115,6 @@ export class CreateIndividualPage {
 
     popover.present();
   }
-
 }
 
 @Component({

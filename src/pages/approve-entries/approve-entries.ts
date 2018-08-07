@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import {IndividualProvider} from "../../providers/individual/individual";
-import {Individual} from "../../interfaces/individual";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 import {CensusIndividual} from "../../interfaces/census-individual";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
@@ -14,6 +13,7 @@ import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
 import {LocationFormGroup} from "../../census-forms/location-form";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
 import {VisitFormGroup} from "../../census-forms/visit-form";
+import {Individual} from "../../interfaces/individual";
 
 /**
  * Generated class for the ApproveEntriesPage page.
@@ -37,7 +37,7 @@ export class ApproveEntriesPage implements OnInit{
 
   filteredLocations: Location[];
   filteredSocialGroups: SocialGroup[];
-  filteredIndividuals: CensusIndividual[];
+  filteredIndividuals: Individual[];
   filteredVisits: Visit[];
   selectedForReview: string = "locations";
   viewEntry: boolean;
@@ -69,7 +69,7 @@ export class ApproveEntriesPage implements OnInit{
       case 'socialgroups':
         await this.socialGroupProvider.getAllSocialGroups().then(x => this.filteredSocialGroups =  x.filter(entry => entry.processed == false));
       case 'individuals':
-        await this.censusSub.getAllCensusSubmissions().then(x => this.filteredIndividuals =  x.filter(entry => entry.processed == false));
+        await this.indProvider.getAllIndividuals().then(x => this.filteredIndividuals =  x.filter(entry => entry.processed == false));
       case 'visits':
         await this.visitProvider.getAllVisits().then(x => this.filteredVisits = x.filter(entry => entry.processed == false));
     }
@@ -98,7 +98,7 @@ export class ApproveEntriesPage implements OnInit{
     switch(this.selectedForReview){
       case "locations": this.locationProvider.update(this.selectedEntry);
       case "socialgroups": this.socialGroupProvider.update(this.selectedEntry);
-      case "individuals": this.censusSub.sendCensusIndividual(this.selectedEntry);
+      case "individuals": this.indProvider.update(this.selectedEntry);
       case "visits": this.visitProvider.update(this.selectedEntry);
     }
   }

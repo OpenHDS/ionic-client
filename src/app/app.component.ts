@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 
-import {App, Events, MenuController, Nav, Platform} from 'ionic-angular';
+import {App, Events,  Nav, Platform} from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {BaselineCensusPage} from "../pages/baseline-census/baseline-census";
 import {LoginPage} from "../pages/login/login";

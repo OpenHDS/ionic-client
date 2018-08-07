@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import {CensusIndividual} from "../../interfaces/census-individual";
 import {SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
+import {Individual} from "../../interfaces/individual";
+import {FieldworkerProvider} from "../fieldworker/fieldworker";
+import {UserProvider} from "../user-provider/user-provider";
 
 /*
   Generated class for the CensusSubmissionProvider provider.
@@ -14,23 +17,29 @@ import {OpenhdsDb} from "../database-providers/openhds-db";
 export class CensusSubmissionProvider {
   db: OpenhdsDb;
 
-  constructor(public http: HttpClient, public systemConfig: SystemConfigProvider) {
+  constructor(public http: HttpClient, public fieldProvider: FieldworkerProvider,
+              public user: UserProvider, public systemConfig: SystemConfigProvider) {
     this.db = new OpenhdsDb();
     console.log('Hello CensusSubmissionProvider Provider');
   }
 
   //TODO: Refactor and simplify census submission!
   sendCensusIndividual(censusInd: CensusIndividual) {
+    let censusToServer = this.serverCopy(censusInd);
+    console.log(censusToServer);
+    const headers = new HttpHeaders().set('authorization',
+      "Basic " + btoa(this.systemConfig.getDefaultUser() + ":" + this.systemConfig.getDefaultPassword()));
 
-    //Transform specific data to format for submission to server.
+    this.http.post(this.systemConfig.getServerURL() + "/census", censusToServer, {headers}).subscribe((x) => x, (err) => console.log(err));
+  }
+
+  serverCopy(censusInd){
+    let cenInd = new CensusIndividual();
+
     censusInd.uuid = censusInd.uuid.replace(/-/g, "");
     if (censusInd.individual.collectedBy == null) {
       censusInd.collectedBy = "UNK";
-      censusInd.individual.collectedBy = "UNK";
-    } else {
-      censusInd.collectedBy = censusInd.collectedBy
-      censusInd.individual.collectedBy =  censusInd.collectedBy
-
+      censusInd.individual.collectedBy = {extId: "UNK", uuid:"UnknownFieldWorker"};
     }
 
     censusInd.individual.uuid = censusInd.individual.uuid.replace(/-/g, "");
@@ -42,19 +51,42 @@ export class CensusSubmissionProvider {
       censusInd.individual.father = {extId: "UNK", uuid: "Unknown Individual"}
     }
 
-    console.log(censusInd);
-    const headers = new HttpHeaders().set('authorization',
-      "Basic " + btoa(this.systemConfig.getDefaultUser() + ":" + this.systemConfig.getDefaultPassword()));
+    //Copy over to fields needed for server, excluding information not needed (such as client error processing fields)
+    cenInd.uuid = censusInd.uuid;
+    cenInd.individual = censusInd.individual;
+    cenInd.collectedBy = censusInd.collectedBy;
+    cenInd.locationExtId = censusInd.locationExtId;
+    cenInd.socialGroupExtId = censusInd.socialGroupExtId;
+    cenInd.socialGroupHeadExtId = censusInd.socialGroupHeadExtId;
+    console.log(censusInd.socialGroupHeadExtId);
+    cenInd.bIsToA = censusInd.bIsToA;
+    cenInd.spouse = censusInd.spouse;
 
-    this.http.post(this.systemConfig.getServerURL() + "/census", censusInd, {headers}).subscribe((x) => x, (err) => console.log(err));
+    return cenInd;
   }
 
   saveCensusInformationForApproval(censusInd: CensusIndividual){
-    console.log(censusInd);
     censusInd.processed = false;
     this.db.censusIndividuals.add(censusInd).catch(err => console.log(err));
   }
 
+
+  async updateCensusInformationForApproval(individual: Individual){
+    console.log("Updating census individual...");
+    let lookup = await this.db.censusIndividuals.toArray();
+
+    lookup.forEach(async x => {
+      if(x.individual.extId == individual.extId) {
+        x.individual = individual;
+
+        // Update occured. Fix representation of individual.
+        let fieldworker = await this.fieldProvider.getFieldworker(individual.collectedBy);
+        x.individual.collectedBy = {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
+        this.db.censusIndividuals.put(x);
+      }
+    });
+
+  }
   async findCensusInformation(censusIndUuid: string){
     var ind = await this.db.censusIndividuals.where("uuid").equals(censusIndUuid);
     return ind.toArray()[0];

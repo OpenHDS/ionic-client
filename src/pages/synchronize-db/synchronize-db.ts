@@ -7,6 +7,7 @@ import {IndividualProvider} from "../../providers/individual/individual";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {ErrorsProvider} from "../../providers/errors/errors";
+import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 
 /**
  * Generated class for the SynchronizeDbPage page.
@@ -31,7 +32,8 @@ export class SynchronizeDbPage {
   constructor(public events: Events, public loadingCtrl: LoadingController, public networkConfig: NetworkConfigProvider,
               public viewCtrl: ViewController, public errProvider: ErrorsProvider,
               public lhProvider: LocationHierarchiesProvider, public locProvider: LocationsProvider,
-              public sgProvider: SocialGroupProvider, public indProvider: IndividualProvider, public fwProvider: FieldworkerProvider) {
+              public sgProvider: SocialGroupProvider, public indProvider: IndividualProvider,
+              public censusProvider: CensusSubmissionProvider, public fwProvider: FieldworkerProvider) {
   }
 
   ionViewDidLoad() {
@@ -129,6 +131,14 @@ export class SynchronizeDbPage {
     });
     loading.dismiss();
     this.publishSynchronizationEvent("individualSync")
+  }
+
+  async syncNewDataWithServer(){
+    //Sync CensusIndividuals
+    let censusIndividuals = await this.censusProvider.getAllCensusSubmissions();
+    censusIndividuals.forEach(cenInd => {
+        this.censusProvider.sendCensusIndividual(cenInd)
+    });
   }
 
   publishSynchronizationEvent(topic){

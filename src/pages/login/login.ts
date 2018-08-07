@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
-
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MenuController, NavController} from 'ionic-angular';
-
 import {UserProvider} from "../../providers/user-provider/user-provider";
-import {BaselineCensusPage} from "../baseline-census/baseline-census";
 import {SupervisorModePage} from "../supervisor-mode/supervisor-mode";
 import {FieldworkerModePage} from "../fieldworker-mode/fieldworker-mode";
 

@@ -1,6 +1,6 @@
 import {Individual} from "./individual";
 
-export interface CensusIndividual {
+export class CensusIndividual {
   uuid?: string;
   socialGroupExtId?: string;
   socialGroupHeadExtId?: string;
