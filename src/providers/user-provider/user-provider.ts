@@ -43,7 +43,7 @@ export class UserProvider {
 
   hasLoggedIn(){
     let loggedIn = localStorage.getItem("hasLoggedIn");
-    return loggedIn.toLowerCase() == 'true' ? true : false; //returns true if logged in, false otherwise
+    return loggedIn != null && loggedIn.toLowerCase() == 'true' ? true : false; //returns true if logged in, false otherwise
   }
 
   getLoggedInUser(){

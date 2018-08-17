@@ -29,16 +29,7 @@ export class CreateVisitPage {
   formSubmitted: boolean = false;
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
-  visit: Visit = {
-    uuid: null,
-    collectedBy: null,
-    visitLocation: null,
-    extId: null,
-    realVisit: null,
-    roundNumber: null,
-    visitDate: null,
-
-  };
+  visit: Visit = new Visit();
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
               public visitProvider: VisitsProvider, public netConfig: NetworkConfigProvider,

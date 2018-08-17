@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Location} from "../../interfaces/locations";
 import { UUID } from "angular2-uuid";
@@ -6,7 +6,9 @@ import { SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
 import {UserProvider} from "../user-provider/user-provider";
-
+import {FieldworkerProvider} from "../fieldworker/fieldworker";
+import {Hierarchy} from "../../interfaces/hierarchy";
+import {Locations} from "../../interfaces/entity-wrappers";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -19,7 +21,7 @@ import {UserProvider} from "../user-provider/user-provider";
 export class LocationsProvider extends DatabaseProviders{
   public db: OpenhdsDb;
 
-  constructor(public http: HttpClient, public userProvider: UserProvider,
+  constructor(public http: HttpClient, public userProvider: UserProvider, public fwProvider: FieldworkerProvider,
               public systemConfig: SystemConfigProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
@@ -49,7 +51,7 @@ export class LocationsProvider extends DatabaseProviders{
       loc.uuid = UUID.UUID();
 
     loc.deleted = false;
-    loc.selected = false;
+    loc.syncedWithServer = false;
     loc.processed = false;
     loc.clientInsert = new Date().getTime();
 
@@ -63,5 +65,77 @@ export class LocationsProvider extends DatabaseProviders{
 
   async update(loc: Location){
     this.db.locations.put(loc).catch(err => console.log(err));
+  }
+
+  async synchronizeOfflineLocations(){
+    //Filter locations for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
+    var offline = await this.db.locations
+      .filter(loc => loc.syncedWithServer === false)
+      .toArray();
+
+    //Process and send data to server.
+    await offline.forEach(async loc => {
+      if (loc.processed) {
+        await this.updateData(loc).then(() => {
+          loc.syncedWithServer = true;
+          this.update(loc);
+        }).catch(() => {
+          loc.syncedWithServer = false;
+          loc.processed = false;
+          this.update(loc);
+        });
+      }
+    });
+  }
+
+  async updateData(locationData: Location){
+    const headers = new HttpHeaders().set('authorization',
+      "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
+
+    const url = this.systemConfig.getServerURL() + "/locations2/pushUpdates";
+    let convertedLoc = await this.serverCopy(locationData);
+    await this.http.put(url, {locations:[convertedLoc], timestamp: new Date().getTime()}, {headers}).subscribe(data => {
+      localStorage.setItem('lastUpdate', data.toString());
+      console.log("Update Successful");
+    }, err => {
+      throw "Updating failed...";
+    });
+  }
+
+  async serverCopy(loc){
+
+    let location = new Location();
+    location.uuid = loc.uuid.replace(/-/g, "");  //Remove the dashes from the uuid.
+
+    let fieldworker = await this.fwProvider.getFieldworker(loc.collectedBy);
+    location.collectedBy = {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
+    location.extId = loc.extId;
+    location.locationLevel = await this.locationHierarchyLevelServerCopy(loc.locationLevel);
+    location.locationName = loc.locationName;
+    location.locationType = loc.locationType;
+    return location;
+  }
+
+  async locationHierarchyLevelServerCopy(level){
+    let locLevel = new Hierarchy();
+    locLevel.extId = level.extId;
+    locLevel.uuid =  level.uuid;
+    locLevel.name = level.name;
+    locLevel.parent = level.parent;
+    locLevel.level = level.level;
+
+    return locLevel;
+  }
+
+  async convertToJson(loc){
+    let json = {};
+    for (let prop in loc){
+      json[prop] = loc[prop];
+    }
+    return json;
+  }
+
+  getLocationDBCount(): Promise<Number>{
+    return this.db.locations.count();
   }
 }

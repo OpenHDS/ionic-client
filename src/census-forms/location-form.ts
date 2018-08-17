@@ -51,7 +51,7 @@ export class LocationFormGroup extends FormGroup {
         extId: new LocationFormControl("External Id", "extId", "",
           [Validators.compose([Validators.required,
             Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
-        type: new LocationFormControl("Location Type", "type", "",
+        locationType: new LocationFormControl("Location Type", "locationType", "",
           [Validators.compose([Validators.required,
             Validators.pattern("(URB|RUR)")])])
       });

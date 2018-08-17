@@ -42,7 +42,10 @@ export class DatabaseProviders {
     entity.forEach(x => {
       x.clientInsert = timestamp;
       x.processed = true;
+      x.syncedWithServer = true;  //Any new records from the server are up to date.
     });
+
+    localStorage.setItem((entityTypeString + "SyncTime"), timestamp);
 
     return entity;
   }

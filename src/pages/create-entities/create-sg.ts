@@ -28,20 +28,7 @@ export class CreateSocialGroupPage {
   sgForm: SocialGroupFormGroup;
   lookupSGHead: boolean = false;
 
-  sg: SocialGroup = {
-    uuid: null,
-    extId: null,
-    groupName: null,
-    groupType: null,
-    groupHead: null,
-    collectedBy: null,
-    deleted: null,
-    insertDate: null,
-    clientInsert: null,
-    processed: false,
-    selected: false
-  };
-
+  sg: SocialGroup = new SocialGroup();
   constructor(public ev: Events, public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams,
               public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
               public user: UserProvider) {

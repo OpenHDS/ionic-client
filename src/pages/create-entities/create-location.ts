@@ -38,24 +38,7 @@ export class CreateLocationPage {
   form: LocationFormGroup;
 
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
-  loc: Location = {
-    uuid: null,
-    extId: null,
-    locationName: null,
-    locationType: null,
-    longitude: null,
-    latitude: null,
-    accuracy: null,
-    altitude: null,
-    collectedBy: null,
-    locationLevel: null,
-    deleted: null,
-    insertDate: null,
-    clientInsert: null,
-    processed: false,
-    selected: false
-  };
-
+  loc: Location = new Location();
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
               public locProvider: LocationsProvider, public viewCtrl: ViewController, private geo: Geolocation,
               public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
