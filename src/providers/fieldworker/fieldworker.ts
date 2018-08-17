@@ -5,7 +5,7 @@ import {NetworkConfigProvider} from "../network-config/network-config";
 import {ErrorsProvider} from "../errors/errors";
 import {Events} from "ionic-angular"
 import {OpenhdsDb} from "../database-providers/openhds-db";
-import {Fieldworker} from "../../interfaces/fieldworker";
+import {Fieldworker} from "../../model/fieldworker";
 import {DatabaseProviders} from "../database-providers/database-providers";
 
 /*

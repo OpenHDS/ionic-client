@@ -11,7 +11,7 @@ import {
 } from 'ionic-angular';
 
 import {Geolocation} from "@ionic-native/geolocation";
-import {Location} from "../../interfaces/locations";
+import {Location} from "../../model/locations";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";

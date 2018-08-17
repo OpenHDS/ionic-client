@@ -3,10 +3,10 @@ import {IonicPage, Events, NavController, NavParams, ViewController} from 'ionic
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {NgForm} from "@angular/forms";
 import {UserProvider} from "../../providers/user-provider/user-provider";
-import {Visit} from "../../interfaces/visit";
+import {Visit} from "../../model/visit";
 import {VisitsProvider} from "../../providers/visits/visits";
-import {Fieldworker} from "../../interfaces/fieldworker";
-import {Location} from "../../interfaces/locations";
+import {Fieldworker} from "../../model/fieldworker";
+import {Location} from "../../model/locations";
 import {VisitFormGroup} from "../../census-forms/visit-form";
 
 /**

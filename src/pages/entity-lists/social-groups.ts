@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { IonicPage, NavController, NavParams, Events} from 'ionic-angular';
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {RefreshObservable} from "../../providers/RefreshObservable";
-import {SocialGroup} from "../../interfaces/social-groups";
-import {Location} from "../../interfaces/locations";
+import {SocialGroup} from "../../model/social-groups";
+import {Location} from "../../model/locations";
 import {CreateSocialGroupPage} from "../create-entities/create-sg";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 

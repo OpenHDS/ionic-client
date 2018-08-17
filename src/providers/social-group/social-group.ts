@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {SystemConfigProvider} from "../system-config/system-config";
 import {NetworkConfigProvider} from "../network-config/network-config";
 import {ErrorsProvider} from "../errors/errors";
-import {SocialGroup} from "../../interfaces/social-groups";
+import {SocialGroup} from "../../model/social-groups";
 import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
 import {OpenhdsDb} from "../database-providers/openhds-db";

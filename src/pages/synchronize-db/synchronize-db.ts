@@ -134,16 +134,17 @@ export class SynchronizeDbPage {
   }
 
   async syncNewDataWithServer(){
-    //Sync Locations, Social Groups
+    //Sync Locations
     await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
+
+    //Sync Social Groups
     await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err); this.sgSyncSuccess = false})
-    //Todo: Sync Social Groups
 
     //Sync CensusIndividuals
-    // let censusIndividuals = await this.censusProvider.getAllCensusSubmissions();
-    // censusIndividuals.forEach(cenInd => {
-    //     this.censusProvider.sendCensusIndividual(cenInd)
-    // });
+    let censusIndividuals = await this.censusProvider.getAllCensusSubmissions();
+    censusIndividuals.forEach(cenInd => {
+        this.censusProvider.sendCensusIndividual(cenInd)
+    });
 
   }
 

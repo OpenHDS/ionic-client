@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {UUID} from "angular2-uuid";
 import {DatabaseProviders} from "../database-providers/database-providers";
 import {SystemConfigProvider} from "../system-config/system-config";
-import {Visit} from "../../interfaces/visit";
+import {Visit} from "../../model/visit";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 
 /*

@@ -2,18 +2,18 @@ import {Component, OnInit} from '@angular/core';
 import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import {IndividualProvider} from "../../providers/individual/individual";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
-import {CensusIndividual} from "../../interfaces/census-individual";
+import {CensusIndividual} from "../../model/census-individual";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {VisitsProvider} from "../../providers/visits/visits";
-import {Location} from "../../interfaces/locations";
-import {SocialGroup} from "../../interfaces/social-groups";
-import {Visit} from "../../interfaces/visit";
+import {Location} from "../../model/locations";
+import {SocialGroup} from "../../model/social-groups";
+import {Visit} from "../../model/visit";
 import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
 import {LocationFormGroup} from "../../census-forms/location-form";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
 import {VisitFormGroup} from "../../census-forms/visit-form";
-import {Individual} from "../../interfaces/individual";
+import {Individual} from "../../model/individual";
 
 /**
  * Generated class for the ApproveEntriesPage page.

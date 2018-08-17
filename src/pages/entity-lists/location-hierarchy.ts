@@ -1,8 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/location-hierarchies";
-import {HierarchyLevels} from "../../interfaces/hierarchy-levels";
-import {Hierarchy} from "../../interfaces/hierarchy";
+import {HierarchyLevels} from "../../model/hierarchy-levels";
+import {Hierarchy} from "../../model/hierarchy";
 import {RefreshObservable} from "../../providers/RefreshObservable";
 
 /**

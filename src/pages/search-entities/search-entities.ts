@@ -11,9 +11,9 @@ import {
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {IndividualProvider} from "../../providers/individual/individual";
-import {SocialGroup} from "../../interfaces/social-groups";
-import {Individual} from "../../interfaces/individual";
-import {Location} from "../../interfaces/locations";
+import {SocialGroup} from "../../model/social-groups";
+import {Individual} from "../../model/individual";
+import {Location} from "../../model/locations";
 
 /**
  * Generated class for the SearchEntitiesPage page.

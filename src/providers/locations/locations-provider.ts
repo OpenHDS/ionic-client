@@ -1,14 +1,14 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Location} from "../../interfaces/locations";
+import { Location} from "../../model/locations";
 import { UUID } from "angular2-uuid";
 import { SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
 import {UserProvider} from "../user-provider/user-provider";
 import {FieldworkerProvider} from "../fieldworker/fieldworker";
-import {Hierarchy} from "../../interfaces/hierarchy";
-import {Locations} from "../../interfaces/entity-wrappers";
+import {Hierarchy} from "../../model/hierarchy";
+import {Locations} from "../../model/entity-wrappers";
 
 /*
   Generated class for the LocationsProvider provider.

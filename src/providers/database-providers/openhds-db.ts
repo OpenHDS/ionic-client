@@ -1,13 +1,13 @@
 import Dexie from 'dexie';
-import {SocialGroup} from "../../interfaces/social-groups";
-import {HierarchyLevels} from "../../interfaces/hierarchy-levels";
-import {Hierarchy} from "../../interfaces/hierarchy";
-import {Fieldworker} from "../../interfaces/fieldworker";
-import {Location} from "../../interfaces/locations";
-import {Individual} from "../../interfaces/individual";
-import {Errors} from "../../interfaces/data-errors";
-import {CensusIndividual} from "../../interfaces/census-individual";
-import {Visit} from "../../interfaces/visit";
+import {SocialGroup} from "../../model/social-groups";
+import {HierarchyLevels} from "../../model/hierarchy-levels";
+import {Hierarchy} from "../../model/hierarchy";
+import {Fieldworker} from "../../model/fieldworker";
+import {Location} from "../../model/locations";
+import {Individual} from "../../model/individual";
+import {Errors} from "../../model/data-errors";
+import {CensusIndividual} from "../../model/census-individual";
+import {Visit} from "../../model/visit";
 
 export class OpenhdsDb extends Dexie {
   fieldworkers: Dexie.Table<Fieldworker, string>;

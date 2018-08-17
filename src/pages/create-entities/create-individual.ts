@@ -9,15 +9,15 @@ import {
 } from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {NgForm} from "@angular/forms";
-import {Individual} from "../../interfaces/individual";
+import {Individual} from "../../model/individual";
 import {IndividualProvider} from "../../providers/individual/individual";
-import {SocialGroup} from "../../interfaces/social-groups";
+import {SocialGroup} from "../../model/social-groups";
 import {UserProvider} from "../../providers/user-provider/user-provider";
-import {Location} from "../../interfaces/locations";
+import {Location} from "../../model/locations";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
-import {CensusIndividual} from "../../interfaces/census-individual";
+import {CensusIndividual} from "../../model/census-individual";
 
 /**
  * Generated class for the CreateLocationPage page.

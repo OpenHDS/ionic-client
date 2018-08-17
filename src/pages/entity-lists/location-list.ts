@@ -1,11 +1,11 @@
 import {Component, EventEmitter, OnInit, Input, Output} from '@angular/core';
 import {IonicPage, Events, ModalController, NavController, NavParams} from 'ionic-angular';
-import {Location} from "../../interfaces/locations";
+import {Location} from "../../model/locations";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import { RefreshObservable } from "../../providers/RefreshObservable";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {CreateLocationPage} from "../create-entities/create-location";
-import {Hierarchy} from "../../interfaces/hierarchy";
+import {Hierarchy} from "../../model/hierarchy";
 
 /**
  * Generated class for the LocationListPage page.

@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {RefreshObservable} from "../../providers/RefreshObservable";
-import {SocialGroup} from "../../interfaces/social-groups";
-import {Individual} from "../../interfaces/individual";
+import {SocialGroup} from "../../model/social-groups";
+import {Individual} from "../../model/individual";
 import {CreateIndividualPage} from "../create-entities/create-individual";
 import {IndividualProvider} from "../../providers/individual/individual";
-import {Location} from "../../interfaces/locations";
+import {Location} from "../../model/locations";
 
 /**
  * Generated class for the IndividualListPage page.

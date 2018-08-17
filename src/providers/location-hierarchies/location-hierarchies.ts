@@ -1,11 +1,11 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {SystemConfigProvider} from "../system-config/system-config";
-import {HierarchyLevels} from "../../interfaces/hierarchy-levels";
-import {Hierarchy} from "../../interfaces/hierarchy";
+import {HierarchyLevels} from "../../model/hierarchy-levels";
+import {Hierarchy} from "../../model/hierarchy";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
-import {Fieldworker} from "../../interfaces/fieldworker";
+import {Fieldworker} from "../../model/fieldworker";
 
 /*
   Generated class for the LocationHierarchiesProvider provider.

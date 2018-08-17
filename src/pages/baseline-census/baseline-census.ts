@@ -1,10 +1,10 @@
 import {Component, OnInit, Input, ViewChild, AfterViewInit} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams, PopoverController, ViewController} from 'ionic-angular';
-import { Location } from "../../interfaces/locations";
+import { Location } from "../../model/locations";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
-import {Hierarchy} from "../../interfaces/hierarchy";
-import {SocialGroup} from "../../interfaces/social-groups";
-import {Individual} from "../../interfaces/individual";
+import {Hierarchy} from "../../model/hierarchy";
+import {SocialGroup} from "../../model/social-groups";
+import {Individual} from "../../model/individual";
 import {CreateVisitPage} from "../create-entities/create-visit";
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";

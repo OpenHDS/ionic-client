@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {IonicPage, Events, NavController, NavParams, ViewController, PopoverController} from 'ionic-angular';
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
-import {SocialGroup} from "../../interfaces/social-groups";
+import {SocialGroup} from "../../model/social-groups";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {NgForm} from "@angular/forms";
 import {CreateIndividualPage} from "./create-individual";

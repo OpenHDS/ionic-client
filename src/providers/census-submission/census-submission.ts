@@ -1,9 +1,9 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {CensusIndividual} from "../../interfaces/census-individual";
+import {CensusIndividual} from "../../model/census-individual";
 import {SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
-import {Individual} from "../../interfaces/individual";
+import {Individual} from "../../model/individual";
 import {FieldworkerProvider} from "../fieldworker/fieldworker";
 import {UserProvider} from "../user-provider/user-provider";
 

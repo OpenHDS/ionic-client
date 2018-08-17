@@ -5,7 +5,7 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {Injectable} from "@angular/core";
 import {Network} from "@ionic-native/network";
 import Dexie from "dexie";
-import {Location} from "../../interfaces/locations";
+import {Location} from "../../model/locations";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {LocationsProvider} from "./locations-provider";
 import {SystemConfigProvider} from "../system-config/system-config";

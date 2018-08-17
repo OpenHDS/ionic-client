@@ -5,7 +5,7 @@ import {NetworkConfigProvider} from "../network-config/network-config";
 import {ErrorsProvider} from "../errors/errors";
 import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
-import {Individual} from "../../interfaces/individual";
+import {Individual} from "../../model/individual";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
 import {CensusSubmissionProvider} from "../census-submission/census-submission";

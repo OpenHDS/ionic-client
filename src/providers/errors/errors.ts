@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Errors} from "../../interfaces/data-errors";
+import {Errors} from "../../model/data-errors";
 import {EntityErrorLabels} from "./entity-error-labels";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 
