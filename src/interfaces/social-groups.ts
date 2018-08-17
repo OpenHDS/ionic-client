@@ -1,16 +1,18 @@
 import {Individual} from "./individual";
 
-export interface SocialGroup{
+export class SocialGroup{
   extId: string;
   groupName: string;
   groupType: string;
   groupHead: Individual;
-  collectedBy: string;
+  collectedBy: any;
   deleted: boolean;
   insertDate: Date;
   clientInsert: number;
   uuid: string;
   processed: boolean;
   errorReported?: boolean;
-  selected: boolean;
+  syncedWithServer?: boolean;
+  selected?: boolean;
+
 }

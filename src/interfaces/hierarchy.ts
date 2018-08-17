@@ -1,6 +1,6 @@
 import {HierarchyLevels} from "./hierarchy-levels"
 
-export interface Hierarchy
+export class Hierarchy
 {
   extId: string;
   level: HierarchyLevels;

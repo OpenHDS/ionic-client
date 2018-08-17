@@ -1,4 +1,4 @@
-export interface Fieldworker{
+export class Fieldworker{
   extId: string;
   firstName?: string;
   lastName?: string;

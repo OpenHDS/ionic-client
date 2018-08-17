@@ -11,4 +11,5 @@ export class CensusIndividual {
   spouse?: Individual;
   processed?: boolean;
   errorReported?: boolean;
+  syncedWithServer?: boolean;
 }

@@ -17,5 +17,7 @@ export class Individual{
   errorReported?: boolean;
   spouse?: string;
   bIsToA?: string;
+  syncedWithServer?: boolean;
+  selected?: boolean;
   uuid: string;
 }

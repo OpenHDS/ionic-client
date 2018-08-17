@@ -1,4 +1,4 @@
-export interface Visit {
+export class Visit {
   uuid: string;
   extId: string;
   realVisit: number;
@@ -8,4 +8,5 @@ export interface Visit {
   visitLocation: string;
   processed?: boolean;
   errorReported?: boolean;
+  syncedWithServer?: boolean;
 }

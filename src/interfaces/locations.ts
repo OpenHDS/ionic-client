@@ -1,6 +1,6 @@
 import {Hierarchy} from "./hierarchy";
 
-export interface Location{
+export class Location{
   extId: string;
   locationName: string;
   locationType: string;
@@ -8,7 +8,7 @@ export interface Location{
   latitude: number;
   accuracy: number;
   altitude: number;
-  collectedBy: string;
+  collectedBy: any; //Fieldworker UUID for client side storage, Fieldworker object to send to server (converted before sync)
   locationLevel: Hierarchy;
   deleted: boolean;
   insertDate: Date;
@@ -16,5 +16,6 @@ export interface Location{
   uuid: string;
   processed?: boolean; //false, if error or not approved, true otherwise.
   errorReported?: boolean;
+  syncedWithServer?: boolean;
   selected?: boolean;
 }

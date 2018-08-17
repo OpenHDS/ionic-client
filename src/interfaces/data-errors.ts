@@ -1,4 +1,4 @@
-export interface Errors{
+export class Errors{
   uuid: string; //External id of the entity that caused the error
   entityType: number;
   entity: any;  // the entity object
