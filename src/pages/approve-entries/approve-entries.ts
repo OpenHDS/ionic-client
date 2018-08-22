@@ -28,7 +28,7 @@ import {Individual} from "../../model/individual";
   templateUrl: 'approve-entries.html',
 })
 
-export class ApproveEntriesPage implements OnInit{
+export class ApproveEntriesPage implements OnInit {
   locationForm: LocationFormGroup;
   socialGroupForm: SocialGroupFormGroup;
   individualForm: CensusIndividualFormGroup;
@@ -44,13 +44,12 @@ export class ApproveEntriesPage implements OnInit{
   selectedEntry: any;
 
 
-
   constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController, public indProvider: IndividualProvider,
               public censusSub: CensusSubmissionProvider, public locationProvider: LocationsProvider,
               public socialGroupProvider: SocialGroupProvider, public visitProvider: VisitsProvider) {
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.loadData();
   }
 
@@ -62,63 +61,79 @@ export class ApproveEntriesPage implements OnInit{
     console.log('ionViewDidLoad ApproveEntriesPage');
   }
 
-  async loadData(){
+  async loadData() {
     switch (this.selectedForReview) {
       case 'locations':
-        await this.locationProvider.getAllLocations().then(x => this.filteredLocations = x.filter(entry => entry.processed==false));
+        await this.locationProvider.getAllLocations().then(x => this.filteredLocations = x.filter(entry => entry.processed == false));
+        break;
       case 'socialgroups':
-        await this.socialGroupProvider.getAllSocialGroups().then(x => this.filteredSocialGroups =  x.filter(entry => entry.processed == false));
+        await this.socialGroupProvider.getAllSocialGroups().then(x => this.filteredSocialGroups = x.filter(entry => entry.processed == false));
+        break;
       case 'individuals':
-        await this.indProvider.getAllIndividuals().then(x => this.filteredIndividuals =  x.filter(entry => entry.processed == false));
+        await this.indProvider.getAllIndividuals().then(x => this.filteredIndividuals = x.filter(entry => entry.processed == false));
+        break;
       case 'visits':
         await this.visitProvider.getAllVisits().then(x => this.filteredVisits = x.filter(entry => entry.processed == false));
+        break;
     }
-
-    console.log(this.filteredIndividuals);
   }
 
 
-  approve(){
+  approve() {
     this.selectedEntry.processed = true;
-    if(this.selectedEntry.errorReported)
+    if (this.selectedEntry.errorReported)
       this.selectedEntry.errorReported = false;
 
     this.updateDataEntry();
   }
 
-  markForCorrection(){
+  markForCorrection() {
     this.selectedEntry.errorReported = true;
-    if(this.selectedEntry.processed)
+    if (this.selectedEntry.processed)
       this.selectedEntry.processed = false;
 
     this.updateDataEntry();
   }
 
-  updateDataEntry(){
-    switch(this.selectedForReview){
-      case "locations": this.locationProvider.update(this.selectedEntry);
-      case "socialgroups": this.socialGroupProvider.update(this.selectedEntry);
-      case "individuals": this.indProvider.update(this.selectedEntry);
-      case "visits": this.visitProvider.update(this.selectedEntry);
+  async updateDataEntry() {
+    console.log(this.selectedForReview);
+    switch (this.selectedForReview) {
+      case "locations":
+        await this.locationProvider.update(this.selectedEntry);
+        break;
+      case "socialgroups":
+        await this.socialGroupProvider.update(this.selectedEntry);
+        break;
+      case "individuals":
+        await this.indProvider.update(this.selectedEntry);
+        break;
+      case "visits":
+        await this.visitProvider.update(this.selectedEntry);
+        break;
+
     }
   }
 
-  viewEntryForApproval(entry){
+  viewEntryForApproval(entry) {
     this.selectedEntry = entry;
     this.viewEntry = true;
     switch (this.selectedForReview) {
       case 'locations':
         this.locationForm = new LocationFormGroup();
+        break;
       case 'socialgroups':
         this.socialGroupForm = new SocialGroupFormGroup();
+        break;
       case 'individuals':
         this.individualForm = new CensusIndividualFormGroup();
+        break;
       case 'visits':
         this.visitForm = new VisitFormGroup();
+        break;
     }
   }
 
-  async setSelectedForReview(selected){
+  async setSelectedForReview(selected) {
     this.selectedForReview = selected;
     this.viewEntry = false;
     this.selectedEntry = null;

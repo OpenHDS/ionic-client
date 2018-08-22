@@ -86,7 +86,7 @@ export class CreateIndividualPage {
       censusInd.socialGroupHeadExtId = this.individual.extId;
     else
       censusInd.socialGroupHeadExtId= this.sg.groupHead.extId;
-    censusInd.individual = this.individualProvider.shallowCopy(this.individual);
+    censusInd.individual = await this.individualProvider.shallowCopy(this.individual);
     censusInd.bIsToA= this.individual.bIsToA;
     censusInd.spouse = this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse) : null;
 

@@ -127,14 +127,6 @@ export class LocationsProvider extends DatabaseProviders{
     return locLevel;
   }
 
-  async convertToJson(loc){
-    let json = {};
-    for (let prop in loc){
-      json[prop] = loc[prop];
-    }
-    return json;
-  }
-
   getLocationDBCount(): Promise<Number>{
     return this.db.locations.count();
   }

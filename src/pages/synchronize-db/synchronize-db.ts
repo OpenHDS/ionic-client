@@ -139,13 +139,13 @@ export class SynchronizeDbPage {
     await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err); this.sgSyncSuccess = false});
 
     //Sync CensusIndividuals
-    // let censusIndividuals = await this.censusProvider.getAllCensusSubmissions();
-    // censusIndividuals.forEach(cenInd => {
-    //     this.censusProvider.sendCensusIndividual(cenInd)
-    // });
+    // TODO: code needs to be moved to census individual provider
+    let censusIndividuals = await this.censusProvider.getAllCensusSubmissions();
+    censusIndividuals.forEach(async cenInd => {
+        await this.censusProvider.sendCensusIndividual(cenInd)
+    });
 
   }
-
 
   publishSynchronizationEvent(topic){
     this.events.publish(topic, true);
