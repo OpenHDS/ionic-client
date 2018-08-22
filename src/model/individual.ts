@@ -2,7 +2,7 @@ import {Fieldworker} from "./fieldworker";
 
 export class Individual{
   extId: string;
-  dob?: Date;
+  dob?: any;
   dobAspect?: string;
   firstName?: string;
   middleName?: string;

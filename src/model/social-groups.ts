@@ -7,7 +7,7 @@ export class SocialGroup{
   groupHead: Individual;
   collectedBy: any;
   deleted: boolean;
-  insertDate: Date;
+  insertDate: Date; //Date or number representation
   clientInsert: number;
   uuid: string;
   processed: boolean;

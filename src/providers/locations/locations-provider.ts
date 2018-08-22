@@ -93,7 +93,7 @@ export class LocationsProvider extends DatabaseProviders{
       "Basic " + btoa(this.systemConfig.getDefaultUser()+ ":" + this.systemConfig.getDefaultPassword()));
 
     const url = this.systemConfig.getServerURL() + "/locations2/pushUpdates";
-    let convertedLoc = await this.serverCopy(locationData);
+    let convertedLoc = await this.shallowCopy(locationData);
     await this.http.put(url, {locations:[convertedLoc], timestamp: new Date().getTime()}, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data.toString());
       console.log("Update Successful");
@@ -102,7 +102,7 @@ export class LocationsProvider extends DatabaseProviders{
     });
   }
 
-  async serverCopy(loc){
+  async shallowCopy(loc){
 
     let location = new Location();
     location.uuid = loc.uuid.replace(/-/g, "");  //Remove the dashes from the uuid.

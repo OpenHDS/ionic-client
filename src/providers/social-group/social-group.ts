@@ -10,6 +10,7 @@ import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
 import {UserProvider} from "../user-provider/user-provider";
 import {FieldworkerProvider} from "../fieldworker/fieldworker";
+import {IndividualProvider} from "../individual/individual";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -17,6 +18,7 @@ import {FieldworkerProvider} from "../fieldworker/fieldworker";
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
 */
+
 @Injectable()
 export class SocialGroupProvider extends DatabaseProviders{
 
@@ -24,6 +26,7 @@ export class SocialGroupProvider extends DatabaseProviders{
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider,
               public errorsProvider: ErrorsProvider, public fwProvider: FieldworkerProvider,
+              public individualProvider: IndividualProvider,
               public systemConfig: SystemConfigProvider, public userProvider: UserProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
@@ -44,7 +47,6 @@ export class SocialGroupProvider extends DatabaseProviders{
 
     if(!sg.uuid)
       sg.uuid = UUID.UUID();
-
     sg.deleted = false;
     sg.syncedWithServer = false;
     sg.processed = false;
@@ -65,6 +67,7 @@ export class SocialGroupProvider extends DatabaseProviders{
   }
 
   async synchronizeOfflineSocialGroups(){
+    console.log("Offline Social Group Sync");
     //Filter locations for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
     var offline = await this.db.socialGroup
       .filter(sg => sg.syncedWithServer === false)
@@ -100,16 +103,14 @@ export class SocialGroupProvider extends DatabaseProviders{
   }
 
   async serverCopy(socialGrp){
-
     let sg = new SocialGroup();
     sg.uuid = socialGrp.uuid.replace(/-/g, "");  //Remove the dashes from the uuid.
-
     let fieldworker = await this.fwProvider.getFieldworker(socialGrp.collectedBy);
     sg.collectedBy = {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
     sg.extId = socialGrp.extId;
     sg.groupName = socialGrp.groupName;
     sg.groupType = socialGrp.groupType;
-    sg.groupHead = {uuid: socialGrp.uuid, extId: socialGrp.groupHead.extId};
+    sg.groupHead = await this.individualProvider.shallowCopy(socialGrp.groupHead);
     return sg;
   }
 }
