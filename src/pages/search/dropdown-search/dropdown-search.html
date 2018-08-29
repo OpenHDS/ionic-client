@@ -1,0 +1,14 @@
+<!--
+  Generated template for the DropdownSearchPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<form>
+  <ion-input type="search" placeholder="Enter fieldworker identification..." (ionChange)="this.search($event)"></ion-input>
+  <ion-list *ngFor="let fw of this.filtered">
+    <ion-item (click)="this.emitFieldworker(fw)">
+      {{fw.extId}}
+    </ion-item>
+  </ion-list>
+</form>
