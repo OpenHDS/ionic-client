@@ -1,0 +1,18 @@
+<!--
+  Generated template for the ErrorReportingPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+  <ion-item-divider (click)="this.toggleErrorReportingView()">
+    Report an Error
+    <ion-icon float-right [name]="this.showErrorReporting ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+  </ion-item-divider>
+
+  <form *ngIf="this.showErrorReporting" novalidate>
+    <ion-textarea
+      placeholder=" Report an error for the data entered above. Fieldworker will be notified of error."
+      [(ngModel)]="this.errorMessage" [ngModelOptions]="{standalone: true}"></ion-textarea>
+    <button ion-button outline color="dark" (click)="this.saveError()">Submit Error</button>
+  </form>
