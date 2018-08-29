@@ -1,8 +1,8 @@
-export class Errors{
-  uuid: string; //External id of the entity that caused the error
-  entityType: number;
-  entity: any;  // the entity object
+export class DataError{
+  uuid: string; //uuid id of the error record
+  entityType: string;
+  entityExtId: string;  // the entity object externalId for lookup
   errorMessage: string; //the error message
   timestamp: number; //timestamp of when the error occurred.
-  resolved: number; //0 for no, 1 for yes
+  resolved: boolean; //false for no, true for yes
 }

@@ -32,12 +32,14 @@ import {LoginPage} from "../pages/login/login";
 import { FieldworkerProvider } from '../providers/fieldworker/fieldworker';
 import { DatabaseProviders } from '../providers/database-providers/database-providers';
 import { CensusSubmissionProvider } from '../providers/census-submission/census-submission';
-import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
+import {ApproveEntriesPage} from "../pages/admin-approval/entry-approval/approve-entries";
 import { VisitsProvider } from '../providers/visits/visits';
 import {CreateVisitPage} from "../pages/create-entities/create-visit";
-import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
+import {SearchEntitiesPage} from "../pages/search/search-by-entity/search-entities";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
+import {DropdownSearchPage} from "../pages/search/dropdown-search/dropdown-search";
+import {ErrorReportingPage} from "../pages/admin-approval/error-reporting/error-reporting";
 
 
 @NgModule({
@@ -61,6 +63,8 @@ import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
     IndividualListPage,
     LoginPage,
     ApproveEntriesPage,
+    ErrorReportingPage,
+    DropdownSearchPage,
     CreateVisitPage,
     SearchEntitiesPage
   ],
@@ -93,6 +97,8 @@ import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
     IndividualListPage,
     LoginPage,
     ApproveEntriesPage,
+    ErrorReportingPage,
+    DropdownSearchPage,
     CreateVisitPage,
     SearchEntitiesPage
   ],

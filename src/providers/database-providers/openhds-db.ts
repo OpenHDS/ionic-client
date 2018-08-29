@@ -5,7 +5,7 @@ import {Hierarchy} from "../../model/hierarchy";
 import {Fieldworker} from "../../model/fieldworker";
 import {Location} from "../../model/locations";
 import {Individual} from "../../model/individual";
-import {Errors} from "../../model/data-errors";
+import {DataError} from "../../model/data-errors";
 import {CensusIndividual} from "../../model/census-individual";
 import {Visit} from "../../model/visit";
 
@@ -18,7 +18,7 @@ export class OpenhdsDb extends Dexie {
   individuals: Dexie.Table<Individual, string>;
   censusIndividuals: Dexie.Table<CensusIndividual, string>;
   visits: Dexie.Table<Visit, string>;
-  errors: Dexie.Table<Errors, string>;
+  errors: Dexie.Table<DataError, string>;
 
   constructor() {
     super("OpenHDS");

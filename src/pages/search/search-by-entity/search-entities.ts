@@ -8,12 +8,12 @@ import {
   PopoverController,
   ViewController
 } from 'ionic-angular';
-import {SocialGroupProvider} from "../../providers/social-group/social-group";
-import {LocationsProvider} from "../../providers/locations/locations-provider";
-import {IndividualProvider} from "../../providers/individual/individual";
-import {SocialGroup} from "../../model/social-groups";
-import {Individual} from "../../model/individual";
-import {Location} from "../../model/locations";
+import {SocialGroupProvider} from "../../../providers/social-group/social-group";
+import {LocationsProvider} from "../../../providers/locations/locations-provider";
+import {IndividualProvider} from "../../../providers/individual/individual";
+import {SocialGroup} from "../../../model/social-groups";
+import {Individual} from "../../../model/individual";
+import {Location} from "../../../model/locations";
 
 /**
  * Generated class for the SearchEntitiesPage page.
@@ -59,10 +59,13 @@ export class SearchEntitiesPage implements OnInit {
     switch (this.entityType) {
       case 'locations':
         await this.locProvider.getAllLocations().then(x => this.filteredLocations = x);
+        break;
       case 'socialgroups':
         await this.sgProvider.getAllSocialGroups().then(x => this.filteredSocialGroups = x);
+        break;
       case 'individuals':
         await this.indProvider.getAllIndividuals().then(x => this.filteredIndividuals = x);
+        break;
     }
   }
 
@@ -73,10 +76,13 @@ export class SearchEntitiesPage implements OnInit {
       switch (this.entityType) {
         case 'locations':
           await this.searchLocations(searchFor);
+          break;
         case 'socialgroups':
           await this.searchSocialGroups(searchFor);
+          break;
         case 'individuals':
           await this.searchForIndividuals(searchFor);
+          break;
       }
     }
 
@@ -111,13 +117,16 @@ export class SearchEntitiesPage implements OnInit {
     switch (this.entityType) {
       case 'locations':
        this.ev.publish("locationSearch", item);
+       break;
       case 'socialgroups':
         await this.ev.publish("socialGroupSearch", item);
+        break;
       case 'individuals':
         if (this.searchForHead)
           this.ev.publish("socialGroupHeadSearch", item);
         else
           this.ev.publish("individualSearch", item);
+        break;
     }
     this.navCtrl.pop();
   }

@@ -1,19 +1,18 @@
 import {Component, OnInit} from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
-import {IndividualProvider} from "../../providers/individual/individual";
-import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
-import {CensusIndividual} from "../../model/census-individual";
-import {LocationsProvider} from "../../providers/locations/locations-provider";
-import {SocialGroupProvider} from "../../providers/social-group/social-group";
-import {VisitsProvider} from "../../providers/visits/visits";
-import {Location} from "../../model/locations";
-import {SocialGroup} from "../../model/social-groups";
-import {Visit} from "../../model/visit";
-import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
-import {LocationFormGroup} from "../../census-forms/location-form";
-import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
-import {VisitFormGroup} from "../../census-forms/visit-form";
-import {Individual} from "../../model/individual";
+import {IonicPage, ModalController, NavController, NavParams, ViewController} from 'ionic-angular';
+import {IndividualProvider} from "../../../providers/individual/individual";
+import {CensusSubmissionProvider} from "../../../providers/census-submission/census-submission";
+import {LocationsProvider} from "../../../providers/locations/locations-provider";
+import {SocialGroupProvider} from "../../../providers/social-group/social-group";
+import {VisitsProvider} from "../../../providers/visits/visits";
+import {Location} from "../../../model/locations";
+import {SocialGroup} from "../../../model/social-groups";
+import {Visit} from "../../../model/visit";
+import {CensusIndividualFormGroup} from "../../../census-forms/individual-form";
+import {LocationFormGroup} from "../../../census-forms/location-form";
+import {SocialGroupFormGroup} from "../../../census-forms/social-group-form";
+import {VisitFormGroup} from "../../../census-forms/visit-form";
+import {Individual} from "../../../model/individual";
 
 /**
  * Generated class for the ApproveEntriesPage page.
@@ -24,7 +23,7 @@ import {Individual} from "../../model/individual";
 
 @IonicPage()
 @Component({
-  selector: 'page-approve-entries',
+  selector: 'approve-entries',
   templateUrl: 'approve-entries.html',
 })
 
@@ -41,10 +40,12 @@ export class ApproveEntriesPage implements OnInit {
   filteredVisits: Visit[];
   selectedForReview: string = "locations";
   viewEntry: boolean;
+  viewMethod: string = "notApproved";
   selectedEntry: any;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController, public indProvider: IndividualProvider,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public view: ViewController,
+              public modalController: ModalController, public indProvider: IndividualProvider,
               public censusSub: CensusSubmissionProvider, public locationProvider: LocationsProvider,
               public socialGroupProvider: SocialGroupProvider, public visitProvider: VisitsProvider) {
   }
@@ -61,7 +62,7 @@ export class ApproveEntriesPage implements OnInit {
     console.log('ionViewDidLoad ApproveEntriesPage');
   }
 
-  async loadData() {
+  async filterByNonProcessedData(){
     switch (this.selectedForReview) {
       case 'locations':
         await this.locationProvider.getAllLocations().then(x => this.filteredLocations = x.filter(entry => entry.processed == false));
@@ -75,6 +76,49 @@ export class ApproveEntriesPage implements OnInit {
       case 'visits':
         await this.visitProvider.getAllVisits().then(x => this.filteredVisits = x.filter(entry => entry.processed == false));
         break;
+    }
+  }
+
+  async filterByProcessedData(){
+    switch (this.selectedForReview) {
+      case 'locations':
+        await this.locationProvider.getAllLocations().then(x => this.filteredLocations = x.filter(entry => entry.processed == true));
+        break;
+      case 'socialgroups':
+        await this.socialGroupProvider.getAllSocialGroups().then(x => this.filteredSocialGroups = x.filter(entry => entry.processed == true));
+        break;
+      case 'individuals':
+        await this.indProvider.getAllIndividuals().then(x => this.filteredIndividuals = x.filter(entry => entry.processed == true));
+        break;
+      case 'visits':
+        await this.visitProvider.getAllVisits().then(x => this.filteredVisits = x.filter(entry => entry.processed == true));
+        break;
+    }
+  }
+
+  async filterAllData(){
+    switch (this.selectedForReview) {
+      case 'locations':
+        await this.locationProvider.getAllLocations().then(x => this.filteredLocations = x);
+        break;
+      case 'socialgroups':
+        await this.socialGroupProvider.getAllSocialGroups().then(x => this.filteredSocialGroups);
+        break;
+      case 'individuals':
+        await this.indProvider.getAllIndividuals().then(x => this.filteredIndividuals = x);
+        break;
+      case 'visits':
+        await this.visitProvider.getAllVisits().then(x => this.filteredVisits = x);
+        break;
+    }
+  }
+  async loadData() {
+    if(this.viewMethod == 'notApproved'){
+      this.filterByNonProcessedData()
+    } else if(this.viewMethod == 'approved'){
+      this.filterByProcessedData()
+    } else {
+      this.filterAllData();
     }
   }
 

@@ -7,9 +7,9 @@ import {LoginPage} from "../pages/login/login";
 import {UserProvider} from "../providers/user-provider/user-provider";
 import {SupervisorModePage} from "../pages/supervisor-mode/supervisor-mode";
 import {SynchronizeDbPage} from "../pages/synchronize-db/synchronize-db";
-import {ApproveEntriesPage} from "../pages/approve-entries/approve-entries";
+import {ApproveEntriesPage} from "../pages/admin-approval/entry-approval/approve-entries";
 import {SystemConfigPage} from "../pages/system-config/system-config";
-import {SearchEntitiesPage} from "../pages/search-entities/search-entities";
+import {SearchEntitiesPage} from "../pages/search/search-by-entity/search-entities";
 import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
 
 export interface PageInterface {
@@ -49,11 +49,14 @@ export class OpenHDSApp {
   constructor( public events: Events,  public platform: Platform, public splashScreen: SplashScreen,
                public userData: UserProvider, public appCtrl: App) {
 
-    console.log("Checking logged in status....");
     if(this.userData.hasLoggedIn() == false || this.userData.getLoggedInUser() == null){
       this.rootPage = LoginPage;
+    } else if(this.userData.getLoggedInUser() === 'admin'){
+      this.rootPage = SupervisorModePage;
+      this.userData.enableUserMenu();
     } else {
       this.rootPage = FieldworkerModePage;
+      this.userData.enableUserMenu();
     }
 
 

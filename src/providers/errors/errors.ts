@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Errors} from "../../model/data-errors";
-import {EntityErrorLabels} from "./entity-error-labels";
+import {DataError} from "../../model/data-errors";
 import {OpenhdsDb} from "../database-providers/openhds-db";
+import {UUID} from "angular2-uuid";
 
 /*
   Generated class for the ErrorsProvider provider.
@@ -17,18 +17,18 @@ export class ErrorsProvider {
     this.db = new OpenhdsDb();
   }
 
-  async updateOrSetErrorStatus(error: Errors){
+  async updateOrSetErrorStatus(error: DataError){
     if(await this.validateErrorExistence(error) == true)
       return await this.db.errors.update(error.uuid, error);
     else
       return await this.db.errors.add(error);
   }
 
-  async getLocationErrors(): Promise<Errors[]>{
-    return this.db.errors.where('entityType').equals(EntityErrorLabels.LOCATION_ERROR).toArray();
+  async getLocationErrors(): Promise<DataError[]>{
+    return this.db.errors.where('entityType').equals('location').toArray();
   }
 
-  async validateErrorExistence(error: Errors){
+  async validateErrorExistence(error: DataError){
     let err = await this.db.errors.filter(err => err.uuid == error.uuid).toArray();
     if(err[0] != null)
       return true;
@@ -43,4 +43,15 @@ export class ErrorsProvider {
 
     return "An unknown error has occurred."
   }
+
+  saveError(err: DataError){
+    if(!err.uuid)
+      err.uuid = UUID.UUID();
+
+    err.resolved = false;
+    err.timestamp = new Date().getTime();
+
+    this.db.errors.add(err);
+  }
+
 }

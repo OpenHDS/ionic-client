@@ -8,7 +8,7 @@ import {CreateIndividualPage} from "./create-individual";
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
 import {LocationPopoverHelp} from "./create-location";
-import {SearchEntitiesPage} from "../search-entities/search-entities";
+import {SearchEntitiesPage} from "../search/search-by-entity/search-entities";
 
 /**
  * Generated class for the CreateLocationPage page.

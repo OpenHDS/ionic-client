@@ -34,7 +34,7 @@
     <div *ngSwitchCase="'locations'">
       <div>
         <ion-item>
-          <ion-searchbar placeholder="Search By Location External Id or Location Name"
+          <ion-searchbar autocomplete="true" animated="true" placeholder="Search By Location External Id or Location Name"
                          (ionInput)="this.search($event)"></ion-searchbar>
         </ion-item>
       </div>

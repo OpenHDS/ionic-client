@@ -15,14 +15,5 @@
 
 
 <ion-content padding>
-  <ion-list-header>Locations</ion-list-header>
-  <ion-list>
-    <ion-card *ngFor="let err of this.locationErrors | async">
-      <ion-card-content>
-          <p>{{err.errorMessage}}</p>
-          <p>{{convertTimestampToDate(err.timestamp)}}</p>
-          <button ion-button outline color="danger" small (click)="this.getEntityModal(err)">Correct Errors</button>
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
+
 </ion-content>
