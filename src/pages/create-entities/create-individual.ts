@@ -18,6 +18,7 @@ import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
 import {CensusIndividual} from "../../model/census-individual";
+import {LoginProvider} from "../../providers/login/login";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -43,14 +44,14 @@ export class CreateIndividualPage {
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public view: ViewController,
               public individualProvider: IndividualProvider, public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
-              public user: UserProvider, public fieldProvider: FieldworkerProvider, public censusSub: CensusSubmissionProvider) {
+              public loginProvider: LoginProvider, public fieldProvider: FieldworkerProvider, public censusSub: CensusSubmissionProvider) {
 
 
     this.sg = this.navParams.data["sg"];
     this.loc = this.navParams.data["loc"];
 
     this.individualForm = new CensusIndividualFormGroup();
-    this.individual.collectedBy = this.user.getLoggedInUser();
+    this.individual.collectedBy = this.loginProvider.getLoggedInUser();
     if (this.navParams.get('createHead')) {
       this.createHead = true;
     } else {
@@ -90,7 +91,7 @@ export class CreateIndividualPage {
     censusInd.bIsToA= this.individual.bIsToA;
     censusInd.spouse = this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse) : null;
 
-    let fieldworker = await this.fieldProvider.getFieldworker(this.user.getLoggedInUser());
+    let fieldworker = await this.fieldProvider.getFieldworker(this.loginProvider.getLoggedInUser());
     censusInd.collectedBy = fieldworker[0].extId;
     censusInd.individual.collectedBy = {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
     await this.censusSub.saveCensusInformationForApproval(censusInd);

@@ -17,6 +17,8 @@ import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {LocationFormGroup} from "../../census-forms/location-form";
+import {LoginPage} from "../login/login";
+import {LoginProvider} from "../../providers/login/login";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -42,9 +44,10 @@ export class CreateLocationPage {
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
               public locProvider: LocationsProvider, public viewCtrl: ViewController, private geo: Geolocation,
               public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
-              public sysConfig: SystemConfigProvider, public user: UserProvider) {
+              public sysConfig: SystemConfigProvider,
+              public loginProvider: LoginProvider) {
 
-    this.loc.collectedBy = this.user.getLoggedInUser();
+    this.loc.collectedBy = this.loginProvider.getLoggedInUser();
     this.loc.locationLevel = this.navParams.get("parentLevel").extId;
     this.form = new LocationFormGroup();
   }

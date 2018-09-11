@@ -5,7 +5,7 @@ import {SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {Individual} from "../../model/individual";
 import {FieldworkerProvider} from "../fieldworker/fieldworker";
-import {UserProvider} from "../user-provider/user-provider";
+import {LoginProvider} from "../login/login";
 
 /*
   Generated class for the CensusSubmissionProvider provider.
@@ -18,7 +18,7 @@ export class CensusSubmissionProvider {
   db: OpenhdsDb;
 
   constructor(public http: HttpClient, public fieldProvider: FieldworkerProvider,
-              public user: UserProvider, public systemConfig: SystemConfigProvider) {
+              public loginProvider: LoginProvider, public systemConfig: SystemConfigProvider) {
     this.db = new OpenhdsDb();
     console.log('Hello CensusSubmissionProvider Provider');
   }

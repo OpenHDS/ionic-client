@@ -8,6 +8,7 @@ import {VisitsProvider} from "../../providers/visits/visits";
 import {Fieldworker} from "../../model/fieldworker";
 import {Location} from "../../model/locations";
 import {VisitFormGroup} from "../../census-forms/visit-form";
+import {LoginProvider} from "../../providers/login/login";
 
 /**
  * Generated class for the CreateVisitPage page.
@@ -33,11 +34,11 @@ export class CreateVisitPage {
 
   constructor(public ev: Events, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
               public visitProvider: VisitsProvider, public netConfig: NetworkConfigProvider,
-              public user: UserProvider) {
+              public loginProvider: LoginProvider) {
 
       //Set fields that are passed from parent, and aren't filled in by fieldworker.
       this.visit.visitLocation = this.navParams.data["visitLocation"].extId;
-      this.visit.collectedBy =  this.user.getLoggedInUser();
+      this.visit.collectedBy =  this.loginProvider.getLoggedInUser();
 
       this.visitForm = new VisitFormGroup();
   }

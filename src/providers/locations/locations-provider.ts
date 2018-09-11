@@ -5,10 +5,9 @@ import { UUID } from "angular2-uuid";
 import { SystemConfigProvider} from "../system-config/system-config";
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
-import {UserProvider} from "../user-provider/user-provider";
 import {FieldworkerProvider} from "../fieldworker/fieldworker";
 import {Hierarchy} from "../../model/hierarchy";
-import {Locations} from "../../model/entity-wrappers";
+import {LoginProvider} from "../login/login";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -21,7 +20,7 @@ import {Locations} from "../../model/entity-wrappers";
 export class LocationsProvider extends DatabaseProviders{
   public db: OpenhdsDb;
 
-  constructor(public http: HttpClient, public userProvider: UserProvider, public fwProvider: FieldworkerProvider,
+  constructor(public http: HttpClient, public loginProvider: LoginProvider, public fwProvider: FieldworkerProvider,
               public systemConfig: SystemConfigProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
@@ -38,7 +37,7 @@ export class LocationsProvider extends DatabaseProviders{
   }
 
   async saveDataLocally(loc: Location){
-    loc.collectedBy = this.userProvider.getLoggedInUser();
+    loc.collectedBy = this.loginProvider.getLoggedInUser();
 
     //Check to see if location already exists!
     let find = await this.db.locations.where('extId').equals(loc.extId).toArray();

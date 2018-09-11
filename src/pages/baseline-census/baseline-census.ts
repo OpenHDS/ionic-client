@@ -1,13 +1,21 @@
-import {Component, OnInit, Input, ViewChild, AfterViewInit} from '@angular/core';
-import {Events, IonicPage, NavController, NavParams, PopoverController, ViewController} from 'ionic-angular';
+import {Component, OnInit} from '@angular/core';
+import {
+  Events,
+  IonicPage,
+  ModalController,
+  NavController,
+  NavParams,
+  ViewController
+} from 'ionic-angular';
 import { Location } from "../../model/locations";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
 import {Hierarchy} from "../../model/hierarchy";
 import {SocialGroup} from "../../model/social-groups";
 import {Individual} from "../../model/individual";
 import {CreateVisitPage} from "../create-entities/create-visit";
-import {UserProvider} from "../../providers/user-provider/user-provider";
 import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
+import {DropdownSearchPage} from "../search/dropdown-search/dropdown-search";
+import {LoginProvider} from "../../providers/login/login";
 
 /**
  * Generated class for the BaselineCensusPage page.
@@ -29,8 +37,9 @@ export class BaselineCensusPage implements OnInit{
   selectedLocation: Location;
   selectedSocialGrp: SocialGroup;
   selectedIndividuals: Individual[] = [];
-  constructor(public navCtrl: NavController, public view: ViewController ,public navParams: NavParams, public ev: Events,
-              public prop: SystemConfigProvider, public userData: UserProvider, public fieldworkerProvider: FieldworkerProvider) {
+  constructor(public navCtrl: NavController, public view: ViewController ,public navParams: NavParams,
+              public modalCntrl: ModalController, public ev: Events,
+              public prop: SystemConfigProvider, public loginProvider: LoginProvider, public fieldworkerProvider: FieldworkerProvider) {
   }
 
   ionViewWillEnter() {
@@ -38,8 +47,7 @@ export class BaselineCensusPage implements OnInit{
   }
 
   async ngOnInit(){
-    this.collectedBy = await this.fieldworkerProvider.getFieldworker(this.userData.getLoggedInUser());
-    console.log(this,this.collectedBy);
+    this.fieldworkerLookup();
   }
 
   setSelectedHierarchy(hierarchy: Hierarchy){
@@ -68,6 +76,16 @@ export class BaselineCensusPage implements OnInit{
     this.selectedLocation = undefined;
     this.selectedSocialGrp = undefined;
     this.selectedIndividuals = [];
+  }
+
+  //Lookup fieldworker for admin census input.
+  async fieldworkerLookup(){
+    if(this.loginProvider.getLoggedInUser() === 'admin'){
+      let modal = this.modalCntrl.create(DropdownSearchPage);
+      modal.present();
+    } else {
+      this.collectedBy = await this.fieldworkerProvider.getFieldworker(this.loginProvider.getLoggedInUser());
+    }
   }
 }
 

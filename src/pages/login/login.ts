@@ -4,6 +4,7 @@ import {MenuController, NavController} from 'ionic-angular';
 import {UserProvider} from "../../providers/user-provider/user-provider";
 import {SupervisorModePage} from "../supervisor-mode/supervisor-mode";
 import {FieldworkerModePage} from "../fieldworker-mode/fieldworker-mode";
+import {LoginProvider} from "../../providers/login/login";
 
 
 
@@ -16,10 +17,11 @@ export class LoginPage {
   password: string;
   submitted = false;
   loginForm: FormGroup;
+  loginAsSuper: boolean = true;
   showLoginError = false;
 
   constructor(public navCtrl: NavController, public menu: MenuController, public userProvider: UserProvider,
-              public formBuilder: FormBuilder) {
+              public loginProvider: LoginProvider, public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
       username: ['', Validators.compose([Validators.required])],
@@ -41,10 +43,16 @@ export class LoginPage {
   async onLogin() {
      this.submitted = true;
      if(this.loginForm.valid){
-       if(this.username == "admin" && this.password == "test"){
-         this.navCtrl.setRoot(SupervisorModePage);
+
+       if(this.loginAsSuper){
+         var loginAttempt = await this.loginProvider.checkPassword(this.username, this.password, this.loginAsSuper);
+         if(loginAttempt){
+           this.navCtrl.setRoot(SupervisorModePage);
+         } else {
+           this.submitted = false;
+         }
        } else {
-         var loginAttempt = await this.userProvider.checkPassword(this.username, this.password);
+         var loginAttempt = await this.loginProvider.checkPassword(this.username, this.password);
          if(loginAttempt){
            this.navCtrl.setRoot(FieldworkerModePage);
          } else {
@@ -56,7 +64,7 @@ export class LoginPage {
      }
 
      if(this.submitted) {
-       this.userProvider.setLoggedInUser(this.username);
+       this.loginProvider.setLoggedInUser(this.username);
        this.showLoginError = false;
      } else {
        this.showLoginError = true

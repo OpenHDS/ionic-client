@@ -37,6 +37,11 @@
     </ion-row>
   </form>
 
+  <ion-item>
+    <ion-label>Supervisor Login (Unselect if Fieldworker)</ion-label>
+    <ion-checkbox round checked="true" [(ngModel)]="this.loginAsSuper"></ion-checkbox>
+  </ion-item>
+
   <ion-card [hidden]="!this.showLoginError">
     <ion-card-content color="danger" text-center>ERROR: INVALID USERNAME AND/OR PASSWORD</ion-card-content>
   </ion-card>

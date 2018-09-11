@@ -8,6 +8,7 @@ import {Individual} from "../../model/individual";
 import {DataError} from "../../model/data-errors";
 import {CensusIndividual} from "../../model/census-individual";
 import {Visit} from "../../model/visit";
+import {User} from "../../model/user";
 
 export class OpenhdsDb extends Dexie {
   fieldworkers: Dexie.Table<Fieldworker, string>;
@@ -19,6 +20,7 @@ export class OpenhdsDb extends Dexie {
   censusIndividuals: Dexie.Table<CensusIndividual, string>;
   visits: Dexie.Table<Visit, string>;
   errors: Dexie.Table<DataError, string>;
+  userCache: Dexie.Table<User, string>;
 
   constructor() {
     super("OpenHDS");
@@ -31,7 +33,8 @@ export class OpenhdsDb extends Dexie {
       individuals: 'uuid, extId, dob, dobAspect, firstName, middleName, lastName, gender, mother, father, bIsToA, deleted, insertDate',
       censusIndividuals: 'uuid, individual, locationExtId, socialGroupExtId, socialGroupHeadExtId, bIsToA, spouse, collectedBy',
       visits: 'uuid, extId, realVisit, roundNumber, visitDate, visitLocation, collectedBy',
-      errors: 'uuid, entityType, entity, errorMessage, timestamp, resolved'
+      errors: 'uuid, entityType, entity, errorMessage, timestamp, resolved',
+      userCache: 'uuid, username, password, roles'
     });
   }
 }

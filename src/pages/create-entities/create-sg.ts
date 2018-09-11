@@ -9,6 +9,8 @@ import {UserProvider} from "../../providers/user-provider/user-provider";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
 import {LocationPopoverHelp} from "./create-location";
 import {SearchEntitiesPage} from "../search/search-by-entity/search-entities";
+import {LoginPage} from "../login/login";
+import {LoginProvider} from "../../providers/login/login";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -31,9 +33,9 @@ export class CreateSocialGroupPage {
   sg: SocialGroup = new SocialGroup();
   constructor(public ev: Events, public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams,
               public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
-              public user: UserProvider) {
+              public loginProvider: LoginProvider) {
 
-   this.sg.collectedBy = this.user.getLoggedInUser();
+   this.sg.collectedBy = this.loginProvider.getLoggedInUser();
    this.sgForm = new SocialGroupFormGroup();
 
 

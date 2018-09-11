@@ -27,7 +27,7 @@ export class MockDatabaseProviders extends DatabaseProviders {
 export class MockLocationsProvider extends LocationsProvider {
   constructor(public http: HttpClient, public userProvider: UserProvider,
               public systemConfig: SystemConfigProvider) {
-    super(http, userProvider, systemConfig);
+    super(http, userProvider, systemConfig, );
     this.db = new MockOpenhdsDatabase();
   }
 }

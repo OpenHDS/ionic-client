@@ -4,13 +4,13 @@ import {App, Events,  Nav, Platform} from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {BaselineCensusPage} from "../pages/baseline-census/baseline-census";
 import {LoginPage} from "../pages/login/login";
-import {UserProvider} from "../providers/user-provider/user-provider";
 import {SupervisorModePage} from "../pages/supervisor-mode/supervisor-mode";
 import {SynchronizeDbPage} from "../pages/synchronize-db/synchronize-db";
 import {ApproveEntriesPage} from "../pages/admin-approval/entry-approval/approve-entries";
 import {SystemConfigPage} from "../pages/system-config/system-config";
 import {SearchEntitiesPage} from "../pages/search/search-by-entity/search-entities";
 import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
+import {LoginProvider} from "../providers/login/login";
 
 export interface PageInterface {
   title: string;
@@ -47,16 +47,16 @@ export class OpenHDSApp {
   rootPage: any;
 
   constructor( public events: Events,  public platform: Platform, public splashScreen: SplashScreen,
-               public userData: UserProvider, public appCtrl: App) {
+               public loginProvider: LoginProvider, public appCtrl: App) {
 
-    if(this.userData.hasLoggedIn() == false || this.userData.getLoggedInUser() == null){
+    if(this.loginProvider.hasLoggedIn() == false || this.loginProvider.getLoggedInUser() == null){
       this.rootPage = LoginPage;
-    } else if(this.userData.getLoggedInUser() === 'admin'){
+    } else if(this.loginProvider.getLoggedInUser() == 'admin'){
       this.rootPage = SupervisorModePage;
-      this.userData.enableUserMenu();
+      this.loginProvider.enableUserMenu();
     } else {
       this.rootPage = FieldworkerModePage;
-      this.userData.enableUserMenu();
+      this.loginProvider.enableUserMenu();
     }
 
 
@@ -73,7 +73,7 @@ export class OpenHDSApp {
 
   logoutUser() {
     this.appCtrl.getRootNav().setRoot(LoginPage);
-    this.userData.setUserLogout();
+    this.loginProvider.setUserLogout();
   }
 
   platformReady() {

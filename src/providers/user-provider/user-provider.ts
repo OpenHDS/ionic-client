@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import Bcrypt from "bcryptjs";
-import {FieldworkerProvider} from "../fieldworker/fieldworker";
 import {Events, MenuController} from "ionic-angular";
+import {NetworkConfigProvider} from "../network-config/network-config";
+import {SystemConfigProvider} from "../system-config/system-config";
+import {OpenhdsDb} from "../database-providers/openhds-db";
+import {User} from "../../model/user";
 
 /*
   Generated class for the LoginProvider provider.
@@ -12,66 +14,42 @@ import {Events, MenuController} from "ionic-angular";
 */
 @Injectable()
 export class UserProvider {
-
-  constructor(public http: HttpClient, public events: Events, public fieldworkerProvider: FieldworkerProvider, public menu: MenuController) {
+  db: OpenhdsDb;
+  constructor(public http: HttpClient, public events: Events, public menu: MenuController,
+              public networkConfig: NetworkConfigProvider, public systemConfigProvider: SystemConfigProvider) {
+    this.db = new OpenhdsDb();
   }
 
-  async checkPassword(username, password) {
-    let status = false;
-    let fieldworker = await this.fieldworkerProvider.getFieldworker(username);
+  async loadSupervisorUser(username, password){
+    const headers = new HttpHeaders().set('Authorization',
+      "Basic " + btoa(username + ":" + password));
 
-    console.log(fieldworker.length);
+    let user = new User();
+    headers.append('Content-Type', "application/json");
+    if(this.networkConfig.isConnected()){
+      await this.http.get(this.systemConfigProvider.getServerURL() + "/users2/" + username,  {headers}).toPromise().then(
+        (userInfo) => {
+          console.log(userInfo["username"]);
+          user.uuid = userInfo["uuid"];
+          user.username = userInfo["username"];
+          user.password = userInfo["password"];
+          user.roles = userInfo["roles"];
+          console.log(userInfo);
 
-    if (fieldworker.length == 0)
-      return status;
+          //Clear cache and replace with new user
+          this.db.userCache.clear();
+          this.db.userCache.add(user);
+        }).catch(err => err);
 
-    return Bcrypt.compareSync(password, fieldworker[0].passwordHash);
-  }
-
-  setLoggedInUser(username){
-    localStorage.setItem("loggedInUser", username);
-    localStorage.setItem("hasLoggedIn", Boolean(true).toString());
-    localStorage.setItem("loggedInTime", Date.now().toString())
-    this.enableUserMenu()
-  }
-
-  setUserLogout(){
-    localStorage.setItem("loggedInUser", null);
-    localStorage.setItem("hasLoggedIn", Boolean(false).toString());
-    this.disableUserMenu();
-  }
-
-  hasLoggedIn(){
-    let loggedIn = localStorage.getItem("hasLoggedIn");
-    return loggedIn != null && loggedIn.toLowerCase() == 'true' ? true : false; //returns true if logged in, false otherwise
-  }
-
-  getLoggedInUser(){
-    return localStorage.getItem("loggedInUser");
-  }
-
-  enableUserMenu(){
-    if(this.getLoggedInUser() == "admin") {
-      this.menu.enable(true, "adminMenu");
-
-      console.log("ENABLING ADMIN")
+      return await this.db.userCache.where('username').equals(username).toArray();
     }
-    else {
-      this.menu.enable(true, "fieldworkerMenu");
-      console.log("ENABLING FIELDWORKER")
-    }
-  }
 
-  disableUserMenu(){
-    if(this.getLoggedInUser() == "admin") {
-      this.menu.enable(false, "adminMenu");
+    //No network connection, or lookup on server failed... See if stored in local database.
+    return await this.db.userCache.where('username').equals(username).toArray();
 
-      console.log("DISABLING ADMIN")
-    }
-    else {
-      this.menu.enable(false, "fieldworkerMenu");
 
-      console.log("DISABLING FIELDWORKER")
-    }
+
+
+
   }
 }

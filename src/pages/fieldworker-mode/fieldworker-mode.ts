@@ -4,6 +4,7 @@ import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
 import {UserProvider} from "../../providers/user-provider/user-provider";
+import {LoginProvider} from "../../providers/login/login";
 
 /**
  * Generated class for the FieldworkerModePage page.
@@ -20,7 +21,7 @@ import {UserProvider} from "../../providers/user-provider/user-provider";
 export class FieldworkerModePage implements OnInit {
 
   incompleteForms: Array<any> = [];
-  constructor(public navCtrl: NavController, public navParams: NavParams, public userData: UserProvider, public locationProvider: LocationsProvider,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public loginProvider: LoginProvider, public locationProvider: LocationsProvider,
               public socialGroupsProvider: SocialGroupProvider, public censusIndividualsProvider: CensusSubmissionProvider) {
   }
 
@@ -35,7 +36,7 @@ export class FieldworkerModePage implements OnInit {
   async loadIncompleteForms(){
     await this.locationProvider.getAllLocations().then((data) => {
       data.forEach( entry => {
-        if(entry.errorReported && entry.collectedBy == this.userData.getLoggedInUser()){
+        if(entry.errorReported && entry.collectedBy == this.loginProvider.getLoggedInUser()){
           this.incompleteForms.push(entry);
         }
       })
@@ -43,7 +44,7 @@ export class FieldworkerModePage implements OnInit {
 
     await this.socialGroupsProvider.getAllSocialGroups().then((data) => {
       data.forEach( entry => {
-        if(entry.errorReported && entry.collectedBy == this.userData.getLoggedInUser()){
+        if(entry.errorReported && entry.collectedBy == this.loginProvider.getLoggedInUser()){
           this.incompleteForms.push(entry);
         }
       })
@@ -51,7 +52,7 @@ export class FieldworkerModePage implements OnInit {
 
     await this.censusIndividualsProvider.getAllCensusSubmissions().then((data) => {
       data.forEach( entry => {
-        if(entry.errorReported && entry.collectedBy == this.userData.getLoggedInUser()){
+        if(entry.errorReported && entry.collectedBy == this.loginProvider.getLoggedInUser()){
           this.incompleteForms.push(entry);
         }
       })
