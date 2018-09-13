@@ -5,12 +5,9 @@ import {SocialGroup} from "../../model/social-groups";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {NgForm} from "@angular/forms";
 import {CreateIndividualPage} from "./create-individual";
-import {UserProvider} from "../../providers/user-provider/user-provider";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
-import {LocationPopoverHelp} from "./create-location";
 import {SearchEntitiesPage} from "../search/search-by-entity/search-entities";
-import {LoginPage} from "../login/login";
-import {LoginProvider} from "../../providers/login/login";
+import {AuthProvider} from "../../providers/authentication/authentication";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -33,9 +30,9 @@ export class CreateSocialGroupPage {
   sg: SocialGroup = new SocialGroup();
   constructor(public ev: Events, public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams,
               public sgProvider: SocialGroupProvider, public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
-              public loginProvider: LoginProvider) {
+              public authProvider: AuthProvider) {
 
-   this.sg.collectedBy = this.loginProvider.getLoggedInUser();
+   this.sg.collectedBy = this.navParams.data["collectedBy"];
    this.sgForm = new SocialGroupFormGroup();
 
 
@@ -79,7 +76,8 @@ export class CreateSocialGroupPage {
     this.navCtrl.pop();
   }
   async createHead(){
-    await this.navCtrl.push(CreateIndividualPage, {sg: this.sg, loc: this.navParams.get("sgLocation"), createHead: true});
+    await this.navCtrl.push(CreateIndividualPage, {collectedBy: this.navParams.get("collectedBy"), sg: this.sg,
+      loc: this.navParams.get("sgLocation"), createHead: true});
   }
 
   async lookupHead(){

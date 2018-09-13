@@ -3,8 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {SocialGroupProvider} from "../../providers/social-group/social-group";
 import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
-import {UserProvider} from "../../providers/user-provider/user-provider";
-import {LoginProvider} from "../../providers/login/login";
+import {AuthProvider} from "../../providers/authentication/authentication";
 
 /**
  * Generated class for the FieldworkerModePage page.
@@ -21,8 +20,9 @@ import {LoginProvider} from "../../providers/login/login";
 export class FieldworkerModePage implements OnInit {
 
   incompleteForms: Array<any> = [];
-  constructor(public navCtrl: NavController, public navParams: NavParams, public loginProvider: LoginProvider, public locationProvider: LocationsProvider,
-              public socialGroupsProvider: SocialGroupProvider, public censusIndividualsProvider: CensusSubmissionProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public authProvider: AuthProvider,
+              public locationProvider: LocationsProvider, public socialGroupsProvider: SocialGroupProvider,
+              public censusIndividualsProvider: CensusSubmissionProvider) {
   }
 
   ionViewDidLoad() {
@@ -36,7 +36,7 @@ export class FieldworkerModePage implements OnInit {
   async loadIncompleteForms(){
     await this.locationProvider.getAllLocations().then((data) => {
       data.forEach( entry => {
-        if(entry.errorReported && entry.collectedBy == this.loginProvider.getLoggedInUser()){
+        if(entry.errorReported && entry.collectedBy == this.authProvider.getLoggedInFieldworker().extId){
           this.incompleteForms.push(entry);
         }
       })
@@ -44,7 +44,7 @@ export class FieldworkerModePage implements OnInit {
 
     await this.socialGroupsProvider.getAllSocialGroups().then((data) => {
       data.forEach( entry => {
-        if(entry.errorReported && entry.collectedBy == this.loginProvider.getLoggedInUser()){
+        if(entry.errorReported && entry.collectedBy == this.authProvider.getLoggedInFieldworker().extId){
           this.incompleteForms.push(entry);
         }
       })
@@ -52,7 +52,7 @@ export class FieldworkerModePage implements OnInit {
 
     await this.censusIndividualsProvider.getAllCensusSubmissions().then((data) => {
       data.forEach( entry => {
-        if(entry.errorReported && entry.collectedBy == this.loginProvider.getLoggedInUser()){
+        if(entry.errorReported && entry.collectedBy == this.authProvider.getLoggedInFieldworker().extId){
           this.incompleteForms.push(entry);
         }
       })

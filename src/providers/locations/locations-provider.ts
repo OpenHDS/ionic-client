@@ -7,7 +7,7 @@ import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
 import {FieldworkerProvider} from "../fieldworker/fieldworker";
 import {Hierarchy} from "../../model/hierarchy";
-import {LoginProvider} from "../login/login";
+import {AuthProvider} from "../authentication/authentication";
 
 /*
   Generated class for the LocationsProvider provider.
@@ -20,7 +20,7 @@ import {LoginProvider} from "../login/login";
 export class LocationsProvider extends DatabaseProviders{
   public db: OpenhdsDb;
 
-  constructor(public http: HttpClient, public loginProvider: LoginProvider, public fwProvider: FieldworkerProvider,
+  constructor(public http: HttpClient, public authProvider: AuthProvider, public fwProvider: FieldworkerProvider,
               public systemConfig: SystemConfigProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
@@ -37,7 +37,7 @@ export class LocationsProvider extends DatabaseProviders{
   }
 
   async saveDataLocally(loc: Location){
-    loc.collectedBy = this.loginProvider.getLoggedInUser();
+    loc.collectedBy = this.authProvider.getLoggedInFieldworker();
 
     //Check to see if location already exists!
     let find = await this.db.locations.where('extId').equals(loc.extId).toArray();

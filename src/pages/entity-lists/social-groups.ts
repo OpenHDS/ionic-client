@@ -6,6 +6,7 @@ import {SocialGroup} from "../../model/social-groups";
 import {Location} from "../../model/locations";
 import {CreateSocialGroupPage} from "../create-entities/create-sg";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
+import {Fieldworker} from "../../model/fieldworker";
 
 /**
  * Generated class for the SocialGroupsPage page.
@@ -23,6 +24,7 @@ export class SocialGroupsPage {
   hierarchyLookupLevel;
   sgObserver: RefreshObservable = new RefreshObservable();
   @Input() sgLocation: Location;
+  @Input() collectedBy: string;
   socialGroups: SocialGroup[];
   @Output() selectedSg = new EventEmitter<SocialGroup>();
   selectedSGDisplay: SocialGroup;
@@ -80,7 +82,7 @@ export class SocialGroupsPage {
   }
 
   goToCreateSgPage(){
-    this.navCtrl.push(CreateSocialGroupPage, {sgLocation: this.sgLocation});
+    this.navCtrl.push(CreateSocialGroupPage, {collectedBy: this.collectedBy, sgLocation: this.sgLocation});
   }
 
   moveUpLevel(){

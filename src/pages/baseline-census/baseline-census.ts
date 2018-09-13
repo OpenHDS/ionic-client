@@ -13,9 +13,9 @@ import {Hierarchy} from "../../model/hierarchy";
 import {SocialGroup} from "../../model/social-groups";
 import {Individual} from "../../model/individual";
 import {CreateVisitPage} from "../create-entities/create-visit";
-import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
 import {DropdownSearchPage} from "../search/dropdown-search/dropdown-search";
-import {LoginProvider} from "../../providers/login/login";
+import {AuthProvider} from "../../providers/authentication/authentication";
+import {Fieldworker} from "../../model/fieldworker";
 
 /**
  * Generated class for the BaselineCensusPage page.
@@ -32,14 +32,22 @@ import {LoginProvider} from "../../providers/login/login";
 
 export class BaselineCensusPage implements OnInit{
   levels = ["Region", "District", "Village", "Subvillage"];
-  collectedBy;
+  collectedBy: Fieldworker;
   selectedHierarchy: Hierarchy[] = [];
   selectedLocation: Location;
   selectedSocialGrp: SocialGroup;
   selectedIndividuals: Individual[] = [];
   constructor(public navCtrl: NavController, public view: ViewController ,public navParams: NavParams,
               public modalCntrl: ModalController, public ev: Events,
-              public prop: SystemConfigProvider, public loginProvider: LoginProvider, public fieldworkerProvider: FieldworkerProvider) {
+              public prop: SystemConfigProvider, public authProvider: AuthProvider) {
+
+    this.ev.subscribe("adminFWSelection", async (fieldworker) => {
+      console.log("setting admin fieldworker selection....");
+      console.log(fieldworker.fieldworker);
+      this.collectedBy = fieldworker.fieldworker;
+      console.log("Collected by stored...");
+      console.log(this.collectedBy);
+    });
   }
 
   ionViewWillEnter() {
@@ -73,6 +81,7 @@ export class BaselineCensusPage implements OnInit{
 
     //Reset for new census collection.
     this.selectedHierarchy = [];
+    this.collectedBy = undefined;
     this.selectedLocation = undefined;
     this.selectedSocialGrp = undefined;
     this.selectedIndividuals = [];
@@ -80,11 +89,11 @@ export class BaselineCensusPage implements OnInit{
 
   //Lookup fieldworker for admin census input.
   async fieldworkerLookup(){
-    if(this.loginProvider.getLoggedInUser() === 'admin'){
+    if(this.authProvider.hasSupervisorLoggedIn()){
       let modal = this.modalCntrl.create(DropdownSearchPage);
       modal.present();
     } else {
-      this.collectedBy = await this.fieldworkerProvider.getFieldworker(this.loginProvider.getLoggedInUser());
+      this.collectedBy = this.authProvider.getLoggedInFieldworker();
     }
   }
 }

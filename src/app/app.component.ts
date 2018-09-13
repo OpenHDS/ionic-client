@@ -10,7 +10,8 @@ import {ApproveEntriesPage} from "../pages/admin-approval/entry-approval/approve
 import {SystemConfigPage} from "../pages/system-config/system-config";
 import {SearchEntitiesPage} from "../pages/search/search-by-entity/search-entities";
 import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
-import {LoginProvider} from "../providers/login/login";
+import {User} from "../model/user";
+import {AuthProvider} from "../providers/authentication/authentication";
 
 export interface PageInterface {
   title: string;
@@ -29,6 +30,7 @@ export interface PageInterface {
 })
 export class OpenHDSApp {
   @ViewChild(Nav) nav: Nav;
+  user: User;
 
   fieldworkerPages: PageInterface[] = [
     { title: 'Dashboard', name: 'DashboardPage', component: FieldworkerModePage },
@@ -47,16 +49,16 @@ export class OpenHDSApp {
   rootPage: any;
 
   constructor( public events: Events,  public platform: Platform, public splashScreen: SplashScreen,
-               public loginProvider: LoginProvider, public appCtrl: App) {
+               public authProvider: AuthProvider, public appCtrl: App) {
 
-    if(this.loginProvider.hasLoggedIn() == false || this.loginProvider.getLoggedInUser() == null){
+    if(this.authProvider.hasSupervisorLoggedIn() === false || this.authProvider.hasFieldworkerLoggedIn() === false){
       this.rootPage = LoginPage;
-    } else if(this.loginProvider.getLoggedInUser() == 'admin'){
+    } else if(this.authProvider.hasSupervisorLoggedIn()){
       this.rootPage = SupervisorModePage;
-      this.loginProvider.enableUserMenu();
+      this.authProvider.setMenu();
     } else {
       this.rootPage = FieldworkerModePage;
-      this.loginProvider.enableUserMenu();
+      this.authProvider.setMenu();
     }
 
 
@@ -73,7 +75,7 @@ export class OpenHDSApp {
 
   logoutUser() {
     this.appCtrl.getRootNav().setRoot(LoginPage);
-    this.loginProvider.setUserLogout();
+    this.authProvider.logout();
   }
 
   platformReady() {

@@ -8,7 +8,7 @@ export class Location{
   latitude: number;
   accuracy: number;
   altitude: number;
-  collectedBy: any; //Fieldworker UUID for client side storage, Fieldworker object to send to server (converted before sync)
+  collectedBy: string; //Fieldworker UUID for client side storage, Fieldworker object to send to server (converted before sync)
   locationLevel: Hierarchy;
   deleted: boolean;
   insertDate: Date;

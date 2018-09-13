@@ -6,6 +6,7 @@ import { RefreshObservable } from "../../providers/RefreshObservable";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {CreateLocationPage} from "../create-entities/create-location";
 import {Hierarchy} from "../../model/hierarchy";
+import {Fieldworker} from "../../model/fieldworker";
 
 /**
  * Generated class for the LocationListPage page.
@@ -27,6 +28,7 @@ export class LocationListPage {
   locationObserver: RefreshObservable = new RefreshObservable();
   locations: Location[];
   @Input() parentLevel: Hierarchy;
+  @Input() collectedBy: string;
   @Output() selectedLoc = new EventEmitter<Location>();
   selectedLocation: Location;
 
@@ -35,7 +37,6 @@ export class LocationListPage {
 
     this.locationObserver.subscribe(async (locations) => {
       this.locations = locations;
-      console.log(this.locations)
     });
 
     this.ev.subscribe('submitLocation', () => {
@@ -45,6 +46,7 @@ export class LocationListPage {
     this.ev.subscribe('syncDb', () => {
       this.locProvider.loadInitData().then(async () => await this.getAllLocations()).catch(err => console.log(err));
     });
+
   }
 
   async ngOnInit() {
@@ -58,7 +60,9 @@ export class LocationListPage {
   }
 
   goToCreateLocPage(){
-    this.navCtrl.push(CreateLocationPage, {parentLevel: this.parentLevel});
+    console.log("collectedby:");
+    console.log(this.collectedBy);
+    this.navCtrl.push(CreateLocationPage, {fieldworker: this.collectedBy, parentLevel: this.parentLevel});
   }
 
   filterLocationsByParentLevel(){

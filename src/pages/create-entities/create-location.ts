@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import { NgForm } from "@angular/forms";
 import {
   IonicPage,
@@ -15,10 +15,9 @@ import {Location} from "../../model/locations";
 import {NetworkConfigProvider} from "../../providers/network-config/network-config";
 import {LocationsProvider} from "../../providers/locations/locations-provider";
 import {SystemConfigProvider} from "../../providers/system-config/system-config";
-import {UserProvider} from "../../providers/user-provider/user-provider";
 import {LocationFormGroup} from "../../census-forms/location-form";
-import {LoginPage} from "../login/login";
-import {LoginProvider} from "../../providers/login/login";
+import {AuthProvider} from "../../providers/authentication/authentication";
+import {Fieldworker} from "../../model/fieldworker";
 
 /**
  * Generated class for the CreateLocationPage page.
@@ -35,7 +34,6 @@ import {LoginProvider} from "../../providers/login/login";
 export class CreateLocationPage {
 
   geoloc: boolean = false;
-  errorFix: boolean;
   formSubmitted: boolean = false;
   form: LocationFormGroup;
 
@@ -45,10 +43,12 @@ export class CreateLocationPage {
               public locProvider: LocationsProvider, public viewCtrl: ViewController, private geo: Geolocation,
               public netConfig: NetworkConfigProvider, public popoverCtrl: PopoverController,
               public sysConfig: SystemConfigProvider,
-              public loginProvider: LoginProvider) {
+              public authProvider: AuthProvider) {
 
-    this.loc.collectedBy = this.loginProvider.getLoggedInUser();
-    this.loc.locationLevel = this.navParams.get("parentLevel").extId;
+
+    this.loc.collectedBy = this.navParams.data["fieldworker"];
+    console.log("Create Location");
+    this.loc.locationLevel = this.navParams.data["parentLevel"].extId;
     this.form = new LocationFormGroup();
   }
 

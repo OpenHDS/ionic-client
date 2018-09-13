@@ -8,10 +8,9 @@ import {UUID} from "angular2-uuid";
 import {Events} from "ionic-angular"
 import {OpenhdsDb} from "../database-providers/openhds-db";
 import {DatabaseProviders} from "../database-providers/database-providers";
-import {UserProvider} from "../user-provider/user-provider";
 import {FieldworkerProvider} from "../fieldworker/fieldworker";
 import {IndividualProvider} from "../individual/individual";
-import {LoginProvider} from "../login/login";
+import {AuthProvider} from "../authentication/authentication";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -28,7 +27,7 @@ export class SocialGroupProvider extends DatabaseProviders{
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigProvider,
               public errorsProvider: ErrorsProvider, public fwProvider: FieldworkerProvider,
               public individualProvider: IndividualProvider,
-              public systemConfig: SystemConfigProvider, public loginProvider: LoginProvider) {
+              public systemConfig: SystemConfigProvider, public authProvider: AuthProvider) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
@@ -44,7 +43,7 @@ export class SocialGroupProvider extends DatabaseProviders{
   }
 
   async saveDataLocally(sg: SocialGroup){
-    sg.collectedBy = this.loginProvider.getLoggedInUser();
+    sg.collectedBy = this.authProvider.getLoggedInUser();
 
     if(!sg.uuid)
       sg.uuid = UUID.UUID();

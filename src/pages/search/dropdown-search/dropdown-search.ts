@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {Fieldworker} from "../../../model/fieldworker";
 import {FieldworkerProvider} from "../../../providers/fieldworker/fieldworker";
 
@@ -19,9 +19,9 @@ export class DropdownSearchPage implements OnInit {
 
   fieldworkerList: Fieldworker[];
   filtered: Fieldworker[] = [];
-  fieldworker_extId: EventEmitter<Fieldworker> = new EventEmitter<Fieldworker>();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public fieldworkerProvider: FieldworkerProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+              public ev: Events, public fieldworkerProvider: FieldworkerProvider) {
 
   }
 
@@ -39,8 +39,6 @@ export class DropdownSearchPage implements OnInit {
   }
 
   emitFieldworker(fw){
-    this.fieldworker_extId.emit(fw);
+    this.ev.publish("adminFWSelection", {fieldworker: fw.extId});
   }
-
-
 }

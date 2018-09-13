@@ -6,6 +6,7 @@ import {Individual} from "../../model/individual";
 import {CreateIndividualPage} from "../create-entities/create-individual";
 import {IndividualProvider} from "../../providers/individual/individual";
 import {Location} from "../../model/locations";
+import {Fieldworker} from "../../model/fieldworker";
 
 /**
  * Generated class for the IndividualListPage page.
@@ -24,6 +25,7 @@ export class IndividualListPage {
   indObserver: RefreshObservable = new RefreshObservable();
   @Input() sg: SocialGroup;
   @Input() loc: Location;
+  @Input() collectedBy: string;
   @Output() selectedIndividual = new EventEmitter<Individual>();
   individuals: Individual[];
 
@@ -67,6 +69,6 @@ export class IndividualListPage {
   }
 
   goToCreateIndividualPage(){
-    this.navCtrl.push(CreateIndividualPage, {sg: this.sg, loc: this.loc});
+    this.navCtrl.push(CreateIndividualPage, {collectedBy: this.collectedBy, sg: this.sg, loc: this.loc});
   }
 }

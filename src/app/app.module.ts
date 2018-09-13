@@ -40,7 +40,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
 import {DropdownSearchPage} from "../pages/search/dropdown-search/dropdown-search";
 import {ErrorReportingPage} from "../pages/admin-approval/error-reporting/error-reporting";
-import { LoginProvider } from '../providers/login/login';
+import { AuthProvider } from '../providers/authentication/authentication';
 
 
 @NgModule({
@@ -122,7 +122,7 @@ import { LoginProvider } from '../providers/login/login';
     DatabaseProviders,
     CensusSubmissionProvider,
     VisitsProvider,
-    LoginProvider
+    AuthProvider
   ]
 })
 
