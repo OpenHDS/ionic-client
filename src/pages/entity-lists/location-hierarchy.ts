@@ -1,9 +1,9 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/location-hierarchies";
+import {LocationHierarchiesProvider} from "../../services/location-hierarchies/location-hierarchies";
 import {HierarchyLevels} from "../../model/hierarchy-levels";
 import {Hierarchy} from "../../model/hierarchy";
-import {RefreshObservable} from "../../providers/RefreshObservable";
+import {RefreshObservable} from "../../services/RefreshObservable";
 
 /**
  * Generated class for the LocationHierarchyPage page.

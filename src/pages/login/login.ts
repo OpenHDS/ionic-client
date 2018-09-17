@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MenuController, NavController} from 'ionic-angular';
 import {SupervisorModePage} from "../supervisor-mode/supervisor-mode";
 import {FieldworkerModePage} from "../fieldworker-mode/fieldworker-mode";
-import {AuthProvider} from "../../providers/authentication/authentication";
+import {AuthProvider} from "../../services/AuthenticationService/authentication";
 
 
 

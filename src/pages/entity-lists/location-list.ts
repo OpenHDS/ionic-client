@@ -1,9 +1,9 @@
 import {Component, EventEmitter, OnInit, Input, Output} from '@angular/core';
 import {IonicPage, Events, ModalController, NavController, NavParams} from 'ionic-angular';
 import {Location} from "../../model/locations";
-import {LocationsProvider} from "../../providers/locations/locations-provider";
-import { RefreshObservable } from "../../providers/RefreshObservable";
-import {NetworkConfigProvider} from "../../providers/network-config/network-config";
+import {LocationsProvider} from "../../services/locations/locations-provider";
+import { RefreshObservable } from "../../services/RefreshObservable";
+import {NetworkConfigProvider} from "../../services/network-config/network-config";
 import {CreateLocationPage} from "../create-entities/create-location";
 import {Hierarchy} from "../../model/hierarchy";
 import {Fieldworker} from "../../model/fieldworker";

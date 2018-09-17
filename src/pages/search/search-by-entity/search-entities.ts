@@ -8,9 +8,9 @@ import {
   PopoverController,
   ViewController
 } from 'ionic-angular';
-import {SocialGroupProvider} from "../../../providers/social-group/social-group";
-import {LocationsProvider} from "../../../providers/locations/locations-provider";
-import {IndividualProvider} from "../../../providers/individual/individual";
+import {SocialGroupProvider} from "../../../services/social-group/social-group";
+import {LocationsProvider} from "../../../services/locations/locations-provider";
+import {IndividualProvider} from "../../../services/individual/individual";
 import {SocialGroup} from "../../../model/social-groups";
 import {Individual} from "../../../model/individual";
 import {Location} from "../../../model/locations";

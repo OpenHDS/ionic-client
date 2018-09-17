@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import {Events, IonicPage, LoadingController, ViewController} from 'ionic-angular';
-import { LocationsProvider } from "../../providers/locations/locations-provider";
-import {LocationHierarchiesProvider} from "../../providers/location-hierarchies/location-hierarchies";
-import {SocialGroupProvider} from "../../providers/social-group/social-group";
-import {IndividualProvider} from "../../providers/individual/individual";
-import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
-import {NetworkConfigProvider} from "../../providers/network-config/network-config";
-import {ErrorsProvider} from "../../providers/errors/errors";
-import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
+import { LocationsProvider } from "../../services/locations/locations-provider";
+import {LocationHierarchiesProvider} from "../../services/location-hierarchies/location-hierarchies";
+import {SocialGroupProvider} from "../../services/social-group/social-group";
+import {IndividualProvider} from "../../services/individual/individual";
+import {FieldworkerProvider} from "../../services/fieldworker/fieldworker";
+import {NetworkConfigProvider} from "../../services/network-config/network-config";
+import {ErrorsProvider} from "../../services/errors/errors";
+import {CensusSubmissionProvider} from "../../services/census-submission/census-submission";
 
 /**
  * Generated class for the SynchronizeDbPage page.
@@ -55,8 +55,8 @@ export class SynchronizeDbPage {
 
   async syncFieldworkers(){
     this.fieldworkerSyncSuccess = true;
-    let loading = this.loadingCtrl.create({
-      content: "Synchronizing fieldworkers... Please wait"
+    const loading = this.loadingCtrl.create({
+      content: 'Synchronizing fieldworkers... Please wait'
     });
 
     loading.present();

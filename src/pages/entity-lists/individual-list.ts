@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {RefreshObservable} from "../../providers/RefreshObservable";
+import {RefreshObservable} from "../../services/RefreshObservable";
 import {SocialGroup} from "../../model/social-groups";
 import {Individual} from "../../model/individual";
 import {CreateIndividualPage} from "../create-entities/create-individual";
-import {IndividualProvider} from "../../providers/individual/individual";
+import {IndividualProvider} from "../../services/individual/individual";
 import {Location} from "../../model/locations";
 import {Fieldworker} from "../../model/fieldworker";
 

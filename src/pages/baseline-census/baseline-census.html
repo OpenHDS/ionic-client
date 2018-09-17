@@ -17,35 +17,58 @@
 <ion-content padding>
   <ion-row>
     <ion-col col-4>
-      <div *ngFor="let level of this.levels; let i = index">
-        <button ion-button full [disabled]="this.selectedHierarchy[i + 1] == undefined && level != 'Region'" >{{level}}</button>
-        <div *ngIf="this.selectedHierarchy[i+2] != undefined">
-          <p ion-text>Name: {{this.selectedHierarchy[i +2].name}}</p>
-          <p ion-text>Ext. Id: {{this.selectedHierarchy[i +2].extId}}</p>
+      <div>
+        <ion-item-divider>
+            <h1 ion-text [color]="this.baselineStep === 'hierarchy' ? 'primary': ''">Hierarchy</h1>
+        </ion-item-divider>
+
+        <!-- Load the hierarchy levels, and display the information for selected  --->
+        <div *ngFor="let level of this.levels; let i = index">
+          <ion-item ion-text *ngIf="level.name !== this.levels[0].name">
+            {{level.name}}:
+
+            <p ion-text *ngIf="this.selectedHierarchy[i+1] !== undefined">
+              {{this.selectedHierarchy[i + 1].name}}
+            </p>
+          </ion-item>
         </div>
       </div>
-      <button ion-button full [disabled]="this.selectedHierarchy[this.levels.length + 1] == undefined">Location</button>
-      <div *ngIf="this.selectedLocation != undefined">
+
+      <div>
+        <ion-item-divider>
+            <h1 ion-text [color]="this.baselineStep === 'location' ? 'primary': ''">Location</h1>
+        </ion-item-divider>
+      </div>
+      <div *ngIf="this.selectedLocation !== undefined">
         <p ion-text> Name: {{this.selectedLocation.locationName}}</p>
-        <p ion-text> Ext ID: {{this.selectedLocation.extId}} </p>
+        <p ion-text> Ext Id: {{this.selectedLocation.extId}} </p>
         <p ion-text> Latitude: {{this.selectedLocation.latitude}}</p>
         <p ion-text> Longitude: {{this.selectedLocation.longitude}}</p>
       </div>
-      <button ion-button full [disabled]="this.selectedLocation == undefined">Social Group</button>
-      <div *ngIf="this.selectedSocialGrp != undefined">
-        <p ion-text> Group Head: {{this.selectedSocialGrp.groupHead.firstName}} {{this.selectedSocialGrp.groupHead.lastName}}</p>
-        <p ion-text> Group Name: {{this.selectedSocialGrp.groupName}}</p>
-        <p ion-text> Ext ID: {{this.selectedSocialGrp.extId}} </p>
+      <div>
+        <ion-item-divider>
+            <hi ion-text [color]="this.baselineStep === 'socialGroup' ? 'primary': ''">Social Group</hi>
+        </ion-item-divider>
+      </div>
+      <div *ngIf="this.selectedSocialGroup != undefined">
+        <p ion-text> Group Head: {{this.selectedSocialGroup.groupHead.firstName}} {{this.selectedSocialGroup.groupHead.lastName}}</p>
+        <p ion-text> Group Name: {{this.selectedSocialGroup.groupName}}</p>
+        <p ion-text> Ext ID: {{this.selectedSocialGroup.extId}} </p>
       </div>
     </ion-col>
     <ion-col>
-      <location-hierarchy (selectedHierarchy)="this.setSelectedHierarchy($event)" *ngIf="this.selectedHierarchy.length != this.levels.length + 2"></location-hierarchy>
-      <location-list (selectedLoc)="this.setLocation($event)" *ngIf="this.selectedHierarchy.length == this.levels.length + 2 && this.selectedLocation == undefined"
-                     [collectedBy]="this.collectedBy" [parentLevel]="this.selectedHierarchy[this.selectedHierarchy.length-1]"></location-list>
-      <social-groups (selectedSg)="this.setSocialGroup($event)" [sgLocation]="this.selectedLocation" [collectedBy]="this.collectedBy"
-                      *ngIf="this.selectedLocation != undefined && this.selectedSocialGrp == undefined"></social-groups>
-      <individual-list (selectedIndividual)="this.setSelectedIndividuals($event)" [sg]="this.selectedSocialGrp" [loc]="this.selectedLocation"
-                     [collectedBy]="this.collectedBy" *ngIf="this.selectedSocialGrp != undefined && this.selectedIndividuals.length >= 0"></individual-list>
+      <location-hierarchy *ngIf="this.baselineStep === 'hierarchy'"
+                          (selectedHierarchy)="this.setSelectedHierarchy($event)">
+      </location-hierarchy>
+       <location-list *ngIf="this.baselineStep ==='location'"
+                      (selectedLoc)="this.setSelectedLocation($event)"
+                      [parentLevel]="this.selectedHierarchy[this.selectedHierarchy.length - 1]"
+                      [collectedBy]="this.collectedBy">
+      </location-list>
+      <!--<social-groups (selectedSg)="this.setSelectedSocialGroup($event)" [sgLocation]="this.selectedLocation" [collectedBy]="this.collectedBy"-->
+                      <!--*ngIf="this.selectedLocation != undefined && this.selectedSocialGroup == undefined"></social-groups>-->
+      <!--<individual-list (selectedIndividual)="this.setSelectedIndividuals($event)" [sg]="this.selectedSocialGroup" [loc]="this.selectedLocation"-->
+                     <!--[collectedBy]="this.collectedBy" *ngIf="this.selectedSocialGroup != undefined && this.selectedIndividuals.length >= 0"></individual-list>-->
 
     </ion-col>
   </ion-row>

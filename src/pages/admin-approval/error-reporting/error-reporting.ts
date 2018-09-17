@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {DataError} from "../../../model/data-errors";
-import {ErrorsProvider} from "../../../providers/errors/errors";
+import {ErrorsProvider} from "../../../services/errors/errors";
 
 /**
  * Generated class for the ErrorReportingPage page.

@@ -8,14 +8,16 @@ import {
   ViewController
 } from 'ionic-angular';
 import { Location } from "../../model/locations";
-import {SystemConfigProvider} from "../../providers/system-config/system-config";
+import {SystemConfigProvider} from "../../services/system-config/system-config";
 import {Hierarchy} from "../../model/hierarchy";
 import {SocialGroup} from "../../model/social-groups";
 import {Individual} from "../../model/individual";
 import {CreateVisitPage} from "../create-entities/create-visit";
 import {DropdownSearchPage} from "../search/dropdown-search/dropdown-search";
-import {AuthProvider} from "../../providers/authentication/authentication";
+import {AuthProvider} from "../../services/AuthenticationService/authentication";
 import {Fieldworker} from "../../model/fieldworker";
+import {LocationHierarchiesProvider} from "../../services/location-hierarchies/location-hierarchies";
+import {HierarchyLevels} from "../../model/hierarchy-levels";
 
 /**
  * Generated class for the BaselineCensusPage page.
@@ -31,61 +33,79 @@ import {Fieldworker} from "../../model/fieldworker";
 })
 
 export class BaselineCensusPage implements OnInit{
-  levels = ["Region", "District", "Village", "Subvillage"];
+  levels: Array<HierarchyLevels>;
   collectedBy: Fieldworker;
-  selectedHierarchy: Hierarchy[] = [];
+  selectedHierarchy: Array<Hierarchy>;
   selectedLocation: Location;
-  selectedSocialGrp: SocialGroup;
+  selectedSocialGroup: SocialGroup;
   selectedIndividuals: Individual[] = [];
+  baselineStep = 'hierarchy';
   constructor(public navCtrl: NavController, public view: ViewController ,public navParams: NavParams,
-              public modalCntrl: ModalController, public ev: Events,
+              public modalCntrl: ModalController, public ev: Events, public locHierarchyProvider: LocationHierarchiesProvider,
               public prop: SystemConfigProvider, public authProvider: AuthProvider) {
 
     this.ev.subscribe("adminFWSelection", async (fieldworker) => {
-      console.log("setting admin fieldworker selection....");
-      console.log(fieldworker.fieldworker);
       this.collectedBy = fieldworker.fieldworker;
-      console.log("Collected by stored...");
-      console.log(this.collectedBy);
     });
   }
 
-  ionViewWillEnter() {
-    this.view.showBackButton(false);
-  }
-
-  async ngOnInit(){
+  async ngOnInit() {
     this.fieldworkerLookup();
-  }
-
-  setSelectedHierarchy(hierarchy: Hierarchy){
-    console.log(hierarchy);
-    this.selectedHierarchy[hierarchy.level.keyIdentifier] = hierarchy;
-  }
-
-  setLocation(location: Location){
-    console.log(location);
-    this.selectedLocation = location;
-  }
-
-  setSocialGroup(sg: SocialGroup){
-    this.selectedSocialGrp = sg;
-  }
-
-  setSelectedIndividuals(ind: Individual){
-    this.selectedIndividuals.push(ind);
-  }
-
-  async completeBaselineCensus(){
-    await this.navCtrl.push(CreateVisitPage, {visitLocation: this.selectedLocation, collectedBy: this.collectedBy[0]});
-
-    //Reset for new census collection.
+    this.levels = await this.locHierarchyProvider.getLevels();
     this.selectedHierarchy = [];
-    this.collectedBy = undefined;
-    this.selectedLocation = undefined;
-    this.selectedSocialGrp = undefined;
-    this.selectedIndividuals = [];
   }
+
+  setSelectedHierarchy(hierarchy: Hierarchy) {
+    this.selectedHierarchy[hierarchy.level.keyIdentifier] = hierarchy;
+    this.checkBaselineStepComplete();
+  }
+
+  setSelectedLocation(location: Location) {
+    this.selectedLocation = location;
+    this.checkBaselineStepComplete();
+  }
+
+  setSelectedSocialGroup(sg: SocialGroup) {
+    this.selectedSocialGroup = sg;
+    this.checkBaselineStepComplete();
+  }
+
+  setSelectedIndividuals(ind: Individual) {
+    this.selectedIndividuals.push(ind);
+    this.checkBaselineStepComplete();
+  }
+
+
+  checkBaselineStepComplete() {
+    switch (this.baselineStep) {
+      case 'hierarchy':
+        if (this.selectedHierarchy[this.levels.length] !== undefined) {
+          this.moveToNextBaselineStep('location');
+        }
+        break;
+      case 'location':
+        if (this.selectedLocation !== undefined) {
+          this.moveToNextBaselineStep('socialGroup');
+        }
+        break;
+      case 'socialGroup':
+        if (this.selectedSocialGroup !== undefined) {
+          this.moveToNextBaselineStep('individual');
+        }
+        break;
+      case 'individual':
+        if (this.selectedIndividuals !== undefined && this.selectedIndividuals.length > 0) {
+          this.moveToNextBaselineStep('visit');
+        }
+        break;
+      default: break;
+    }
+  }
+
+  moveToNextBaselineStep(step) {
+    this.baselineStep = step;
+  }
+
 
   //Lookup fieldworker for admin census input.
   async fieldworkerLookup(){

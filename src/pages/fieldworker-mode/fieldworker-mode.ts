@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {LocationsProvider} from "../../providers/locations/locations-provider";
-import {SocialGroupProvider} from "../../providers/social-group/social-group";
-import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
-import {AuthProvider} from "../../providers/authentication/authentication";
+import {LocationsProvider} from "../../services/locations/locations-provider";
+import {SocialGroupProvider} from "../../services/social-group/social-group";
+import {CensusSubmissionProvider} from "../../services/census-submission/census-submission";
+import {AuthProvider} from "../../services/AuthenticationService/authentication";
 
 /**
  * Generated class for the FieldworkerModePage page.

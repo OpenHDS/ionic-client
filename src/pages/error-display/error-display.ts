@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import {IonicPage, ModalController, NavController, NavParams, ViewController} from 'ionic-angular';
-import {ErrorsProvider} from "../../providers/errors/errors";
+import {ErrorsProvider} from "../../services/errors/errors";
 import {DataError} from "../../model/data-errors"
-import {LocationsProvider} from "../../providers/locations/locations-provider";
+import {LocationsProvider} from "../../services/locations/locations-provider";
 
 /**
  * Generated class for the ErrorDisplayPage page.

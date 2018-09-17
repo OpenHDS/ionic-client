@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
-import {LocationsProvider} from "../../providers/locations/locations-provider";
+import {LocationsProvider} from "../../services/locations/locations-provider";
 
 /**
  * Generated class for the SuperviserModePage page.

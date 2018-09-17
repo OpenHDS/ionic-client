@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
 import {Events, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {Fieldworker} from "../../../model/fieldworker";
-import {FieldworkerProvider} from "../../../providers/fieldworker/fieldworker";
+import {FieldworkerProvider} from "../../../services/fieldworker/fieldworker";
 
 /**
  * Generated class for the DropdownSearchPage page.

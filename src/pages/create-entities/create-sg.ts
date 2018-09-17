@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import {IonicPage, Events, NavController, NavParams, ViewController, PopoverController} from 'ionic-angular';
-import {NetworkConfigProvider} from "../../providers/network-config/network-config";
+import {NetworkConfigProvider} from "../../services/network-config/network-config";
 import {SocialGroup} from "../../model/social-groups";
-import {SocialGroupProvider} from "../../providers/social-group/social-group";
+import {SocialGroupProvider} from "../../services/social-group/social-group";
 import {NgForm} from "@angular/forms";
 import {CreateIndividualPage} from "./create-individual";
 import {SocialGroupFormGroup} from "../../census-forms/social-group-form";
 import {SearchEntitiesPage} from "../search/search-by-entity/search-entities";
-import {AuthProvider} from "../../providers/authentication/authentication";
+import {AuthProvider} from "../../services/AuthenticationService/authentication";
 
 /**
  * Generated class for the CreateLocationPage page.

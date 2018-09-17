@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
-import { SystemConfigProvider} from "../../providers/system-config/system-config";
+import { SystemConfigProvider} from "../../services/system-config/system-config";
 
 /**
  * Generated class for the SystemConfigPage page.

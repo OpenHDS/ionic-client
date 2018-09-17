@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {IonicPage, Events, NavController, NavParams, ViewController} from 'ionic-angular';
-import {NetworkConfigProvider} from "../../providers/network-config/network-config";
+import {NetworkConfigProvider} from "../../services/network-config/network-config";
 import {NgForm} from "@angular/forms";
 import {Visit} from "../../model/visit";
-import {VisitsProvider} from "../../providers/visits/visits";
+import {VisitsProvider} from "../../services/visits/visits";
 import {Fieldworker} from "../../model/fieldworker";
 import {Location} from "../../model/locations";
 import {VisitFormGroup} from "../../census-forms/visit-form";
-import {AuthProvider} from "../../providers/authentication/authentication";
+import {AuthProvider} from "../../services/AuthenticationService/authentication";
 
 /**
  * Generated class for the CreateVisitPage page.

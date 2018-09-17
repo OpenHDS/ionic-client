@@ -7,17 +7,17 @@ import {
   ViewController,
   PopoverController
 } from 'ionic-angular';
-import {NetworkConfigProvider} from "../../providers/network-config/network-config";
+import {NetworkConfigProvider} from "../../services/network-config/network-config";
 import {NgForm} from "@angular/forms";
 import {Individual} from "../../model/individual";
-import {IndividualProvider} from "../../providers/individual/individual";
+import {IndividualProvider} from "../../services/individual/individual";
 import {SocialGroup} from "../../model/social-groups";
 import {Location} from "../../model/locations";
-import {CensusSubmissionProvider} from "../../providers/census-submission/census-submission";
+import {CensusSubmissionProvider} from "../../services/census-submission/census-submission";
 import {CensusIndividualFormGroup} from "../../census-forms/individual-form";
 import {CensusIndividual} from "../../model/census-individual";
-import {AuthProvider} from "../../providers/authentication/authentication";
-import {FieldworkerProvider} from "../../providers/fieldworker/fieldworker";
+import {AuthProvider} from "../../services/AuthenticationService/authentication";
+import {FieldworkerProvider} from "../../services/fieldworker/fieldworker";
 
 /**
  * Generated class for the CreateLocationPage page.

@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {IonicPage, ModalController, NavController, NavParams, ViewController} from 'ionic-angular';
-import {IndividualProvider} from "../../../providers/individual/individual";
-import {CensusSubmissionProvider} from "../../../providers/census-submission/census-submission";
-import {LocationsProvider} from "../../../providers/locations/locations-provider";
-import {SocialGroupProvider} from "../../../providers/social-group/social-group";
-import {VisitsProvider} from "../../../providers/visits/visits";
+import {IndividualProvider} from "../../../services/individual/individual";
+import {CensusSubmissionProvider} from "../../../services/census-submission/census-submission";
+import {LocationsProvider} from "../../../services/locations/locations-provider";
+import {SocialGroupProvider} from "../../../services/social-group/social-group";
+import {VisitsProvider} from "../../../services/visits/visits";
 import {Location} from "../../../model/locations";
 import {SocialGroup} from "../../../model/social-groups";
 import {Visit} from "../../../model/visit";

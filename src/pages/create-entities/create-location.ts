@@ -12,11 +12,11 @@ import {
 
 import {Geolocation} from "@ionic-native/geolocation";
 import {Location} from "../../model/locations";
-import {NetworkConfigProvider} from "../../providers/network-config/network-config";
-import {LocationsProvider} from "../../providers/locations/locations-provider";
-import {SystemConfigProvider} from "../../providers/system-config/system-config";
+import {NetworkConfigProvider} from "../../services/network-config/network-config";
+import {LocationsProvider} from "../../services/locations/locations-provider";
+import {SystemConfigProvider} from "../../services/system-config/system-config";
 import {LocationFormGroup} from "../../census-forms/location-form";
-import {AuthProvider} from "../../providers/authentication/authentication";
+import {AuthProvider} from "../../services/AuthenticationService/authentication";
 import {Fieldworker} from "../../model/fieldworker";
 
 /**
