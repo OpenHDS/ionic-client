@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {Network} from '@ionic-native/network/ngx';
+import { Network } from '@ionic-native/network/ngx';
 
 /*
   Generated class for the NetworkConfigProvider provider.
@@ -15,24 +15,26 @@ export class NetworkConfigurationService {
   connected = true;
 
   constructor(public http: HttpClient, public network: Network) {
-    // Check if online when initially loaded. Uses navigator. Once checked Native Network plugin watches for changes.
-    if (!navigator.onLine) {
+    console.log('Hello NetworkConfigurationService');
+
+    //Check if online when initially loaded. Uses navigator. Once checked Native Network plugin watches for changes.
+    if(!navigator.onLine){
       this.connected = false;
-      console.log('NAVIGATOR: offline');
+      console.log("NAVIGATOR: offline")
     } else {
-      console.log('NAVIGATOR: online');
+      console.log("NAVIGATOR: online");
     }
   }
 
   private connection = this.network.onConnect().subscribe(() => {
     this.connected = true;
-    console.log('Network connection!');
+    console.log("Network connection!");
 
   });
 
   private disconnected = this.network.onDisconnect().subscribe(() => {
     this.connected = false;
-    console.log('No network connection!');
+    console.log("No network connection!");
   });
 
   isConnected(): boolean {
