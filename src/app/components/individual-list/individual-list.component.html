@@ -1,3 +1,19 @@
-<p>
-  individual-list works!
-</p>
+<div>
+  <ion-list no-lines>
+    <ion-card *ngFor="let ind of individualDetails" (click)="this.selectIndividual(ind)">
+      <ion-card-content>
+        <h5> {{ind.firstName}} {{ind.lastName}}</h5>
+        <h5> Ext Id: {{ind.extId}}</h5>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</div>
+
+<div>
+  <ion-button float-sm-left [disabled]="this.selectedPage === 1" fill="outline" (click)="changePage(this.selectedPage - 1)">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <ion-button float-sm-right [disabled]="this.selectedPage === pageCount" fill="outline" (click)="changePage(this.selectedPage + 1)">
+    <ion-icon name="arrow-forward"></ion-icon>
+  </ion-button>
+</div>
