@@ -17,5 +17,8 @@ import {Component, Input} from "@angular/core";
 })
 export class OpenhdsTitleHeaderComponent {
   @Input() headerTitle: string;
+
+  constructor(){
+  }
 }
 
