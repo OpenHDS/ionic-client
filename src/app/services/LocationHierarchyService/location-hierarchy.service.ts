@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {DatabaseService} from '../DatabaseService/database-service';
 import {OpenhdsDb} from '../DatabaseService/openhds-db';
 import {SystemConfigService} from '../SystemService/system-config.service';
-import {HierarchyLevels} from '../../models/hierarchy-levels';
+import {HierarchyLevel} from '../../models/hierarchy-level';
 import {Hierarchy} from '../../models/hierarchy';
 
 
@@ -35,7 +35,7 @@ export class LocationHierarchyService extends DatabaseService {
         hier.forEach(x => this.insertHierarchy(x));
     }
 
-    getLevels(): Promise<HierarchyLevels[]> {
+    getLevels(): Promise<HierarchyLevel[]> {
         return this.db.levels.toArray();
     }
 
@@ -47,7 +47,7 @@ export class LocationHierarchyService extends DatabaseService {
         return this.db.locationhierarchies.where('extId').equals(extId)[0];
     }
     // Abstract Updates and Adds to prevent errors
-    async insertLevels(lev: HierarchyLevels) {
+    async insertLevels(lev: HierarchyLevel) {
         this.db.levels.add(lev).catch(err => console.log(err));
     }
 

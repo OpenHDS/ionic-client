@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {SocialGroup} from '../../models/social-groups';
+import {SocialGroup} from '../../models/social-group';
 import {UUID} from 'angular2-uuid';
 import {Events} from '@ionic/angular';
 import {DatabaseService} from '../DatabaseService/database-service';

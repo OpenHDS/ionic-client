@@ -1,8 +1,8 @@
-import {HierarchyLevels} from './hierarchy-levels';
+import {HierarchyLevel} from './hierarchy-level';
 
 export class Hierarchy {
   extId: string;
-  level: HierarchyLevels;
+  level: HierarchyLevel;
   parent: Hierarchy;
   name: string;
   uuid: string;

@@ -1,4 +1,4 @@
-export class HierarchyLevels {
+export class HierarchyLevel {
   extId: string;
   name: string;
   uuid: string;

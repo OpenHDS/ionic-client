@@ -1,0 +1,21 @@
+<div>
+  <ion-list no-lines>
+    <ion-card *ngFor="let sg of socialGroupDetails"
+              (click)="this.selectSocialGroup(sg)">
+      <ion-card-content>
+        <h1>{{sg.groupName}}</h1>
+        <h5> Group Head: {{sg.groupHead.firstName}} {{sg.groupHead.lastName}}</h5>
+        <h5> Ext Id: {{sg.extId}}</h5>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</div>
+
+<div>
+  <ion-button float-sm-left [disabled]="this.selectedPage === 1" fill="outline" (click)="changePage(this.selectedPage - 1)">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-button>
+  <ion-button float-sm-right [disabled]="this.selectedPage === pageCount" fill="outline" (click)="changePage(this.selectedPage + 1)">
+    <ion-icon name="arrow-forward"></ion-icon>
+  </ion-button>
+</div>

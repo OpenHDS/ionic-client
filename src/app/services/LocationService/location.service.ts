@@ -1,6 +1,6 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Location } from '../../models/locations';
+import { Location } from '../../models/location';
 import { UUID } from 'angular2-uuid';
 import {DatabaseService} from '../DatabaseService/database-service';
 import {OpenhdsDb} from '../DatabaseService/openhds-db';
@@ -128,6 +128,11 @@ export class LocationService extends DatabaseService {
     locLevel.level = level.level;
 
     return locLevel;
+  }
+
+  async filterLocationsByParentLevel(parentLevel) {
+    let allLocations = await this.getAllLocations();
+    return allLocations.filter(x => x.locationLevel.extId == parentLevel);
   }
 
   getLocationDBCount(): Promise<Number> {

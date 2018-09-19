@@ -1,18 +1,18 @@
 import Dexie from 'dexie';
-import {SocialGroup} from '../../models/social-groups';
-import {HierarchyLevels} from '../../models/hierarchy-levels';
+import {SocialGroup} from '../../models/social-group';
+import {HierarchyLevel} from '../../models/hierarchy-level';
 import {Hierarchy} from '../../models/hierarchy';
 import {Fieldworker} from '../../models/fieldworker';
-import {Location} from '../../models/locations';
+import {Location} from '../../models/location';
 import {Individual} from '../../models/individual';
-import {DataError} from '../../models/data-errors';
+import {DataError} from '../../models/data-error';
 import {CensusIndividual} from '../../models/census-individual';
 import {Visit} from '../../models/visit';
 import {User} from '../../models/user';
 
 export class OpenhdsDb extends Dexie {
   fieldworkers: Dexie.Table<Fieldworker, string>;
-  levels: Dexie.Table<HierarchyLevels, string>;
+  levels: Dexie.Table<HierarchyLevel, string>;
   locationhierarchies: Dexie.Table<Hierarchy, string>;
   locations: Dexie.Table<Location, string>;
   socialGroup: Dexie.Table<SocialGroup, string>;

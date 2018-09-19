@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {DataError} from '../../models/data-errors';
+import {DataError} from '../../models/data-error';
 import {UUID} from 'angular2-uuid';
 import {OpenhdsDb} from '../DatabaseService/openhds-db';
 

@@ -1,5 +1,3 @@
-import {Hierarchy} from './hierarchy';
-
 export class Location {
   extId: string;
   locationName: string;

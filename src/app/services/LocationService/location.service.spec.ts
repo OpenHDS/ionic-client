@@ -5,7 +5,7 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {Injectable} from '@angular/core';
 import {Network} from '@ionic-native/network';
 import Dexie from 'dexie';
-import {Location} from '../../models/locations';
+import {Location} from '../../models/location';
 import {LocationService} from './location.service';
 
 import {DatabaseService} from '../DatabaseService/database-service';

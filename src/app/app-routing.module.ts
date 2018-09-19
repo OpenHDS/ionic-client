@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'fieldworker-dash', loadChildren: './pages/fieldworker-dash/fieldworker-dash.module#FieldworkerDashPageModule' },
   { path: 'database-sync', loadChildren: './pages/database-sync/database-sync.module#DatabaseSyncPageModule' },
   { path: 'system-config', loadChildren: './pages/system-config/system-config.module#SystemConfigPageModule' },
+  { path: 'baseline', loadChildren: './pages/baseline-census/baseline-census.module#BaselineCensusPageModule' },
 
 ];
 

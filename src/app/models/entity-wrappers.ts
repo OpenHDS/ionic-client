@@ -1,4 +1,4 @@
-import {Location} from './locations';
+import {Location} from './location';
 
 export class Locations {
   locations: Array<Object>;
