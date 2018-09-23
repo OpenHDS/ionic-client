@@ -54,4 +54,9 @@ export class LocationHierarchyService extends DatabaseService {
     async insertHierarchy(hierarchy: Hierarchy) {
         this.db.locationhierarchies.add(hierarchy).catch(err => console.log(err));
     }
+
+    async findHierarchyByParentLevelExtId(extId){
+      return await this.db.locationhierarchies.where('extId').equals(extId).toArray();
+
+    }
 }

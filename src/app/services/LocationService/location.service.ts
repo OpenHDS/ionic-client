@@ -8,6 +8,8 @@ import {AuthService} from '../AuthService/auth.service';
 import {FieldworkerService} from '../FieldworkerService/fieldworker.service';
 import {SystemConfigService} from '../SystemService/system-config.service';
 import {Hierarchy} from '../../models/hierarchy';
+import {Events} from "@ionic/angular";
+import {LocationHierarchyService} from "../LocationHierarchyService/location-hierarchy.service";
 
 
 /*
@@ -23,8 +25,8 @@ import {Hierarchy} from '../../models/hierarchy';
 export class LocationService extends DatabaseService {
   public db: OpenhdsDb;
 
-  constructor(public http: HttpClient, public authProvider: AuthService, public fwProvider: FieldworkerService,
-              public systemConfig: SystemConfigService) {
+  constructor(public http: HttpClient, public event: Events, public authProvider: AuthService, public fwProvider: FieldworkerService,
+              public systemConfig: SystemConfigService, public locHierarchyService: LocationHierarchyService) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
@@ -35,8 +37,8 @@ export class LocationService extends DatabaseService {
   }
 
   // Get all location in the database
-  getAllLocations() {
-      return this.db.locations.toArray();
+  async getAllLocations() {
+      return await this.db.locations.toArray();
   }
 
   async saveDataLocally(loc: Location) {
@@ -130,9 +132,11 @@ export class LocationService extends DatabaseService {
     return locLevel;
   }
 
-  async filterLocationsByParentLevel(parentLevel) {
+  async filterLocationsByParentLevel(parentLevel: string) {
     let allLocations = await this.getAllLocations();
-    return allLocations.filter(x => x.locationLevel.extId == parentLevel);
+    allLocations = allLocations.filter(x => x.locationLevel === parentLevel || x.locationLevel.extId === parentLevel);
+    console.log(allLocations);
+    return allLocations;
   }
 
   getLocationDBCount(): Promise<Number> {
