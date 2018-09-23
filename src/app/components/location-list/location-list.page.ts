@@ -1,38 +1,34 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {RefreshObservable} from "../../services/RefreshObservable";
 import {Hierarchy} from "../../models/hierarchy";
-import {Events} from "@ionic/angular";
 import {NetworkConfigurationService} from "../../services/NetworkService/network-config";
 import {LocationService} from "../../services/LocationService/location.service";
 import {Router} from "@angular/router";
 import {Location} from "../../models/location";
+import {Events} from "@ionic/angular";
+import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 
 @Component({
   selector: 'location-list',
-  templateUrl: './location-list.component.html',
-  styleUrls: ['./location-list.component.scss']
+  templateUrl: './location-list.page.html',
+  styleUrls: ['./location-list.page.scss']
 })
-export class LocationListComponent implements OnInit {
+export class LocationListPage implements OnInit {
   itemsPerPage = 7;
   selectedPage = 1;
 
-  locationObserver: RefreshObservable = new RefreshObservable();
-  locations: Location[];
+  locations: Location[] = [];
   @Input() parentLevel: Hierarchy;
   @Input() collectedBy: string;
   @Output() selectedLoc = new EventEmitter<Location>();
-  selectedLocation: Location;
 
-  constructor(public ev: Events, public router: Router, public locProvider: LocationService,
+  constructor(public syncObserver: SynchonizationObservableService, public router: Router, public locProvider: LocationService,
               public networkConfig: NetworkConfigurationService) {
 
-    this.locationObserver.subscribe(async (locations) => {
-      this.locations = locations;
-    });
 
-    this.ev.subscribe('syncDb', () => {
-      this.locProvider.loadInitData().then(async () => await this.getAllLocations())
-        .catch(err => console.log(err));
+
+    this.syncObserver.subscribe("Location:Create:ListUpdate", async () => {
+      this.getAllLocations().then(() => this.changePage(1));
+      console.log(this.locations);
     });
   }
 
@@ -41,15 +37,10 @@ export class LocationListComponent implements OnInit {
   }
 
   async getAllLocations() {
-    let locations = await this.locProvider.filterLocationsByParentLevel(this.parentLevel.extId);
-    this.locationObserver.publishChange(locations);
+    this.locations = await this.locProvider.filterLocationsByParentLevel(this.parentLevel.extId);
   }
 
   selectLocation(location: Location) {
-    if (this.selectedLocation != null)
-      this.locations[this.locations.indexOf(this.selectedLocation)].selected = false;
-    this.selectedLocation = location;
-    location.selected = true;
     this.selectedLoc.emit(location);
   }
 

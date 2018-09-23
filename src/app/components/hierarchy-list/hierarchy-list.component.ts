@@ -1,9 +1,9 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {RefreshObservable} from "../../services/RefreshObservable";
 import {Hierarchy} from "../../models/hierarchy";
 import {HierarchyLevel} from "../../models/hierarchy-level";
 import {Events} from "@ionic/angular";
 import {LocationHierarchyService} from "../../services/LocationHierarchyService/location-hierarchy.service";
+import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 
 @Component({
   selector: 'hierarchy-list',
@@ -14,8 +14,6 @@ export class HierarchyListComponent implements OnInit {
   itemsPerPage = 7;
   selectedPage = 1;
 
-  levelsObserver: RefreshObservable = new RefreshObservable();
-  hierarchyObserver: RefreshObservable = new RefreshObservable();
   parent: Hierarchy;
   hierarchy: Hierarchy[] = [];
   levels: HierarchyLevel[] = [];
@@ -24,24 +22,27 @@ export class HierarchyListComponent implements OnInit {
   selectedHierarchy = new EventEmitter<Hierarchy>();
   levelInHierarchy: number = 2;
 
-  constructor( public ev: Events,
+  constructor( public ev: Events, public syncObserver: SynchonizationObservableService,
               public lhProvider: LocationHierarchyService) {
 
-    this.levelsObserver.subscribe(async (levels) => {
+    this.syncObserver.subscribe('hierarchyLevels',async (levels) => {
+      console.log("Levels sync");
       this.levels = levels;
     });
 
-    this.hierarchyObserver.subscribe(async (hierarchy) => {
-      this.hierarchy = hierarchy
+    this.syncObserver.subscribe('hierarchy', async (hierarchy) => {
+      console.log("Hierarchy sync");
+      this.hierarchy = hierarchy;
     });
 
-    this.ev.subscribe('syncDb', () => {
-      this.lhProvider.getLevels().then(async (lvls) => this.levelsObserver.publishChange(lvls.sort((a,b) => {
+    this.syncObserver.subscribe('hierarchySync', () => {
+      console.log("Hierarchy sync!");
+      this.lhProvider.getLevels().then(async (lvls) => this.syncObserver.publishChange('hierarchyLevels', lvls.sort((a,b) => {
         return a.keyIdentifier - b.keyIdentifier;
       }).filter(x => x.keyIdentifier > 1))).catch(err => console.log(err));
 
       this.lhProvider.getHierarchy().then(async (locHierarchy) =>
-        this.hierarchyObserver.publishChange(locHierarchy));
+        this.syncObserver.publishChange('hierarchy', locHierarchy));
     });
 
 

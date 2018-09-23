@@ -4,13 +4,10 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import {OpenhdsTitleHeaderComponent} from "./openhds-title-header/openhds-title-header.component";
 import {HierarchyListComponent} from "./hierarchy-list/hierarchy-list.component";
-import {LocationListComponent} from "./location-list/location-list.component";
 import {SocialGroupListComponent} from "./social-group-list/social-group-list.component";
 import {IndividualListComponent} from "./individual-list/individual-list.component";
-import {LocationHierarchyService} from "../services/LocationHierarchyService/location-hierarchy.service";
-import {LocationService} from "../services/LocationService/location.service";
-import {SocialGroupService} from "../services/SocialGroupService/social-group.service";
-import {IndividualService} from "../services/IndividualService/individual.service";
+
+import {HelpPopoverComponent} from "./help-popover/help-popover.component";
 
 @NgModule({
   imports: [
@@ -22,22 +19,19 @@ import {IndividualService} from "../services/IndividualService/individual.servic
   declarations: [
     OpenhdsTitleHeaderComponent,
     HierarchyListComponent,
-    LocationListComponent,
     SocialGroupListComponent,
-    IndividualListComponent
+    IndividualListComponent,
+    HelpPopoverComponent
   ],
   exports: [
     OpenhdsTitleHeaderComponent,
     HierarchyListComponent,
-    LocationListComponent,
     SocialGroupListComponent,
-    IndividualListComponent
+    IndividualListComponent,
+    HelpPopoverComponent
   ],
   providers: [
-    LocationHierarchyService,
-    LocationService,
-    SocialGroupService,
-    IndividualService
+
   ],
   entryComponents: [],
 })

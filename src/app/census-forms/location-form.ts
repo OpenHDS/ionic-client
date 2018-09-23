@@ -71,7 +71,7 @@ export class LocationFormGroup extends FormGroup {
     return messages;
   }
 
-  getFormHelpMessage(formLabel) {
+  getFormHelpMessage() {
     return this.formHelpMessages.type;
   }
 }

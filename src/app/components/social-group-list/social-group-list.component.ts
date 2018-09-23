@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {RefreshObservable} from "../../services/RefreshObservable";
+import {Observable} from "../../services/Observable";
 import {SocialGroup} from "../../models/social-group";
-import {Events} from "@ionic/angular";
 import {SocialGroupService} from "../../services/SocialGroupService/social-group.service";
 import {SystemConfigService} from "../../services/SystemService/system-config.service";
 import {Location} from "../../models/location";
+import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 
 @Component({
   selector: 'social-group-list',
@@ -15,16 +15,15 @@ export class SocialGroupListComponent implements OnInit {
   hierarchyLookupLevel;
   itemsPerPage = 7;
   selectedPage = 1;
-  sgObserver: RefreshObservable = new RefreshObservable();
   @Input() sgLocation: Location;
   @Input() collectedBy: string;
   socialGroups: SocialGroup[];
   @Output() selectedSg = new EventEmitter<SocialGroup>();
   selectedSGDisplay: SocialGroup;
 
-  constructor(public ev: Events, public sgProvider: SocialGroupService,
+  constructor(public syncObserver: SynchonizationObservableService, public sgProvider: SocialGroupService,
               public systemConfig: SystemConfigService) {
-    this.ev.subscribe("submitSG", (sg) => {
+    this.syncObserver.subscribe("submitSG", (sg) => {
       console.log(sg.sg);
       this.sgProvider.loadInitData().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err))
         .then(() =>
@@ -34,11 +33,11 @@ export class SocialGroupListComponent implements OnInit {
         });
     });
 
-    this.ev.subscribe('syncDb', () => {
+    this.syncObserver.subscribe('socialGroupSync', () => {
       this.sgProvider.loadInitData().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err));
     });
 
-    this.sgObserver.subscribe(async (sgs) => {
+    this.syncObserver.subscribe("socialGroups", async (sgs) => {
       this.socialGroups = sgs;
     });
 
@@ -51,7 +50,7 @@ export class SocialGroupListComponent implements OnInit {
 
   async getAllSocialGroups(){
     let sgs = await this.sgProvider.getAllSocialGroups();
-    this.sgObserver.publishChange(sgs);
+    this.syncObserver.publishChange("socialGroups", sgs);
   }
 
   ionViewDidLoad() {

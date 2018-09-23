@@ -1,9 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {RefreshObservable} from "../../services/RefreshObservable";
 import {Individual} from "../../models/individual";
 import {SocialGroup} from "../../models/social-group";
-import {Events} from "@ionic/angular";
 import {IndividualService} from "../../services/IndividualService/individual.service";
+import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 
 @Component({
   selector: 'individual-list',
@@ -14,15 +13,14 @@ export class IndividualListComponent implements OnInit {
   itemsPerPage = 7;
   selectedPage = 1;
 
-  indObserver: RefreshObservable = new RefreshObservable();
   @Input() sg: SocialGroup;
   @Input() loc: Location;
   @Input() collectedBy: string;
   @Output() selectedIndividual = new EventEmitter<Individual>();
   individuals: Individual[];
 
-  constructor(public ev: Events, public indProvider: IndividualService) {
-    this.ev.subscribe("submitIndividual", async (ind) => {
+  constructor(public syncObserver: SynchonizationObservableService, public indProvider: IndividualService) {
+    this.syncObserver.subscribe("submitIndividual", async (ind) => {
       await this.getAllIndividuals().catch(err => console.log(err))
         .then(() =>
         {
@@ -31,11 +29,12 @@ export class IndividualListComponent implements OnInit {
         });
     });
 
-    this.ev.subscribe('syncDb', () => {
+    this.syncObserver.subscribe('syncIndividual', () => {
+      console.log("Sync Individual Subscription...");
       this.indProvider.loadInitData().then(async () => await this.getAllIndividuals()).catch(err => console.log(err));
     });
 
-    this.indObserver.subscribe(async (ind) => {
+    this.syncObserver.subscribe("individual", async (ind) => {
       this.individuals = ind;
     });
   }
@@ -46,7 +45,7 @@ export class IndividualListComponent implements OnInit {
 
   async getAllIndividuals(){
     let ind = await this.indProvider.getAllIndividuals();
-    this.indObserver.publishChange(ind);
+    this.syncObserver.publishChange("individual", ind);
   }
 
   filterBySGExtId(){
