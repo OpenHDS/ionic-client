@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'create-social-group', loadChildren: './pages/create-entity/create-social-group/create-social-group.module#CreateSocialGroupPageModule' },
   { path: 'create-individual', loadChildren: './pages/create-entity/create-individual/create-individual.module#CreateIndividualPageModule' },
   { path: 'create-visit', loadChildren: './pages/create-entity/create-visit/create-visit.module#CreateVisitPageModule' },
+  { path: 'search', loadChildren: './pages/search/search.module#SearchPageModule' },
 ];
 
 @NgModule({

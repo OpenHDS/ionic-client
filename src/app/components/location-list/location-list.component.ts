@@ -9,10 +9,10 @@ import {SynchonizationObservableService} from "../../services/SynchonizationObse
 
 @Component({
   selector: 'location-list',
-  templateUrl: './location-list.page.html',
-  styleUrls: ['./location-list.page.scss']
+  templateUrl: './location-list.component.html',
+  styleUrls: ['./location-list.component.scss']
 })
-export class LocationListPage implements OnInit {
+export class LocationListComponent implements OnInit {
   itemsPerPage = 7;
   selectedPage = 1;
 

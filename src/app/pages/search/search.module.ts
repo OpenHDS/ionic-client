@@ -5,14 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { BaselineCensusPage } from './baseline-census.page';
+import { SearchPage } from './search.page';
 import {ComponentsModule} from "../../components/components";
-import {LocationListComponent} from "../../components/location-list/location-list.component";
 
 const routes: Routes = [
   {
     path: '',
-    component: BaselineCensusPage
+    component: SearchPage
   }
 ];
 
@@ -24,7 +23,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [BaselineCensusPage, LocationListComponent],
-  providers: []
+  declarations: [SearchPage]
 })
-export class BaselineCensusPageModule {}
+export class SearchPageModule {}
