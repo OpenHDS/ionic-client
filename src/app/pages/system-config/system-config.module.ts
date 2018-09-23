@@ -1,12 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
-import { IonicModule } from '@ionic/angular';
-
-import { SystemConfigPage } from './system-config.page';
-import {ComponentsModule} from "../../components/components";
+import {SystemConfigPage} from "./system-config.page";
 
 const routes: Routes = [
   {
@@ -16,13 +10,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ComponentsModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes)
-  ],
-  declarations: [SystemConfigPage]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
-export class SystemConfigPageModule {}
+export class SystemConfigPageModule { }

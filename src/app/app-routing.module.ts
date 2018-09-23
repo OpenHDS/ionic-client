@@ -9,7 +9,10 @@ const routes: Routes = [
   { path: 'database-sync', loadChildren: './pages/database-sync/database-sync.module#DatabaseSyncPageModule' },
   { path: 'system-config', loadChildren: './pages/system-config/system-config.module#SystemConfigPageModule' },
   { path: 'baseline', loadChildren: './pages/baseline-census/baseline-census.module#BaselineCensusPageModule' },
-
+  { path: 'create-location', loadChildren: './pages/create-entity/create-location/create-location.module#CreateLocationPageModule' },
+  { path: 'create-social-group', loadChildren: './pages/create-entity/create-social-group/create-social-group.module#CreateSocialGroupPageModule' },
+  { path: 'create-individual', loadChildren: './pages/create-entity/create-individual/create-individual.module#CreateIndividualPageModule' },
+  { path: 'create-visit', loadChildren: './pages/create-entity/create-visit/create-visit.module#CreateVisitPageModule' },
 ];
 
 @NgModule({

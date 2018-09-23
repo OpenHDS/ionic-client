@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {MenuController} from '@ionic/angular';
+import {Events, MenuController, NavController} from '@ionic/angular';
 import {AuthService} from '../../services/AuthService/auth.service';
+import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 
 @Component({
   selector: 'login',
@@ -16,14 +17,14 @@ export class LoginPage implements OnInit {
   loginAsSuper = true;
   showLoginError = false;
 
-  constructor(public router: Router, public menu: MenuController,
+  constructor(public router: Router, public ev: Events, public menu: MenuController, public syncObserver: SynchonizationObservableService,
+              public navController: NavController,
               public authProvider: AuthService, public formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
       username: ['', Validators.compose([Validators.required])],
       password: ['', Validators.compose([Validators.required])],
     });
-
   }
 
   ngOnInit() {
@@ -49,13 +50,21 @@ export class LoginPage implements OnInit {
 
       if (this.loginAsSuper) {
         if (await this.authProvider.login(value.username, value.password, this.loginAsSuper)) {
-          this.router.navigate(['/supervisor-dash']);
+          this.router.navigate(['/supervisor-dash']).then(() => {
+            console.log("Logging in...");
+            this.syncObserver.publishChange('Login:Admin:Success', true);
+          });
+
           this.authProvider.setMenu();
+
+
         }
+
       } else {
         if (await this.authProvider.login(value.username, value.password)) {
-          this.router.navigate(['/fieldworker-dash']);
+          await this.router.navigate(['/fieldworker-dash']);
           this.authProvider.setMenu();
+          this.ev.publish("Login:Fieldworker:Success");
         }
       }
     } else {

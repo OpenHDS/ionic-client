@@ -10,7 +10,7 @@ import {CensusSubmissionService} from '../../services/CensusSubmissionService/ce
 import {FieldworkerService} from '../../services/FieldworkerService/fieldworker.service';
 
 @Component({
-  selector: 'app-synchronize-db',
+  selector: 'synchronize-db',
   templateUrl: './database-sync.page.html',
   styleUrls: ['./database-sync.page.scss'],
 })
@@ -23,7 +23,7 @@ export class DatabaseSyncPage implements OnInit {
   individualSyncSuccess: boolean;
   errors: Object[] = [];
 
-  constructor(public events: Events, public loadingCtrl: LoadingController, public networkConfig: NetworkConfigurationService,
+  constructor(public event: Events, public loadingCtrl: LoadingController, public networkConfig: NetworkConfigurationService,
               public errProvider: ErrorService,
               public lhProvider: LocationHierarchyService, public locProvider: LocationService,
               public sgProvider: SocialGroupService, public indProvider: IndividualService,
@@ -60,7 +60,6 @@ export class DatabaseSyncPage implements OnInit {
       this.errors.push('Fieldworker Sync: ' + this.errProvider.mapErrorMessage(err.status));
       this.fieldworkerSyncSuccess = false; });
     loading.dismiss();
-    this.publishSynchronizationEvent('fieldworkerSync');
   }
 
   async syncLocLevels() {
@@ -80,7 +79,6 @@ export class DatabaseSyncPage implements OnInit {
       this.locationLevelsSyncSuccess = false;
     });
     loading.dismiss();
-    this.publishSynchronizationEvent('hierarchySync');
 
   }
   async syncLocations() {
@@ -95,7 +93,6 @@ export class DatabaseSyncPage implements OnInit {
       this.locationSyncSuccess = false;
     });
     loading.dismiss();
-    this.publishSynchronizationEvent('locationSync');
   }
 
   async syncSocialGroups() {
@@ -110,7 +107,6 @@ export class DatabaseSyncPage implements OnInit {
       this.sgSyncSuccess = false;
     });
     loading.dismiss();
-    this.publishSynchronizationEvent('socialGroupSync');
   }
 
   async syncIndividuals() {
@@ -125,7 +121,6 @@ export class DatabaseSyncPage implements OnInit {
       this.individualSyncSuccess = false;
     });
     loading.dismiss();
-    this.publishSynchronizationEvent('individualSync');
   }
 
   async syncNewDataWithServer() {
@@ -140,9 +135,5 @@ export class DatabaseSyncPage implements OnInit {
       await this.censusProvider.sendCensusIndividual(cenInd);
     });
 
-  }
-
-  publishSynchronizationEvent(topic) {
-    this.events.publish(topic, true);
   }
 }
