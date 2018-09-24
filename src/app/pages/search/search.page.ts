@@ -102,16 +102,18 @@ export class SearchPage implements OnInit {
   async returnSelection(item){
     switch (this.entityType) {
       case 'locations':
-        this.syncObservable.publishChange("locationSearch", item);
+        this.syncObservable.publishChange("Search:Location", item);
         break;
       case 'socialgroups':
-        await this.syncObservable.publishChange("socialGroupSearch", item);
+        await this.syncObservable.publishChange("Search:SocialGroup", item);
         break;
       case 'individuals':
-        if (this.searchForHead)
-          this.syncObservable.publishChange("socialGroupHeadSearch", item);
-        else
-          this.syncObservable.publishChange("individualSearch", item);
+        if (this.searchForHead) {
+          this.syncObservable.publishChange("Search:SocialGroup:Head", item);
+          this.router.navigate(["/create-social-group"]);
+
+        }else
+          this.syncObservable.publishChange("Search:Individual", item);
         break;
     }
     this.router.navigate(["/baseline"]);

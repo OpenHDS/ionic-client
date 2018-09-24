@@ -5,7 +5,7 @@ import {SocialGroup} from "../../models/social-group";
 import {Individual} from "../../models/individual";
 import {LocationHierarchyService} from "../../services/LocationHierarchyService/location-hierarchy.service";
 import {Location} from "../../models/location";
-import {Events, NavController} from "@ionic/angular";
+import {NavController} from "@ionic/angular";
 import {NavigationService} from "../../services/NavigationService/navigation.service";
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 
@@ -14,6 +14,7 @@ import {SynchonizationObservableService} from "../../services/SynchonizationObse
   templateUrl: './baseline-census.page.html',
   styleUrls: ['./baseline-census.page.scss'],
 })
+
 export class BaselineCensusPage implements OnInit {
   readonly PAGE_NAME = 'Baseline Census';
   levels: Array<HierarchyLevel>;
@@ -29,8 +30,15 @@ export class BaselineCensusPage implements OnInit {
               public navService: NavigationService) {
 
     this.syncObservable.subscribe("Location:Create:Success", (location) => {
-      console.log(location);
       this.setSelectedLocation(location);
+    });
+
+    this.syncObservable.subscribe("SocialGroup:Create:Success", (socialGroup) => {
+      this.setSelectedSocialGroup(socialGroup);
+    });
+
+    this.syncObservable.subscribe("Individual:Create:Success", (individual) => {
+      this.setSelectedSocialGroup(individual);
     });
 
   }
@@ -79,10 +87,7 @@ export class BaselineCensusPage implements OnInit {
         }
         break;
       case 'individual':
-        if (this.selectedIndividuals !== undefined && this.selectedIndividuals.length > 0) {
-          this.moveToNextBaselineStep('visit');
-        }
-        break;
+       break;
       default: break;
     }
   }
@@ -91,15 +96,22 @@ export class BaselineCensusPage implements OnInit {
     switch (this.baselineStep) {
       case 'location':
         this.navService.data = {collectedBy: this.collectedBy, parentLevel: this.selectedHierarchy[this.selectedHierarchy.length -1].extId};
-        console.log((this.navService.data));
         this.navController.navigateForward("/create-location").then(() => {
           console.log("Baseline: Create Location Event");
           this.syncObservable.publishChange("Baseline:CreateLocation");
         });
         break;
       case 'socialGroup':
+        this.navService.data = {collectedBy: this.collectedBy, location: this.selectedLocation};
+        this.navController.navigateForward("/create-social-group").then(() => {
+          this.syncObservable.publishChange("Baseline:CreateSocialGroup");
+        });
         break;
       case 'individual':
+        this.navService.data = {collectedBy: this.collectedBy, loc: this.selectedLocation, sg: this.selectedSocialGroup}
+        this.navController.navigateForward("/create-individual").then(() => {
+          this.syncObservable.publishChange("Baseline:CreateIndividual");
+        });
         break;
       default: break;
     }

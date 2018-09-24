@@ -1,9 +1,54 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>create-social-group</ion-title>
-  </ion-toolbar>
-</ion-header>
+<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
 
-<ion-content padding>
+<ion-content>
+  <div *ngIf="!this.netConfig.isConnected()">
+    <ion-card color="danger">
+      <ion-card-content>
+        <p>There is currently no network connection. You data will be uploaded to the server when there
+          is a connection!</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <form novalidate [formGroup]="sgForm" (ngSubmit)="submitForm(sgForm)">
+    <ion-item color="danger" *ngIf="formSubmitted && sgForm.invalid">
+      There are problems with the form
+      <ion-list>
+        <ion-item color="danger" *ngFor="let error of sgForm.getFormValidationMessages(sgForm)">
+          {{error}}
+        </ion-item>
+      </ion-list>
+    </ion-item>
+
+    <!------  Form Fields --------->
+    <div class="form-group" *ngFor="let control of sgForm.socialGroupControls">
+      <ion-item>
+        <ion-label>{{control.label}}</ion-label>
+        <ion-input class="form-control"
+                   formControlName="{{control.modelProperty}}"></ion-input>
+        <ion-button type="button" fill="outline" spot="end"
+                [hidden]="control.label != 'Group Type'" (click)="helpPopup(control.label)">
+          <ion-icon name="help-circle" ></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
+        <p color="danger" *ngFor="let error of control.getValidationMessages()">
+          {{error}}
+        </p>
+      </ion-item>
+    </div>
+
+    <br/>
+
+      <ion-button fill="outline" type="submit" [disabled]="formSubmitted && sgForm.invalid">Create Social Group Head</ion-button>
+  </form>
+
+  <br>
+  <ion-toolbar color="primary">Additional Options</ion-toolbar>
+
+  <ion-item>
+      <ion-label>Lookup Social Group Head</ion-label>
+      <ion-toggle [(ngModel)]="lookupSGHead"></ion-toggle>
+  </ion-item>
 
 </ion-content>

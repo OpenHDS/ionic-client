@@ -1,9 +1,56 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>create-individual</ion-title>
-  </ion-toolbar>
-</ion-header>
+<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
 
 <ion-content padding>
+  <div *ngIf="!this.netConfig.isConnected()">
+    <ion-card color="danger">
+      <ion-card-content>
+        <p>There is currently no network connection. You data will be uploaded to the server when there
+          is a connection!</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <form novalidate [formGroup]="individualForm" (ngSubmit)="submitForm(individualForm)">
+    <ion-item color="danger" *ngIf="formSubmitted && individualForm.invalid">
+      There are problems with the form
+      <ion-list>
+        <ion-item color="danger" *ngFor="let error of individualForm.getFormValidationMessages(individualForm)">
+          {{error}}
+        </ion-item>
+      </ion-list>
+    </ion-item>
+
+    <!------  Form Fields --------->
+    <div class="form-group" *ngFor="let control of individualForm.individualFormControls">
+      <ion-item>
+        <ion-label>{{control.label}}</ion-label>
+
+        <ion-input type="date" float-right *ngIf="control.label == 'Date of Birth'" formControlName="{{control.modelProperty}}"
+                 ></ion-input>
+
+        <!---- Other form fields that aren't selection based ---->
+        <ion-input *ngIf="control.label != 'Date of Birth'"
+                   [(ngModel)]="individual[control.modelProperty]"
+                   formControlName="{{control.modelProperty}}"></ion-input>
+        <ion-button type="button" fill="outline" spot="end"
+                [hidden]="control.label != 'Gender' && control.label != 'Partial Date' && control.label != 'Relationship to Head'"
+                (click)="helpPopup(control.label)">
+          <ion-icon name="help-circle" ></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
+        <p color="danger" *ngFor="let error of control.getValidationMessages()">
+          {{error}}
+        </p>
+      </ion-item>
+    </div>
+
+    <div *ngIf="this.createHead; else indButtonBlock">
+      <ion-button fill="outline" [disabled]="!individualForm.valid && this.formSubmitted" type="submit"> Create Head</ion-button>
+    </div>
+    <ng-template #indButtonBlock>
+      <ion-button fill="outline" [disabled]="!individualForm.valid && this.formSubmitted" type="submit"> Create Individual</ion-button>
+    </ng-template>
+  </form>
 
 </ion-content>

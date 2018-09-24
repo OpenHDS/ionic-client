@@ -101,7 +101,7 @@
       </div>
 
       <div *ngIf="this.baselineStep === 'socialGroup'">
-        <ion-button fill="outline" expand="full" responsive>
+        <ion-button fill="outline" expand="full" responsive (click)="this.goToCreatePage()">
           Create Social Group
         </ion-button>
         <br>

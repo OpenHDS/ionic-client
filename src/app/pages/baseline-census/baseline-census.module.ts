@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { BaselineCensusPage } from './baseline-census.page';
 import {ComponentsModule} from "../../components/components";
-import {LocationListComponent} from "../../components/location-list/location-list.component";
 
 const routes: Routes = [
   {
@@ -24,7 +23,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [BaselineCensusPage, LocationListComponent],
+  declarations: [BaselineCensusPage],
   providers: []
 })
 export class BaselineCensusPageModule {}
