@@ -19,6 +19,7 @@ import {SocialGroupService} from "./services/SocialGroupService/social-group.ser
 import {CensusSubmissionService} from "./services/CensusSubmissionService/census-submission.service";
 import {FieldworkerService} from "./services/FieldworkerService/fieldworker.service";
 import {SynchonizationObservableService} from "./services/SynchonizationObserverable/synchonization-observable.service";
+import {VisitService} from "./services/VisitService/visit.service";
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,7 @@ import {SynchonizationObservableService} from "./services/SynchonizationObserver
     LocationService,
     SocialGroupService,
     IndividualService,
+    VisitService,
     CensusSubmissionService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

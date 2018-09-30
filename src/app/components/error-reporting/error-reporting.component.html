@@ -1,0 +1,12 @@
+<ion-item-divider (click)="this.toggleErrorReportingView()">
+  <h6>Report an Error</h6>
+  <ion-icon slot="end" [name]="this.showErrorReporting ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+</ion-item-divider>
+
+<form *ngIf="this.showErrorReporting" novalidate>
+  <ion-textarea
+    placeholder=" Report an error for the data entered above. Fieldworker will be notified of error."
+    [(ngModel)]="this.errorMessage" [ngModelOptions]="{standalone: true}">
+  </ion-textarea>
+  <ion-button fill="outline" (click)="this.saveError()">Submit Error</ion-button>
+</form>

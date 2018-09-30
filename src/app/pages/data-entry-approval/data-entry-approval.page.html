@@ -1,0 +1,209 @@
+<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+
+<ion-content padding>
+  <ion-radio-group (ionChange)="this.loadData()" [(ngModel)]="this.viewMethod" [ngModelOptions]="{standalone: true}">
+  <ion-row>
+    <ion-col inset size="3">
+      <ion-list-header>View Data Entries By: </ion-list-header>
+    </ion-col>
+    <ion-col size="3">
+      <ion-item>
+        <ion-label>Not Approved</ion-label>
+        <ion-radio checked="true" value="notApproved"></ion-radio>
+      </ion-item>
+
+    </ion-col >
+    <ion-col size="3">
+      <ion-item>
+        <ion-label>Approved</ion-label>
+        <ion-radio value="approved"></ion-radio>
+      </ion-item>
+    </ion-col>
+    <ion-col size="3">
+      <ion-item>
+        <ion-label>Approved and Not Approved</ion-label>
+        <ion-radio value="all"></ion-radio>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  </ion-radio-group>
+
+
+  <ion-row>
+    <ion-col size="2">
+      <ion-list inset>
+        <ion-item (click)="this.setSelectedForReview('locations')">Locations
+          <ion-icon name="return-right" slot="end" *ngIf="this.selectedForReview =='locations'"></ion-icon>
+        </ion-item>
+        <br/>
+        <br/>
+        <ion-item (click)="this.setSelectedForReview('socialgroups')"> Social Groups
+          <ion-icon name="return-right" slot="end" *ngIf="this.selectedForReview =='socialgroups'"></ion-icon>
+        </ion-item>
+        <br/>
+        <br/>
+        <ion-item (click)="this.setSelectedForReview('individuals')"> Individuals
+          <ion-icon name="return-right" slot="end" *ngIf="this.selectedForReview =='individuals'"></ion-icon>
+        </ion-item>
+        <br/>
+        <br/>
+        <ion-item (click)="this.setSelectedForReview('visits')"> Visits
+          <ion-icon name="return-right" slot="end" *ngIf="this.selectedForReview =='visits'"></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+
+    <ion-col size="6">
+      <div [ngSwitch]="this.selectedForReview">
+        <div *ngSwitchCase="'locations'">
+          <ion-list lines="full" *ngIf="this.filteredLocations != undefined && this.filteredLocations.length != 0; else elseLocBlock">
+            <ion-item *ngFor="let loc of this.filteredLocations">
+                {{loc.locationName}}
+                <ion-icon name="alert" color="danger" *ngIf="this.loc.errorReported" slot="end"></ion-icon>
+                <ion-icon name="checkbox-outline" color="primary" *ngIf="this.loc.processed" slot="end"></ion-icon>
+                <ion-button slot="end" fill="outline" [color]="this.loc.errorReported ? 'danger': 'primary'"
+                            (click)="this.viewEntryForApproval(loc)">Review Entry</ion-button>
+            </ion-item>
+          </ion-list>
+          <ng-template #elseLocBlock>
+            <ion-item>There are no locations available for approval.</ion-item>
+          </ng-template>
+
+        </div>
+
+        <div *ngSwitchCase="'socialgroups'">
+          <ion-card *ngIf="this.filteredSocialGroups != undefined && this.filteredSocialGroups.length != 0; else elseSGBlock">
+            <ion-card-content>
+              <ion-item *ngFor="let sg of this.filteredSocialGroups">
+                {{sg.groupName}}
+                <ion-icon name="alert" color="danger" *ngIf="this.sg.errorReported" slot="end"></ion-icon>
+                <ion-icon name="checkbox-outline" color="dark" *ngIf="this.sg.processed" slot="end"></ion-icon>
+                <br>
+                <ion-button fill="outline" (click)="this.viewEntryForApproval(sg)">Review Entry</ion-button>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+          <ng-template  #elseSGBlock>
+            <ion-item>There are no social groups available for approval.</ion-item>
+          </ng-template>
+        </div>
+
+        <div *ngSwitchCase="'individuals'">
+          <ion-card *ngIf="this.filteredIndividuals != undefined && this.filteredIndividuals.length != 0; else elseIndBlock">
+            <ion-card-content>
+              <ion-item *ngFor="let ind of this.filteredIndividuals">
+                {{ind.firstName}} {{ind.lastName}}
+                <ion-icon name="alert" color="danger" *ngIf="this.ind.errorReported" slot="end"></ion-icon>
+                <ion-icon name="checkbox-outline" color="dark" *ngIf="this.ind.processed" slot="end"></ion-icon>
+                <br>
+                <ion-button fill="outline" (click)="this.viewEntryForApproval(ind)">Review Entry</ion-button>
+
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+          <ng-template #elseIndBlock>
+            <ion-item>There are no individuals available for approval.</ion-item>
+          </ng-template>
+        </div>
+        <div *ngSwitchCase="'visits'">
+          <ion-card *ngIf="this.filteredVisits != undefined && this.filteredVisits.length != 0; else elseVisitBlock">
+            <ion-card-content>
+              <ion-item *ngFor="let visit of this.filteredVisits">
+                {{visit.uuid}}
+                <ion-icon name="alert" color="danger" *ngIf="this.visit.errorReported" slot="end"></ion-icon>
+                <ion-icon name="checkbox-outline" color="dark" *ngIf="this.visit.processed" slot="end"></ion-icon>
+                <br>
+                <ion-button fill="outline" slot="end" (click)="this.viewEntryForApproval(visit)">Review Entry</ion-button>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+          <ng-template #elseVisitBlock>
+            <ion-item>There are no visits available for approval.</ion-item>
+          </ng-template>
+        </div>
+      </div>
+    </ion-col>
+
+    <ion-col col-4 *ngIf="this.viewEntry == true">
+      <div [ngSwitch]="this.selectedForReview">
+
+        <div *ngSwitchCase="'locations'">
+          <form [formGroup]="locationForm">
+            <div class="form-group" *ngFor="let control of locationForm.locationControls">
+              <ion-item>
+                <ion-label>{{control.label}}</ion-label>
+                <ion-input class="form-control"
+                           formControlName="{{control.modelProperty}}"></ion-input>
+              </ion-item>
+            </div>
+          </form>
+          <br>
+
+          <ion-button fill="outline" (click)="this.approve()">Approve Entry</ion-button>
+          <ion-button color="danger" fill="outline" (click)="this.markForCorrection()">Needs Correction</ion-button>
+
+          <br><br><br><br>
+          <error-reporting [entityId]="this.selectedEntry.extId" [entityType]="this.selectedForReview"></error-reporting>
+
+        </div>
+
+        <div *ngSwitchCase="'socialgroups'">
+          <form [formGroup]="socialGroupForm">
+            <div class="form-group" *ngFor="let control of socialGroupForm.socialGroupControls">
+              <ion-item>
+                <ion-label>{{control.label}}</ion-label>
+                <ion-input class="form-control"
+                           formControlName="{{control.modelProperty}}"></ion-input>
+              </ion-item>
+            </div>
+          </form>
+          <br><br><br><br>
+
+          <ion-button fill="outline" (click)="this.approve()">Approve Entry</ion-button>
+          <ion-button color="danger" fill="outline" (click)="this.markForCorrection()">Needs Correction</ion-button>
+          <br>
+          <error-reporting [entityId]="this.selectedEntry.extId" [entityType]="this.selectedForReview"></error-reporting>
+        </div>
+
+        <div *ngSwitchCase="'individuals'">
+          <form [formGroup]="individualForm">
+            <div class="form-group" *ngFor="let control of individualForm.individualFormControls">
+              <ion-item>
+                <ion-label>{{control.label}}</ion-label>
+                <ion-input class="form-control"
+                           formControlName="{{control.modelProperty}}"></ion-input>
+              </ion-item>
+            </div>
+          </form>
+          <br>
+
+          <ion-button fill="outline" (click)="this.approve()">Approve Entry</ion-button>
+          <ion-button color="danger" fill="outline" (click)="this.markForCorrection()">Needs Correction</ion-button>
+          <br><br><br><br>
+          <error-reporting [entityId]="this.selectedEntry.extId" [entityType]="this.selectedForReview"></error-reporting>
+
+        </div>
+
+        <div *ngSwitchCase="'visits'">
+          <form [formGroup]="visitForm">
+            <div class="form-group" *ngFor="let control of visitForm.visitControls">
+              <ion-item>
+                <ion-label>{{control.label}}</ion-label>
+                <ion-input class="form-control"
+                           formControlName="{{control.modelProperty}}"></ion-input>
+              </ion-item>
+            </div>
+          </form>
+          <br>
+
+          <ion-button fill="outline" (click)="this.approve()">Approve Entry</ion-button>
+          <ion-button color="danger" fill="outline" (click)="this.markForCorrection()">Needs Correction</ion-button>
+          <br><br><br><br>
+          <error-reporting [entityId]="this.selectedEntry.extId" [entityType]="this.selectedForReview"></error-reporting>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+
+
+</ion-content>

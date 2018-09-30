@@ -108,7 +108,7 @@ export class BaselineCensusPage implements OnInit {
         });
         break;
       case 'individual':
-        this.navService.data = {collectedBy: this.collectedBy, loc: this.selectedLocation, sg: this.selectedSocialGroup}
+        this.navService.data = {collectedBy: this.collectedBy, loc: this.selectedLocation, sg: this.selectedSocialGroup};
         this.navController.navigateForward("/create-individual").then(() => {
           this.syncObservable.publishChange("Baseline:CreateIndividual");
         });
@@ -120,5 +120,11 @@ export class BaselineCensusPage implements OnInit {
     this.baselineStep = step;
   }
 
+  isEligableToSubmit(){
+    if(this.selectedIndividuals != undefined && this.selectedIndividuals.length >= 1)
+      return true;
+    else
+      return false;
+  }
 
 }

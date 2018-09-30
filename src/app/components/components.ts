@@ -9,6 +9,7 @@ import {IndividualListComponent} from "./individual-list/individual-list.compone
 
 import {HelpPopoverComponent} from "./help-popover/help-popover.component";
 import {LocationListComponent} from "./location-list/location-list.component";
+import {ErrorReportingComponent} from "./error-reporting/error-reporting.component";
 
 @NgModule({
   imports: [
@@ -19,23 +20,25 @@ import {LocationListComponent} from "./location-list/location-list.component";
   ],
   declarations: [
     OpenhdsTitleHeaderComponent,
+    ErrorReportingComponent,
     HierarchyListComponent,
     LocationListComponent,
     SocialGroupListComponent,
     IndividualListComponent,
-    HelpPopoverComponent
+    HelpPopoverComponent,
   ],
   exports: [
     OpenhdsTitleHeaderComponent,
+    ErrorReportingComponent,
     HierarchyListComponent,
     LocationListComponent,
     SocialGroupListComponent,
     IndividualListComponent,
-    HelpPopoverComponent
+    HelpPopoverComponent,
   ],
   providers: [
 
   ],
-  entryComponents: [HelpPopoverComponent],
+  entryComponents: [HelpPopoverComponent, ErrorReportingComponent],
 })
 export class ComponentsModule {}

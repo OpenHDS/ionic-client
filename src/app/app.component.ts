@@ -30,7 +30,7 @@ export class AppComponent {
     { title: 'Baseline Census', url: '/baseline'},
     { title: 'Search For a Record', url: '/search'},
     { title: 'Synchronization', url: "/database-sync"},
-    { title: 'Data Entry Approval', url: '/approve'},
+    { title: 'Data Entry Approval', url: '/approval'},
     { title: 'System Configurations', url: '/system-config'},
   ];
 

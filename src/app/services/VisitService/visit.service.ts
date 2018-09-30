@@ -29,9 +29,8 @@ export class VisitService extends DatabaseService {
     visits.forEach(x => this.insert(x));
   }
 
-  // Get all location in the database
-  getAllVisits() {
-    return this.db.visits.toArray();
+  async getAllVisits() {
+    return await this.db.visits.toArray();
   }
 
   saveDataLocally(v: Visit) {

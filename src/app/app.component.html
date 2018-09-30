@@ -8,7 +8,7 @@
       </ion-header>
       <ion-content>
 
-        <ion-list>
+        <ion-list lines="full">
           <ion-menu-toggle auto-hide="true" *ngFor="let p of fieldworkerPages">
             <ion-item button (click)="this.openPage(p.url)">
               <ion-label>
@@ -29,7 +29,7 @@
     </ion-header>
     <ion-content>
 
-      <ion-list>
+      <ion-list lines="full">
         <ion-menu-toggle auto-hide="true" *ngFor="let p of adminPages">
           <ion-item button (click)="this.openPage(p.url)">
             <ion-label>
