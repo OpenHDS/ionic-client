@@ -40,8 +40,8 @@ export class SocialGroupService extends DatabaseService {
   }
 
   // Get all social groups in the database
-  getAllSocialGroups() {
-    return this.db.socialGroup.toArray();
+  async getAllSocialGroups() {
+    return await this.db.socialGroup.toArray();
   }
 
   async saveDataLocally(sg: SocialGroup) {
@@ -115,5 +115,10 @@ export class SocialGroupService extends DatabaseService {
     sg.groupType = socialGrp.groupType;
     sg.groupHead = await this.individualProvider.shallowCopy(socialGrp.groupHead);
     return sg;
+  }
+
+  async filterSocialGroupsByLocation(locExtId: string){
+    let sgs = await this.getAllSocialGroups();
+    return sgs.filter(sg => sg.extId.substring(0, locExtId.length) === locExtId);
   }
 }

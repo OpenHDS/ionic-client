@@ -8,7 +8,6 @@ import {Location} from "../../models/location";
 import {Individual} from "../../models/individual";
 import {Visit} from "../../models/visit";
 import {IndividualService} from "../../services/IndividualService/individual.service";
-import {CensusSubmissionService} from "../../services/CensusSubmissionService/census-submission.service";
 import {LocationService} from "../../services/LocationService/location.service";
 import {SocialGroupService} from "../../services/SocialGroupService/social-group.service";
 import {VisitService} from "../../services/VisitService/visit.service";

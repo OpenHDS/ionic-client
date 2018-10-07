@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: 'create-visit', loadChildren: './pages/create-entity/create-visit/create-visit.module#CreateVisitPageModule' },
   { path: 'search', loadChildren: './pages/search/search.module#SearchPageModule' },
   { path: 'approval', loadChildren: './pages/data-entry-approval/data-entry-approval.module#DataEntryApprovalPageModule' },
+  { path: 'entity-correction', loadChildren: './pages/entity-correction/entity-correction.module#EntityCorrectionPageModule' },
 ];
 
 @NgModule({

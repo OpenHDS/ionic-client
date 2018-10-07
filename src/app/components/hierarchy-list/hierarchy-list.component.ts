@@ -11,7 +11,7 @@ import {SynchonizationObservableService} from "../../services/SynchonizationObse
   styleUrls: ['./hierarchy-list.component.scss']
 })
 export class HierarchyListComponent implements OnInit {
-  itemsPerPage = 7;
+  itemsPerPage = 5;
   selectedPage = 1;
 
   parent: Hierarchy;

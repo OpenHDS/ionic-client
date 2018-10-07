@@ -24,6 +24,7 @@ export class BaselineCensusPage implements OnInit {
   selectedSocialGroup: SocialGroup;
   selectedIndividuals: Individual[] = [];
   baselineStep = 'hierarchy';
+  editing = false;
 
   constructor(public syncObservable: SynchonizationObservableService, public locHierarchyService: LocationHierarchyService,
               public navController: NavController,
@@ -41,6 +42,14 @@ export class BaselineCensusPage implements OnInit {
       this.setSelectedSocialGroup(individual);
     });
 
+    if(this.navService.data !== undefined) {
+      this.editing = this.navService.data.editing;
+
+      this.selectedHierarchy = this.navService.data.baselineEdit.selectedHierarchy;
+      this.selectedLocation = this.navService.data.baselineEdit.selectedLocation;
+      this.selectedSocialGroup = this.navService.data.baselineEdit.selectedSocialGroup;
+      this.selectedIndividuals = this.navService.data.baselineEdit.selectedIndividuals;
+    }
   }
 
   async ngOnInit() {
@@ -97,7 +106,6 @@ export class BaselineCensusPage implements OnInit {
       case 'location':
         this.navService.data = {collectedBy: this.collectedBy, parentLevel: this.selectedHierarchy[this.selectedHierarchy.length -1].extId};
         this.navController.navigateForward("/create-location").then(() => {
-          console.log("Baseline: Create Location Event");
           this.syncObservable.publishChange("Baseline:CreateLocation");
         });
         break;
@@ -116,6 +124,7 @@ export class BaselineCensusPage implements OnInit {
       default: break;
     }
   }
+
   moveToNextBaselineStep(step) {
     this.baselineStep = step;
   }
@@ -125,6 +134,27 @@ export class BaselineCensusPage implements OnInit {
       return true;
     else
       return false;
+  }
+
+  segmentChanged(event){
+    this.baselineStep = event.value;
+    this.reloadEntityList()
+  }
+
+  // Send reload event to entity list components
+  reloadEntityList(){
+    switch (this.baselineStep) {
+      case 'location':
+        this.syncObservable.publishChange("Baseline:Reload:Location");
+        break;
+      case 'socialGroup':
+        this.syncObservable.publishChange("Baseline:Reload:SocialGroup");
+        break;
+      case 'individual':
+        this.syncObservable.publishChange("Baseline:Reload:Individual");
+        break;
+      default: break;
+    }
   }
 
 }

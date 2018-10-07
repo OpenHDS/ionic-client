@@ -64,7 +64,7 @@ export class IndividualFormGroup extends FormGroup {
         [Validators.compose([Validators.required,
           Validators.pattern('(M|F)')])]),
       dob: new IndividualFormControl('Date of Birth', 'dob', '',
-        [Validators.compose([])]),
+        []),
       partialDate: new IndividualFormControl('Partial Date', 'partialDate',
           '', Validators.compose([Validators.required, Validators.pattern('(1|2)')]))
     });

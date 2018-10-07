@@ -1,6 +1,24 @@
 <openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
 
 <ion-content padding>
+  <!--Segment selection, present only when a fieldworker is correcting entered data -->
+  <div padding>
+    <ion-segment color='primary' [disabled]="!this.editing" [(ngModel)]="baselineStep">
+      <ion-segment-button value="hierarchy" (click)="this.segmentChanged($event)">
+        Location Hierarchy
+      </ion-segment-button>
+      <ion-segment-button value="location" (click)="this.segmentChanged($event)">
+        Locations
+      </ion-segment-button>
+      <ion-segment-button value="socialGroup" (click)="this.segmentChanged($event)">
+        Social Groups
+      </ion-segment-button>
+      <ion-segment-button value="individual" (click)="this.segmentChanged($event)">
+        Individuals
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
   <ion-row>
     <ion-col size="4">
       <div>
@@ -64,7 +82,7 @@
           </ion-text>
         </ion-item-divider>
         <ion-text padding-start *ngFor="let ind of this.selectedIndividuals">
-          Name: {{ind.firstName}} {{ind.lastName}}
+          Name: {{ind.firstName}} {{ind.lastName}} <br/>
         </ion-text>
       </div>
     </ion-col>

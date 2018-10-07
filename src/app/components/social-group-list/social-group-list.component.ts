@@ -1,10 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Observable} from "../../services/Observable";
 import {SocialGroup} from "../../models/social-group";
 import {SocialGroupService} from "../../services/SocialGroupService/social-group.service";
 import {SystemConfigService} from "../../services/SystemService/system-config.service";
 import {Location} from "../../models/location";
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
+import {LocationHierarchyService} from "../../services/LocationHierarchyService/location-hierarchy.service";
+import {HierarchyLevel} from "../../models/hierarchy-level";
 
 @Component({
   selector: 'social-group-list',
@@ -13,7 +14,8 @@ import {SynchonizationObservableService} from "../../services/SynchonizationObse
 })
 export class SocialGroupListComponent implements OnInit {
   hierarchyLookupLevel;
-  itemsPerPage = 7;
+  levels: HierarchyLevel[] = [];
+  itemsPerPage = 5;
   selectedPage = 1;
   @Input() sgLocation: Location;
   @Input() collectedBy: string;
@@ -21,48 +23,34 @@ export class SocialGroupListComponent implements OnInit {
   @Output() selectedSg = new EventEmitter<SocialGroup>();
   selectedSGDisplay: SocialGroup;
 
-  constructor(public syncObserver: SynchonizationObservableService, public sgProvider: SocialGroupService,
+  changeHierarchyLevelOptions: any = {
+    header: 'Change Hierarchy Level',
+    subHeader: 'Select the hierarchy level to search for a social group',
+    translucent: true
+  };
+
+  constructor(public syncObserver: SynchonizationObservableService, public locHierarchyService: LocationHierarchyService,
+              public sgProvider: SocialGroupService,
               public systemConfig: SystemConfigService) {
-    this.syncObserver.subscribe("submitSG", (sg) => {
-      console.log(sg.sg);
-      this.sgProvider.loadInitData().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err))
-        .then(() =>
-        {
-          this.socialGroups = this.filterByLocationExtId();
-          this.selectSocialGroup(sg.sg)
-        });
-    });
 
-    this.syncObserver.subscribe('socialGroupSync', () => {
-      this.sgProvider.loadInitData().then(async () => await this.getAllSocialGroups()).catch(err => console.log(err));
-    });
-
-    this.syncObserver.subscribe("socialGroups", async (sgs) => {
-      this.socialGroups = sgs;
+    this.syncObserver.subscribe("SocialGroup:Create:ListUpdate", async () => {
+       await this.getAllSocialGroups();
     });
 
     this.hierarchyLookupLevel = this.systemConfig.getSocialLookupLevel();
   }
 
   async ngOnInit() {
-    await this.getAllSocialGroups().catch(err => console.log(err));
+    await this.getAllSocialGroups();
+    this.levels = await this.locHierarchyService.getLevels();
   }
 
   async getAllSocialGroups(){
-    let sgs = await this.sgProvider.getAllSocialGroups();
-    this.syncObserver.publishChange("socialGroups", sgs);
+    this.socialGroups = await this.sgProvider.filterSocialGroupsByLocation(this.sgLocation.extId);
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SocialGroupsPage');
-  }
-
-  filterByLocationExtId(){
-    if(this.socialGroups == null)
-      return [];
-
-    return this.socialGroups.filter(sg => sg.extId.substring(0, this.sgLocation.extId.length) == this.sgLocation.extId
-      && this.sgLocation.locationLevel.level.keyIdentifier == this.hierarchyLookupLevel);
   }
 
   selectSocialGroup(socialGroup){
@@ -73,19 +61,9 @@ export class SocialGroupListComponent implements OnInit {
     this.selectedSg.emit(socialGroup);
   }
 
-  moveUpLevel(){
-    //Don't want to past 1st level in hierarchy
-    if(this.hierarchyLookupLevel > 1) {
-      this.hierarchyLookupLevel = this.hierarchyLookupLevel - 1;
-      this.filterByLocationExtId();
-    }
-  }
-
-  moveDownLevel(){
-    //Don't want to past 1st level in hierarchy
-    if(this.hierarchyLookupLevel < 5) {
-      this.hierarchyLookupLevel = this.hierarchyLookupLevel + 1;
-      this.filterByLocationExtId();
+  async changeLevel(){
+    if(this.hierarchyLookupLevel == 1){
+      this.socialGroups = await this.sgProvider.getAllSocialGroups();
     }
   }
 

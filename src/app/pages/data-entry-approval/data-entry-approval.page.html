@@ -72,35 +72,30 @@
         </div>
 
         <div *ngSwitchCase="'socialgroups'">
-          <ion-card *ngIf="this.filteredSocialGroups != undefined && this.filteredSocialGroups.length != 0; else elseSGBlock">
-            <ion-card-content>
+          <ion-list lines="full" *ngIf="this.filteredSocialGroups != undefined && this.filteredSocialGroups.length != 0; else elseSGBlock">
               <ion-item *ngFor="let sg of this.filteredSocialGroups">
                 {{sg.groupName}}
                 <ion-icon name="alert" color="danger" *ngIf="this.sg.errorReported" slot="end"></ion-icon>
-                <ion-icon name="checkbox-outline" color="dark" *ngIf="this.sg.processed" slot="end"></ion-icon>
-                <br>
-                <ion-button fill="outline" (click)="this.viewEntryForApproval(sg)">Review Entry</ion-button>
+                <ion-icon name="checkbox-outline" color="primary" *ngIf="this.sg.processed" slot="end"></ion-icon>
+                <ion-button slot="end" fill="outline" [color]="this.sg.errorReported ? 'danger': 'primary'"
+                            (click)="this.viewEntryForApproval(sg)">Review Entry</ion-button>
               </ion-item>
-            </ion-card-content>
-          </ion-card>
+          </ion-list>
           <ng-template  #elseSGBlock>
             <ion-item>There are no social groups available for approval.</ion-item>
           </ng-template>
         </div>
 
         <div *ngSwitchCase="'individuals'">
-          <ion-card *ngIf="this.filteredIndividuals != undefined && this.filteredIndividuals.length != 0; else elseIndBlock">
-            <ion-card-content>
+          <ion-list lines="full" *ngIf="this.filteredIndividuals != undefined && this.filteredIndividuals.length != 0; else elseIndBlock">
               <ion-item *ngFor="let ind of this.filteredIndividuals">
                 {{ind.firstName}} {{ind.lastName}}
                 <ion-icon name="alert" color="danger" *ngIf="this.ind.errorReported" slot="end"></ion-icon>
-                <ion-icon name="checkbox-outline" color="dark" *ngIf="this.ind.processed" slot="end"></ion-icon>
-                <br>
-                <ion-button fill="outline" (click)="this.viewEntryForApproval(ind)">Review Entry</ion-button>
-
+                <ion-icon name="checkbox-outline" color="primary" *ngIf="this.ind.processed" slot="end"></ion-icon>
+                <ion-button slot="end" fill="outline" [color]="this.ind.errorReported ? 'danger': 'primary'"
+                            (click)="this.viewEntryForApproval(ind)">Review Entry</ion-button>
               </ion-item>
-            </ion-card-content>
-          </ion-card>
+          </ion-list>
           <ng-template #elseIndBlock>
             <ion-item>There are no individuals available for approval.</ion-item>
           </ng-template>
@@ -111,9 +106,9 @@
               <ion-item *ngFor="let visit of this.filteredVisits">
                 {{visit.uuid}}
                 <ion-icon name="alert" color="danger" *ngIf="this.visit.errorReported" slot="end"></ion-icon>
-                <ion-icon name="checkbox-outline" color="dark" *ngIf="this.visit.processed" slot="end"></ion-icon>
-                <br>
-                <ion-button fill="outline" slot="end" (click)="this.viewEntryForApproval(visit)">Review Entry</ion-button>
+                <ion-icon name="checkbox-outline" color="primary" *ngIf="this.visit.processed" slot="end"></ion-icon>
+                <ion-button slot="end" fill="outline" [color]="this.visit.errorReported ? 'danger': 'primary'"
+                            (click)="this.viewEntryForApproval(visit)">Review Entry</ion-button>
               </ion-item>
             </ion-card-content>
           </ion-card>

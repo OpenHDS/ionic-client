@@ -1,4 +1,12 @@
 <div>
+  <ion-item>
+    <ion-label>Level in Location Hierarchy</ion-label>
+    <ion-select [interfaceOptions]="changeHierarchyLevelOptions" interface="alert" [placeholder]="this.hierarchyLookupLevel">
+      <ion-select-option *ngFor="let lvl of levels" [value]="lvl.keyIdentifier">
+        {{lvl.name}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
   <ion-list no-lines>
     <ion-card *ngFor="let sg of socialGroupDetails"
               (click)="this.selectSocialGroup(sg)">

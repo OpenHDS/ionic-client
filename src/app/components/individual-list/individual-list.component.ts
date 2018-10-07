@@ -10,7 +10,7 @@ import {SynchonizationObservableService} from "../../services/SynchonizationObse
   styleUrls: ['./individual-list.component.scss']
 })
 export class IndividualListComponent implements OnInit {
-  itemsPerPage = 7;
+  itemsPerPage = 5;
   selectedPage = 1;
 
   @Input() sg: SocialGroup;

@@ -13,7 +13,7 @@ import {SynchonizationObservableService} from "../../services/SynchonizationObse
   styleUrls: ['./location-list.component.scss']
 })
 export class LocationListComponent implements OnInit {
-  itemsPerPage = 7;
+  itemsPerPage = 5;
   selectedPage = 1;
 
   locations: Location[] = [];
@@ -28,7 +28,10 @@ export class LocationListComponent implements OnInit {
 
     this.syncObserver.subscribe("Location:Create:ListUpdate", async () => {
       this.getAllLocations().then(() => this.changePage(1));
-      console.log(this.locations);
+    });
+
+    this.syncObserver.subscribe("Baseline:Reload:Location", async () => {
+      this.getAllLocations().then(() => this.changePage(1));
     });
   }
 
