@@ -25,26 +25,6 @@ export class HierarchyListComponent implements OnInit {
   constructor( public ev: Events, public syncObserver: SynchonizationObservableService,
               public lhProvider: LocationHierarchyService) {
 
-    this.syncObserver.subscribe('hierarchyLevels',async (levels) => {
-      console.log("Levels sync");
-      this.levels = levels;
-    });
-
-    this.syncObserver.subscribe('hierarchy', async (hierarchy) => {
-      console.log("Hierarchy sync");
-      this.hierarchy = hierarchy;
-    });
-
-    this.syncObserver.subscribe('hierarchySync', () => {
-      console.log("Hierarchy sync!");
-      this.lhProvider.getLevels().then(async (lvls) => this.syncObserver.publishChange('hierarchyLevels', lvls.sort((a,b) => {
-        return a.keyIdentifier - b.keyIdentifier;
-      }).filter(x => x.keyIdentifier > 1))).catch(err => console.log(err));
-
-      this.lhProvider.getHierarchy().then(async (locHierarchy) =>
-        this.syncObserver.publishChange('hierarchy', locHierarchy));
-    });
-
 
   }
 
@@ -62,11 +42,15 @@ export class HierarchyListComponent implements OnInit {
     console.log('ionViewDidLoad LocationHierarchyPage');
   }
 
-  filterByLevel(keyLevel){
-    if(keyLevel != 2)
-      return this.hierarchy.filter(x => x.level.keyIdentifier == keyLevel && x.parent.extId == this.parent.extId);
-    else
-      return this.hierarchy.filter(x => x.level.keyIdentifier == keyLevel);
+  filterByLevel(keyLevel) {
+    if (keyLevel != 2){
+      let filter = this.hierarchy.filter(x => x.level.keyIdentifier == keyLevel && x.parent.extId == this.parent.extId);
+      return filter;
+    }
+    else {
+      let filter = this.hierarchy.filter(x => x.level.keyIdentifier == keyLevel);
+      return filter
+    }
   }
 
   setSelectedLevel(levelInHierarchy, hier){

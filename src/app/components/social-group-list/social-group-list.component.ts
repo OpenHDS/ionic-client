@@ -6,6 +6,7 @@ import {Location} from "../../models/location";
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 import {LocationHierarchyService} from "../../services/LocationHierarchyService/location-hierarchy.service";
 import {HierarchyLevel} from "../../models/hierarchy-level";
+import {Hierarchy} from "../../models/hierarchy";
 
 @Component({
   selector: 'social-group-list',
@@ -17,6 +18,7 @@ export class SocialGroupListComponent implements OnInit {
   levels: HierarchyLevel[] = [];
   itemsPerPage = 5;
   selectedPage = 1;
+  @Input() sgHierarchy: Hierarchy[] //For moving up and down hierarchy
   @Input() sgLocation: Location;
   @Input() collectedBy: string;
   socialGroups: SocialGroup[];
@@ -61,9 +63,17 @@ export class SocialGroupListComponent implements OnInit {
     this.selectedSg.emit(socialGroup);
   }
 
-  async changeLevel(){
-    if(this.hierarchyLookupLevel == 1){
+  async changeLevel(event){
+    if(event.target.value === 1){
       this.socialGroups = await this.sgProvider.getAllSocialGroups();
+    }
+
+    else if(event.target.value === 5){
+      await this.getAllSocialGroups();
+    }
+
+    else {
+      this.socialGroups = await this.sgProvider.filterSocialGroupsByHierarchyLevel(event.target.value, this.sgHierarchy[event.target.value].extId)
     }
   }
 

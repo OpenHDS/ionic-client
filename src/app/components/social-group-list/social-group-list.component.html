@@ -1,7 +1,7 @@
 <div>
   <ion-item>
     <ion-label>Level in Location Hierarchy</ion-label>
-    <ion-select [interfaceOptions]="changeHierarchyLevelOptions" interface="alert" [placeholder]="this.hierarchyLookupLevel">
+    <ion-select [interfaceOptions]="changeHierarchyLevelOptions" interface="alert"  (ionChange)="this.changeLevel($event)" [placeholder]="this.hierarchyLookupLevel">
       <ion-select-option *ngFor="let lvl of levels" [value]="lvl.keyIdentifier">
         {{lvl.name}}
       </ion-select-option>

@@ -11,6 +11,10 @@ import {IndividualService} from '../IndividualService/individual.service';
 import {SystemConfigService} from '../SystemService/system-config.service';
 import {AuthService} from '../AuthService/auth.service';
 import {OpenhdsDb} from '../DatabaseService/openhds-db';
+import {LocationHierarchyService} from "../LocationHierarchyService/location-hierarchy.service";
+import {Hierarchy} from "../../models/hierarchy";
+import {HierarchyLevel} from "../../models/hierarchy-level";
+import {loadElementInternal} from "@angular/core/src/render3/util";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -28,7 +32,7 @@ export class SocialGroupService extends DatabaseService {
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigurationService,
               public errorsProvider: ErrorService, public fwProvider: FieldworkerService,
-              public individualProvider: IndividualService,
+              public individualProvider: IndividualService, public locHierarchyService: LocationHierarchyService,
               public systemConfig: SystemConfigService, public authProvider: AuthService) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
@@ -120,5 +124,19 @@ export class SocialGroupService extends DatabaseService {
   async filterSocialGroupsByLocation(locExtId: string){
     let sgs = await this.getAllSocialGroups();
     return sgs.filter(sg => sg.extId.substring(0, locExtId.length) === locExtId);
+  }
+
+  async filterSocialGroupsByHierarchyLevel(levelIdentifier, levelExt){
+    let sgs = await this.getAllSocialGroups();
+
+    let validLocations = await this.locHierarchyService.ascendHierarchy(levelIdentifier, levelExt);
+
+    let filtered = [];
+    validLocations.forEach((loc) => {
+      sgs.filter(x => x.extId.substring(0, loc.extId.length) === loc.extId)
+        .forEach((sg) => filtered.push(sg))
+    });
+
+    return filtered;
   }
 }

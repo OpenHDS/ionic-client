@@ -5,6 +5,7 @@ import {OpenhdsDb} from '../DatabaseService/openhds-db';
 import {SystemConfigService} from '../SystemService/system-config.service';
 import {HierarchyLevel} from '../../models/hierarchy-level';
 import {Hierarchy} from '../../models/hierarchy';
+import {skip} from "rxjs/operators";
 
 
 /*
@@ -35,16 +36,16 @@ export class LocationHierarchyService extends DatabaseService {
         hier.forEach(x => this.insertHierarchy(x));
     }
 
-    getLevels(): Promise<HierarchyLevel[]> {
-        return this.db.levels.toArray();
+    async getLevels() {
+        return await this.db.levels.toArray();
     }
 
-    getHierarchy(): Promise<Hierarchy[]> {
-        return this.db.locationhierarchies.toArray();
+    async getHierarchy() {
+        return await this.db.locationhierarchies.toArray();
     }
 
-    findHierarchy(extId): Hierarchy {
-        return this.db.locationhierarchies.where('extId').equals(extId)[0];
+    async findHierarchy(extId) {
+        return await this.db.locationhierarchies.where('extId').equals(extId).toArray();
     }
     // Abstract Updates and Adds to prevent errors
     async insertLevels(lev: HierarchyLevel) {
@@ -55,8 +56,32 @@ export class LocationHierarchyService extends DatabaseService {
         this.db.locationhierarchies.add(hierarchy).catch(err => console.log(err));
     }
 
-    async findHierarchyByParentLevelExtId(extId){
-      return await this.db.locationhierarchies.where('extId').equals(extId).toArray();
-
+    async getLevelsInHierarchy(){
+      return await this.db.levels.count();
     }
+
+    async ascendHierarchy(startLevel, levelExt){
+      let hierarchy = await this.getHierarchy();
+      let ascendTo = startLevel;
+      let levelCount = await this.getLevelsInHierarchy();
+      let lookInto = [];
+      hierarchy = hierarchy.filter(x => x.level.keyIdentifier === levelCount);
+      console.log(hierarchy);
+      for(let i = 0; i < hierarchy.length; i++){
+        let parent = hierarchy[i].parent;
+
+        //Ascend up to the startLevel
+        for(let lvl = levelCount; lvl > ascendTo + 1; lvl--){
+          parent = parent.parent;
+          console.log(lvl + ": " + parent.extId)
+        }
+
+        if(parent.extId === levelExt){
+          lookInto.push(hierarchy[i])
+        }
+      }
+
+      return lookInto;
+    }
+
 }
