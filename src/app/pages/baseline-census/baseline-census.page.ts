@@ -24,7 +24,9 @@ export class BaselineCensusPage implements OnInit {
   selectedSocialGroup: SocialGroup;
   selectedIndividuals: Individual[] = [];
   baselineStep = 'hierarchy';
+  shownGroup = ['hierarchy'];
   editing = false;
+
 
   constructor(public syncObservable: SynchonizationObservableService, public locHierarchyService: LocationHierarchyService,
               public navController: NavController,
@@ -127,6 +129,8 @@ export class BaselineCensusPage implements OnInit {
 
   moveToNextBaselineStep(step) {
     this.baselineStep = step;
+    this.toggleGroup(step);
+
   }
 
   isEligableToSubmit(){
@@ -156,5 +160,18 @@ export class BaselineCensusPage implements OnInit {
       default: break;
     }
   }
+
+  toggleGroup(group) {
+    if (this.isGroupShown(group)) {
+      this.shownGroup = this.shownGroup.filter(function(value, index, arr){
+        return value !== group;
+      });
+    } else {
+      this.shownGroup.push(group);
+    }
+  };
+  isGroupShown(group) {
+    return this.shownGroup.indexOf(group) > -1;
+  };
 
 }

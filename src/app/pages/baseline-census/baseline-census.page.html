@@ -2,7 +2,7 @@
 
 <ion-content padding>
   <!--Segment selection, present only when a fieldworker is correcting entered data -->
-  <div padding>
+  <div padding [hidden]="!this.editing">
     <ion-segment color='primary' [disabled]="!this.editing" [(ngModel)]="baselineStep">
       <ion-segment-button value="hierarchy" (click)="this.segmentChanged($event)">
         Location Hierarchy
@@ -21,15 +21,16 @@
 
   <ion-row>
     <ion-col size="4">
-      <div>
+      <div (click)="this.toggleGroup('hierarchy')">
         <ion-item-divider>
           <ion-text [color]="this.baselineStep === 'hierarchy' ? 'primary': 'medium'">
             <h4>Hierarchy</h4>
           </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('hierarchy') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
         </ion-item-divider>
 
         <!-- Load the hierarchy levels, and display the information for selected  --->
-        <div padding-start *ngFor="let level of this.levels; let i = index">
+        <div [hidden]="!this.isGroupShown('hierarchy')" padding-start *ngFor="let level of this.levels; let i = index">
           <ion-text *ngIf="level.name != this.levels[0].name">
             {{level.name}}:
             <ion-text *ngIf="this.selectedHierarchy[i+1] != undefined">
@@ -39,13 +40,14 @@
         </div>
       </div>
 
-      <div>
+      <div (click)="this.toggleGroup('location')">
         <ion-item-divider>
           <ion-text [color]="this.baselineStep === 'location' ? 'primary': 'medium'">
             <h4>Location</h4>
           </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('location') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
         </ion-item-divider>
-        <div padding-start *ngIf="this.selectedLocation !== undefined">
+        <div padding-start *ngIf="this.selectedLocation !== undefined && this.isGroupShown('location')">
           <ion-text>
             Name: {{selectedLocation.locationName}}
           </ion-text>
@@ -55,13 +57,15 @@
           </ion-text>
         </div>
       </div>
-      <div>
+      <div (click)="this.toggleGroup('socialGroup')">
         <ion-item-divider>
           <ion-text [color]="this.baselineStep === 'socialGroup' ? 'primary': 'medium'">
             <h4>Social Group</h4>
           </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('socialGroup') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+
         </ion-item-divider>
-        <div *ngIf="this.selectedSocialGroup !== undefined" padding-start>
+        <div *ngIf="this.selectedSocialGroup !== undefined && this.isGroupShown('socialGroup')" padding-start>
           <ion-text>
             Name: {{selectedSocialGroup.groupName}}
           </ion-text>
@@ -75,15 +79,18 @@
           </ion-text>
         </div>
       </div>
-      <div>
+      <div (click)="this.toggleGroup('individual')">
         <ion-item-divider>
           <ion-text [color]="this.baselineStep === 'individual' ? 'primary': 'medium'">
             <h4>Individual</h4>
           </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('individual') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
         </ion-item-divider>
-        <ion-text padding-start *ngFor="let ind of this.selectedIndividuals">
-          Name: {{ind.firstName}} {{ind.lastName}} <br/>
-        </ion-text>
+        <div [hidden]="!this.isGroupShown('individual')">
+          <ion-text padding-start *ngFor="let ind of this.selectedIndividuals">
+            Name: {{ind.firstName}} {{ind.lastName}} <br/>
+          </ion-text>
+        </div>
       </div>
     </ion-col>
     <ion-col size="4">
