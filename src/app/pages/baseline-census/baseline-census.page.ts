@@ -145,6 +145,14 @@ export class BaselineCensusPage implements OnInit {
     this.reloadEntityList()
   }
 
+  // Complete baseline: fillout visit form, and send to Summary page.
+  completeBaselineCensus(){
+    this.navService.data = {collectedBy: this.collectedBy, visitLocation: this.selectedLocation};
+    this.navController.navigateForward("/create-visit").then(() => {
+      this.syncObservable.publishChange("Baseline:CreateVisit")
+    });
+  }
+
   // Send reload event to entity list components
   reloadEntityList(){
     switch (this.baselineStep) {
@@ -169,9 +177,10 @@ export class BaselineCensusPage implements OnInit {
     } else {
       this.shownGroup.push(group);
     }
-  };
+  }
+
   isGroupShown(group) {
     return this.shownGroup.indexOf(group) > -1;
-  };
+  }
 
 }

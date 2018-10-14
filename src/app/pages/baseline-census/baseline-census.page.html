@@ -137,7 +137,7 @@
   </ion-row>
   <ion-row>
     <ion-col>
-      <ion-button [disabled]="!this.isEligableToSubmit()" fill="outline" expand="full">Complete Baseline Census</ion-button>
+      <ion-button [disabled]="!this.isEligableToSubmit()" responsive fill="outline" expand="full" (click)="this.completeBaselineCensus()">Complete Baseline Census</ion-button>
     </ion-col>
   </ion-row>
 </ion-content>

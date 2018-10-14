@@ -39,6 +39,10 @@ export class VisitFormControl extends FormControl {
 }
 
 export class VisitFormGroup extends FormGroup {
+  formHelpMessages = {
+    'Real Visit': ['0 - None in House', '1 - Real '],
+  };
+
   // Form group, fieldworker and locationId are auto-populated fields!
   constructor() {
     super({
@@ -70,6 +74,11 @@ export class VisitFormGroup extends FormGroup {
 
     console.log(messages);
     return messages;
-
   }
+
+  getFormHelpMessage(label) {
+    return this.formHelpMessages[label];
+  }
+
+
 }
