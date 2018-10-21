@@ -135,11 +135,21 @@ export class LocationService extends DatabaseService {
   async filterLocationsByParentLevel(parentLevel: string) {
     let allLocations = await this.getAllLocations();
     allLocations = allLocations.filter(x => x.locationLevel === parentLevel || x.locationLevel.extId === parentLevel);
-    console.log(allLocations);
     return allLocations;
   }
 
   getLocationDBCount(): Promise<Number> {
     return this.db.locations.count();
+  }
+
+  async findLocationByExtId(locExtId){
+    return await this.db.locations.where('extId').equals(locExtId).toArray();
+  }
+
+  async buildHierarchyForLocation(locExtId){
+    let l = await this.findLocationByExtId(locExtId);
+    let hierarchy = await this.locHierarchyService.buildHierarchy(l[0]);
+
+    return hierarchy;
   }
 }

@@ -139,4 +139,8 @@ export class SocialGroupService extends DatabaseService {
 
     return filtered;
   }
+
+  async findSocialGroupByExtId(entityId){
+    return await this.db.socialGroup.where('extId').equals(entityId).toArray()
+  }
 }

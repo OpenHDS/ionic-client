@@ -5,7 +5,7 @@ import {OpenhdsDb} from '../DatabaseService/openhds-db';
 import {SystemConfigService} from '../SystemService/system-config.service';
 import {HierarchyLevel} from '../../models/hierarchy-level';
 import {Hierarchy} from '../../models/hierarchy';
-import {skip} from "rxjs/operators";
+import {Location} from "../../models/location";
 
 
 /*
@@ -60,6 +60,7 @@ export class LocationHierarchyService extends DatabaseService {
       return await this.db.levels.count();
     }
 
+    // Build the hierarchy from a start level up through the root.
     async ascendHierarchy(startLevel, levelExt){
       let hierarchy = await this.getHierarchy();
       let ascendTo = startLevel;
@@ -82,6 +83,25 @@ export class LocationHierarchyService extends DatabaseService {
       }
 
       return lookInto;
+    }
+
+    //Build the hierarchy for a given location
+    async buildHierarchy(location: Location){
+      console.log(location);
+      let hierarchies = [];
+      let levelCount = await this.getLevelsInHierarchy();
+
+      hierarchies.push(location.locationLevel);
+
+      let parent = location.locationLevel;
+
+      //Stop before Country level
+      for(let i = levelCount; i > 2; i--){
+        parent = parent.parent;
+        hierarchies.push(parent);
+      }
+
+      return hierarchies;
     }
 
 }

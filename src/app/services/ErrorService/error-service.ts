@@ -3,13 +3,6 @@ import {DataError} from '../../models/data-error';
 import {UUID} from 'angular2-uuid';
 import {OpenhdsDb} from '../DatabaseService/openhds-db';
 
-/*
-  Generated class for the ErrorsProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
-
 @Injectable({ providedIn: 'root' })
 export class ErrorService {
   private db: OpenhdsDb;
@@ -17,7 +10,7 @@ export class ErrorService {
     this.db = new OpenhdsDb();
   }
 
-  async updateOrSetErrorStatus(error: DataError) {
+  async updateOrAddError(error: DataError) {
     if (await this.validateErrorExistence(error) === true) {
       return await this.db.errors.update(error.uuid, error);
     } else {
@@ -25,8 +18,8 @@ export class ErrorService {
     }
   }
 
-  async getLocationErrors(): Promise<DataError[]> {
-    return this.db.errors.where('entityType').equals('location').toArray();
+  async getEntityErrors(labelName): Promise<DataError[]> {
+    return this.db.errors.where('entityType').equals(labelName).toArray();
   }
 
   async validateErrorExistence(error: DataError) {
@@ -36,6 +29,12 @@ export class ErrorService {
     }
 
     return false;
+  }
+
+  async findAndMarkResolved(entityId){
+    let entity = this.db.errors.where('entityExtId').equals(entityId).toArray()[0];
+    entity.resolved = true;
+    await this.updateOrAddError(entity);
   }
 
   mapErrorMessage(code) {
@@ -54,7 +53,7 @@ export class ErrorService {
     err.resolved = false;
     err.timestamp = new Date().getTime();
 
-    this.db.errors.add(err);
+    this.updateOrAddError(err);
   }
 
 }

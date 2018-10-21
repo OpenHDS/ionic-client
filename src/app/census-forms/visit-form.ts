@@ -40,7 +40,7 @@ export class VisitFormControl extends FormControl {
 
 export class VisitFormGroup extends FormGroup {
   formHelpMessages = {
-    'Real Visit': ['0 - None in House', '1 - Real '],
+    'Real Visit': ['0 - Real', '1 - Empty House '],
   };
 
   // Form group, fieldworker and locationId are auto-populated fields!

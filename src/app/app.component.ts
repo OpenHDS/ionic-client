@@ -24,6 +24,7 @@ export class AppComponent {
     { title: 'Dashboard', url: "/fieldworker-dash" },
     { title: 'Baseline Census', url: "/baseline"},
     { title: 'Search For a Record', url: "/search"},
+    { title: 'Data Entry Correction', url: '/correction-routine'}
   ];
   adminPages: PageInterface[] = [
     { title: 'Dashboard', url: "/supervisor-dash" },
@@ -32,6 +33,8 @@ export class AppComponent {
     { title: 'Synchronization', url: "/database-sync"},
     { title: 'Data Entry Approval', url: '/approval'},
     { title: 'System Configurations', url: '/system-config'},
+    { title: 'Data Entry Correction', url: '/correction-routine'}
+
   ];
 
   rootPage: any;

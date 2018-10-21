@@ -11,6 +11,8 @@ import {IndividualService} from "../../services/IndividualService/individual.ser
 import {LocationService} from "../../services/LocationService/location.service";
 import {SocialGroupService} from "../../services/SocialGroupService/social-group.service";
 import {VisitService} from "../../services/VisitService/visit.service";
+import {DataError} from "../../models/data-error";
+import {ErrorService} from "../../services/ErrorService/error-service";
 
 @Component({
   selector: 'data-entry-approval',
@@ -36,7 +38,7 @@ export class DataEntryApprovalPage implements OnInit {
   selectedEntry: any;
 
   constructor(public individualService: IndividualService, public locationService: LocationService,
-              public socialGroupService: SocialGroupService, public visitService: VisitService) {
+              public socialGroupService: SocialGroupService, public visitService: VisitService, public errorService: ErrorService) {
   }
 
   ngOnInit() {
@@ -110,9 +112,10 @@ export class DataEntryApprovalPage implements OnInit {
 
   approve() {
     this.selectedEntry.processed = true;
-    if (this.selectedEntry.errorReported)
+    if (this.selectedEntry.errorReported) {
       this.selectedEntry.errorReported = false;
-
+      this.errorService.findAndMarkResolved(this.selectedEntry.extId);
+    }
     this.updateDataEntry();
   }
 
@@ -120,8 +123,6 @@ export class DataEntryApprovalPage implements OnInit {
     this.selectedEntry.errorReported = true;
     if (this.selectedEntry.processed)
       this.selectedEntry.processed = false;
-
-    this.updateDataEntry();
   }
 
   async updateDataEntry() {

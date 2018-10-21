@@ -35,6 +35,7 @@ export class HierarchyListComponent implements OnInit {
     this.levels = this.levels.sort((a, b) => {
       return a.keyIdentifier - b.keyIdentifier;
     }).filter(x => x.keyIdentifier > 1);
+
     this.hierarchy = await this.lhProvider.getHierarchy();
   }
 

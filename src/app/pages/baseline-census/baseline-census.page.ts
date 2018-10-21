@@ -22,7 +22,7 @@ export class BaselineCensusPage implements OnInit {
   selectedHierarchy: Array<Hierarchy>;
   selectedLocation: Location;
   selectedSocialGroup: SocialGroup;
-  selectedIndividuals: Individual[] = [];
+  selectedIndividuals: Array<Individual>;
   baselineStep = 'hierarchy';
   shownGroup = ['hierarchy'];
   editing = false;
@@ -43,20 +43,17 @@ export class BaselineCensusPage implements OnInit {
     this.syncObservable.subscribe("Individual:Create:Success", (individual) => {
       this.setSelectedSocialGroup(individual);
     });
-
-    if(this.navService.data !== undefined) {
-      this.editing = this.navService.data.editing;
-
-      this.selectedHierarchy = this.navService.data.baselineEdit.selectedHierarchy;
-      this.selectedLocation = this.navService.data.baselineEdit.selectedLocation;
-      this.selectedSocialGroup = this.navService.data.baselineEdit.selectedSocialGroup;
-      this.selectedIndividuals = this.navService.data.baselineEdit.selectedIndividuals;
-    }
   }
 
   async ngOnInit() {
     this.levels = await this.locHierarchyService.getLevels();
     this.selectedHierarchy = [];
+    this.selectedIndividuals = [];
+    if(this.navService.data !== undefined) {
+      this.editing = this.navService.data.entityEditing;
+      this.processEditing();
+    }
+
   }
 
   setSelectedHierarchy(hierarchy: Hierarchy) {
@@ -183,4 +180,33 @@ export class BaselineCensusPage implements OnInit {
     return this.shownGroup.indexOf(group) > -1;
   }
 
+  processEditing(){
+     this.selectedHierarchy.push(new Hierarchy(), new Hierarchy()); //Filler for hierarchy root and country level
+     this.navService.data.selectedHierarchy.forEach(hier => this.selectedHierarchy.push(hier));
+     switch(this.navService.data.entity){
+       case 'locations':
+         this.selectedLocation = this.navService.data.selectedLocation;
+         this.toggleGroup('location');
+         this.baselineStep = 'location';
+         break;
+       case 'socialGroups':
+         this.selectedLocation = this.navService.data.selectedLocation;
+         this.selectedSocialGroup = this.navService.data.selectedSocialGroup;
+         this.toggleGroup('socialGroup');
+         this.baselineStep = 'socialGroup';
+         break;
+       case 'individuals':
+         this.selectedLocation = this.navService.data.selectedLocation;
+         this.selectedSocialGroup = this.navService.data.selectedSocialGroup;
+         this.navService.data.selectedIndividuals.forEach(ind => this.selectedIndividuals.push(ind));
+         this.baselineStep = 'individual';
+         this.toggleGroup('individual');
+         break;
+     }
+
+  }
+
+  saveBaselineReferences(){
+
+  }
 }

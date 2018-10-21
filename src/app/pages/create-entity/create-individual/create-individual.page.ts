@@ -28,7 +28,6 @@ export class CreateIndividualPage implements OnInit {
   sg: SocialGroup;
   loc: Location;
 
-  //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   individual: Individual = new Individual();
 
   constructor(public syncObserver: SynchonizationObservableService,public navService: NavigationService,
@@ -84,7 +83,7 @@ export class CreateIndividualPage implements OnInit {
       censusInd.socialGroupHeadExtId= this.sg.groupHead.extId;
     censusInd.individual = await this.individualProvider.shallowCopy(this.individual);
     censusInd.bIsToA= this.individual.bIsToA;
-    censusInd.spouse = this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse) : null;
+    censusInd.spouse = this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse)[0] : null;
 
     let fieldworker = await this.fieldworkerProvider.getFieldworker(this.individual.collectedBy);
     censusInd.collectedBy = fieldworker[0];

@@ -38,7 +38,7 @@ export class IndividualService extends DatabaseService {
     }
 
     async findIndividualByExtId(extId: string) {
-        return await this.db.individuals.where('extId').equals(extId).toArray()[0];
+        return await this.db.individuals.where('extId').equals(extId).toArray();
     }
 
     async saveDataLocally(ind: Individual) {
