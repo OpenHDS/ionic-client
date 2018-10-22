@@ -42,8 +42,6 @@ export class LocationService extends DatabaseService {
   }
 
   async saveDataLocally(loc: Location) {
-    loc.collectedBy = this.authProvider.getLoggedInFieldworker();
-
     // Check to see if location already exists!
     const find = await this.db.locations.where('extId').equals(loc.extId).toArray();
 
@@ -78,29 +76,29 @@ export class LocationService extends DatabaseService {
       .filter(loc => loc.syncedWithServer === false)
       .toArray();
 
-    // Process and send data to server.
-    await offline.forEach(async loc => {
-      if (loc.processed) {
-        await this.updateData(loc).then(() => {
-          loc.syncedWithServer = true;
-          this.update(loc);
-        }).catch(() => {
-          loc.syncedWithServer = false;
-          loc.processed = false;
-          this.update(loc);
-        });
-      }
-    });
+    const shallowCopies = [];
+
+    for(let i = 0; i < offline.length; i++){
+      let shallow = await this.shallowCopy(offline[i]);
+      console.log(shallow);
+      shallowCopies.push(shallow);
+    }
+
+    await this.updateData(shallowCopies);
   }
 
-  async updateData(locationData: Location) {
+  async updateData(locationData: Array<Location>) {
     const headers = new HttpHeaders().set('authorization',
       'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
 
+
     const url = this.systemConfig.getServerURL() + '/locations2/pushUpdates';
-    const convertedLoc = await this.shallowCopy(locationData);
-    await this.http.put(url, {locations: [convertedLoc], timestamp: new Date().getTime()}, {headers}).subscribe(data => {
-      localStorage.setItem('lastUpdate', data.toString());
+    console.log("Sending " + locationData.length + " locations to the server...");
+
+    await this.http.put(url, {locations: locationData, timestamp: new Date().getTime()}, {headers}).subscribe(data => {
+      console.log(data["syncTime"]);
+      console.log(data["errors"])
+      localStorage.setItem('lastUpdate', data["syncTime"].toString());
       console.log('Update Successful');
     }, err => {
       throw new Error('Updating failed...');
@@ -109,25 +107,25 @@ export class LocationService extends DatabaseService {
 
   async shallowCopy(loc) {
 
-    const location = new Location();
-    location.uuid = loc.uuid.replace(/-/g, '');  // Remove the dashes from the uuid.
+    const l = new Location();
+    l.uuid = loc.uuid.replace(/-/g, '');  // Remove the dashes from the uuid.
 
     const fieldworker = await this.fwProvider.getFieldworker(loc.collectedBy);
-    location.collectedBy = {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
-    location.extId = loc.extId;
-    location.locationLevel = await this.locationHierarchyLevelServerCopy(loc.locationLevel);
-    location.locationName = loc.locationName;
-    location.locationType = loc.locationType;
-    return location;
+    l.collectedBy = {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
+    l.extId = loc.extId;
+    l.locationLevel = await this.locationHierarchyLevelServerCopy(loc.locationLevel);
+    l.locationName = loc.locationName;
+    l.locationType = loc.locationType;
+
+    return l;
   }
 
   async locationHierarchyLevelServerCopy(level) {
+    let hLevel = await this.locHierarchyService.findHierarchy(level);
     const locLevel = new Hierarchy();
-    locLevel.extId = level.extId;
-    locLevel.uuid =  level.uuid;
-    locLevel.name = level.name;
-    locLevel.parent = level.parent;
-    locLevel.level = level.level;
+    locLevel.uuid = hLevel[0].uuid;
+    locLevel.extId = hLevel[0].extId;
+    locLevel.name = hLevel[0].name;
 
     return locLevel;
   }

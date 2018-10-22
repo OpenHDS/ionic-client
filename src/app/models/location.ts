@@ -16,4 +16,5 @@ export class Location {
   errorReported?: boolean;
   syncedWithServer?: boolean;
   selected?: boolean;
+  status?: string; //C -- Created, U -- Updated, A -- Approved
 }

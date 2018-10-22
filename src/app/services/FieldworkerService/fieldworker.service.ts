@@ -40,11 +40,7 @@ export class FieldworkerService extends DatabaseService {
   }
 
    async getFieldworker(extId: string) {
-    let fw;
-
-    fw = await this.db.fieldworkers.where('extId').equals(extId).toArray();
-    console.log(fw);
-    return fw;
+    return await this.db.fieldworkers.where('extId').equals(extId).toArray();
   }
 
   async saveDataLocally(fw: Fieldworker) {

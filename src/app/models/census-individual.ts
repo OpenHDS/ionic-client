@@ -4,7 +4,7 @@ export class CensusIndividual {
   uuid?: string;
   socialGroupExtId?: string;
   socialGroupHeadExtId?: string;
-  collectedBy?: string;
+  collectedBy?: any;
   locationExtId?: string;
   individual?: Individual;
   bIsToA?: string;
