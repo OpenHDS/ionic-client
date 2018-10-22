@@ -1,0 +1,98 @@
+<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+      OpenHDS Server URL
+        <ion-button *ngIf="!this.showURL; else showURLIcon" fill="outline" spot="start" size="small"
+                    (click)="this.displayURL()">
+          <ion-icon name="arrow-forward"></ion-icon>
+        </ion-button>
+
+        <ng-template #showURLIcon>
+          <ion-button size="small" fill="outline" spot="start" size="small" (click)="this.displayURL()">
+            <ion-icon name="arrow-down"></ion-icon>
+          </ion-button>
+        </ng-template>
+
+    </ion-card-header>
+    <ion-card-content *ngIf="this.showURL">
+      <div>
+        <ion-input [disabled]="!this.editing" type="text" name='url' [(ngModel)]="this.url"></ion-input>
+        <div *ngIf="!editing; else elseBlock">
+          <ion-button size="small" fill="outline" (click)="this.setEditing()">Edit URL</ion-button>
+        </div>
+        <ng-template #elseBlock>
+          <ion-button size="small" fill="outline" (click)="this.saveServerUrl()">Save URL</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.setEditing()">Cancel</ion-button>
+        </ng-template>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-card>
+    <ion-card-header>Location Hierarchy Configuration
+      <ion-button size="small" fill="outline" spot="end" *ngIf="!this.showHierarchy; else showHierarchyIcon"
+                  (click)="this.displayLH()">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+
+      <ng-template #showHierarchyIcon>
+        <ion-button size="small" fill="outline" spot="end" (click)="this.displayLH()">
+          <ion-icon name="arrow-down"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ion-card-header>
+
+    <ion-card-content>
+      <div *ngIf="this.showHierarchy">
+        <ion-item *ngFor="let key of this.getHierarchyLevelKeys()">
+          <ion-label>{{key}}:</ion-label>
+          <ion-input type="text" name="locHier-{{i}}" [disabled]="!this.editingLH"
+                     [(ngModel)]="this.hierarchyLevels[key]"></ion-input>
+        </ion-item>
+        <div *ngIf="!this.editingLH; else elseLocHierBlock">
+          <ion-button size="small" fill="outline" (click)="this.setLHEditing()">Edit Hierarchy Configuration
+          </ion-button>
+        </div>
+        <ng-template #elseLocHierBlock>
+          <ion-button size="small" fill="outline" (click)="this.saveLocationHierarchy()">Save Hierarchy Configuration
+          </ion-button>
+          <ion-button size="small" fill="outline" (click)="this.setLHEditing()">Cancel</ion-button>
+        </ng-template>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>Codes and Parameters
+      <ion-button size="small" fill="outline" spot="end" *ngIf="!this.showCodes; else showCodesIconBlock"
+                  (click)="this.displayCodes()">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+      <ng-template #showCodesIconBlock>
+        <ion-button size="small" fill="outline" spot="end" (click)="this.displayCodes()">
+          <ion-icon name="arrow-down"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ion-card-header>
+
+    <ion-card-content *ngIf="showCodes">
+      <div>
+        <ion-item *ngFor="let key of this.getCodeKeys()">
+          <ion-label>{{key}}:</ion-label>
+          <ion-input type="text" name="code-{{i}}" [disabled]="!this.editingCodes"
+                     [(ngModel)]="this.codes[key]"></ion-input>
+        </ion-item>
+        <div *ngIf="!this.editingCodes; else elseCodeBlock">
+          <ion-button size="small" fill="outline" (click)="this.setCodeEditing()">Edit Code Configuration</ion-button>
+        </div>
+        <ng-template #elseCodeBlock>
+          <ion-button size="small" fill="outline" (click)="this.saveCodes()">Save Code Configuration</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.setCodeEditing()">Cancel</ion-button>
+        </ng-template>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

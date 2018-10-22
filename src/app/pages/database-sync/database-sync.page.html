@@ -1,0 +1,64 @@
+<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+
+<ion-content padding>
+  <ion-card [hidden]="this.networkConfig.isConnected()">
+    <ion-card-content>There is no network connection. A network connection is required to sync with the database.</ion-card-content>
+  </ion-card>
+
+  <ion-card [hidden]="this.errors.length == 0">
+    <ion-card-content *ngFor="let e of this.errors">
+      {{e}}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-row>
+    <ion-col col-4>
+      <ion-button expand="full">Synchronize Database</ion-button>
+    </ion-col>
+    <ion-col col-4>
+      <ion-infinite-scroll>
+        <ion-card-header>
+          <h3>Fieldworker Sync</h3>
+          <ng-template [ngIf]="this.fieldworkerSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.fieldworkerSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
+        </ion-card-header>
+        <ion-card-header>
+          <h3>Location Hierarchy</h3>
+          <ng-template [ngIf]="this.locationLevelsSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.locationLevelsSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
+        </ion-card-header>
+
+        <ion-card-header>
+          <h3>Locations</h3>
+          <ng-template [ngIf]="this.locationSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.locationSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
+        </ion-card-header>
+
+        <ion-card-header>
+          <h3>Social Groups</h3>
+          <ng-template [ngIf]="this.sgSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.sgSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
+        </ion-card-header>
+
+        <ion-card-header>
+          <h3>Individuals</h3>
+          <ng-template [ngIf]="this.individualSyncSuccess"><p ion-text color="secondary">Sync Successful</p></ng-template>
+          <ng-template [ngIf]="!this.individualSyncSuccess"><p ion-text color="danger">Not Synced</p></ng-template>
+        </ion-card-header>
+      </ion-infinite-scroll>
+    </ion-col>
+    <ion-col col-4>
+      <ion-button full outline expand="full" fill="outline" (click)="syncDatabase()">Synchronize Database</ion-button>
+      <ion-button full outline expand="full" fill="outline" (click)="syncFieldworkers()">Synchronize Only Fieldworkers</ion-button>
+
+      <ion-button full outline expand="full" fill="outline" (click)="syncLocLevels()">Synchronize Only Location Hierarchy</ion-button>
+      <ion-button full outline expand="full" fill="outline" (click)="syncLocations()">Synchronize Only Location</ion-button>
+      <ion-button full outline expand="full" fill="outline" (click)="syncSocialGroups()">Synchronize Only Social Groups</ion-button>
+      <ion-button full outline expand="full" fill="outline" (click)="syncIndividuals()">Synchronize Only Individuals</ion-button>
+      <br>
+      <br>
+      <ion-button expand="full" fill="outline" color="secondary" (click)="syncNewDataWithServer()">Send Approved Data to Server</ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>
+

@@ -1,87 +1,79 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 
-import {App, Events,  Nav, Platform} from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import {BaselineCensusPage} from "../pages/baseline-census/baseline-census";
-import {LoginPage} from "../pages/login/login";
-import {SupervisorModePage} from "../pages/supervisor-mode/supervisor-mode";
-import {SynchronizeDbPage} from "../pages/synchronize-db/synchronize-db";
-import {ApproveEntriesPage} from "../pages/admin-approval/entry-approval/approve-entries";
-import {SystemConfigPage} from "../pages/system-config/system-config";
-import {SearchEntitiesPage} from "../pages/search/search-by-entity/search-entities";
-import {FieldworkerModePage} from "../pages/fieldworker-mode/fieldworker-mode";
-import {User} from "../model/user";
-import {AuthProvider} from "../providers/authentication/authentication";
+import {Nav, Platform} from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import {User} from "./models/user";
+import {AuthService} from "./services/AuthService/auth.service";
+import {Router} from "@angular/router";
 
 export interface PageInterface {
   title: string;
-  name: string;
-  component: any;
-  icon?: string;
-  logsOut?: boolean;
-  index?: number;
-  tabName?: string;
-  tabComponent?: any;
+  url: string;
 }
 
 @Component({
-  selector: `ion-app`,
-  templateUrl: 'app.html'
+  selector: 'app-root',
+  templateUrl: 'app.component.html'
 })
-export class OpenHDSApp {
+export class AppComponent {
   @ViewChild(Nav) nav: Nav;
   user: User;
 
   fieldworkerPages: PageInterface[] = [
-    { title: 'Dashboard', name: 'DashboardPage', component: FieldworkerModePage },
-    { title: 'Baseline Census', name: 'BaselineCensusPage', component: BaselineCensusPage},
-    { title: 'Search For a Record', name: 'SearchEntitiesPage', component: SearchEntitiesPage},
+    { title: 'Dashboard', url: "/fieldworker-dash" },
+    { title: 'Baseline Census', url: "/baseline"},
+    { title: 'Search For a Record', url: "/search"},
+    { title: 'Data Entry Correction', url: '/correction-routine'}
   ];
   adminPages: PageInterface[] = [
-    { title: 'Dashboard', name: 'AdminDashboardPage', component: SupervisorModePage},
-    { title: 'Baseline Census', name: 'BaselineCensusPage', component: BaselineCensusPage},
-    { title: 'Search For a Record', name: 'SearchEntitiesPage', component: SearchEntitiesPage},
-    { title: 'Synchronization', name: 'SynchronizeDbPage', component: SynchronizeDbPage},
-    { title: 'Data Entry Approval', name: 'ApproveEntriesPage', component: ApproveEntriesPage},
-    { title: 'System Configurations', name: 'SystemConfigPage', component: SystemConfigPage},
+    { title: 'Dashboard', url: "/supervisor-dash" },
+    { title: 'Baseline Census', url: '/baseline'},
+    { title: 'Search For a Record', url: '/search'},
+    { title: 'Synchronization', url: "/database-sync"},
+    { title: 'Data Entry Approval', url: '/approval'},
+    { title: 'System Configurations', url: '/system-config'},
+    { title: 'Data Entry Correction', url: '/correction-routine'}
+
   ];
 
   rootPage: any;
 
-  constructor( public events: Events,  public platform: Platform, public splashScreen: SplashScreen,
-               public authProvider: AuthProvider, public appCtrl: App) {
+  constructor(
+    private platform: Platform,
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar,
+    private router: Router,
+    private authService: AuthService
+  ) {
 
-    if(this.authProvider.hasSupervisorLoggedIn() === false || this.authProvider.hasFieldworkerLoggedIn() === false){
-      this.rootPage = LoginPage;
-    } else if(this.authProvider.hasSupervisorLoggedIn()){
-      this.rootPage = SupervisorModePage;
-      this.authProvider.setMenu();
+    if(this.authService.hasSupervisorLoggedIn() === false || this.authService.hasFieldworkerLoggedIn() === false){
+      this.router.navigate(['/login'])
+    } else if(this.authService.hasSupervisorLoggedIn()){
+      this.router.navigate(['/supervisor-dash']);
+      this.authService.setMenu();
     } else {
-      this.rootPage = FieldworkerModePage;
-      this.authProvider.setMenu();
+      this.router.navigate(['/fieldworker-dash']);
+      this.authService.setMenu();
     }
 
-
-    this.platformReady();
+    this.initializeApp();
   }
 
-  ionViewWillEnter() {
-
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+    });
   }
 
   openPage(page){
-    this.nav.push(page.component);
+    this.router.navigate([page])
   }
 
   logoutUser() {
-    this.appCtrl.getRootNav().setRoot(LoginPage);
-    this.authProvider.logout();
-  }
-
-  platformReady() {
-    // Call any initial plugins when ready
-    this.platform.ready().then(() => {
-
-    });
+    this.router.navigate(["/login"]).then(() => this.authService.logout());
   }
 }
+
+

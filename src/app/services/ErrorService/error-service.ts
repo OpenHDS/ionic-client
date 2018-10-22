@@ -1,0 +1,59 @@
+import { Injectable } from '@angular/core';
+import {DataError} from '../../models/data-error';
+import {UUID} from 'angular2-uuid';
+import {OpenhdsDb} from '../DatabaseService/openhds-db';
+
+@Injectable({ providedIn: 'root' })
+export class ErrorService {
+  private db: OpenhdsDb;
+  constructor() {
+    this.db = new OpenhdsDb();
+  }
+
+  async updateOrAddError(error: DataError) {
+    if (await this.validateErrorExistence(error) === true) {
+      return await this.db.errors.update(error.uuid, error);
+    } else {
+      return await this.db.errors.add(error);
+    }
+  }
+
+  async getEntityErrors(labelName): Promise<DataError[]> {
+    return this.db.errors.where('entityType').equals(labelName).toArray();
+  }
+
+  async validateErrorExistence(error: DataError) {
+    const err = await this.db.errors.filter(err => err.uuid == error.uuid).toArray();
+    if (err[0] != null) {
+      return true;
+    }
+
+    return false;
+  }
+
+  async findAndMarkResolved(entityId){
+    let entity = this.db.errors.where('entityExtId').equals(entityId).toArray()[0];
+    entity.resolved = true;
+    await this.updateOrAddError(entity);
+  }
+
+  mapErrorMessage(code) {
+    if (code === 404) {
+      return 'The data resource trying to be accessed was not found. Check URL for database.';
+    }
+
+    return 'An unknown error has occurred.';
+  }
+
+  saveError(err: DataError) {
+    if (!err.uuid) {
+      err.uuid = UUID.UUID();
+    }
+
+    err.resolved = false;
+    err.timestamp = new Date().getTime();
+
+    this.updateOrAddError(err);
+  }
+
+}
