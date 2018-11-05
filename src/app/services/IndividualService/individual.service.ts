@@ -64,7 +64,7 @@ export class IndividualService extends DatabaseService {
         const copy = new Individual();
         copy.uuid = ind.uuid.replace(/-/g, '');
         copy.extId = ind.extId;
-        const fieldworker = await this.fieldworkerProvider.getFieldworker(ind.collectedBy);
+        const fieldworker = await this.fieldworkerProvider.getFieldworker(ind.collectedBy.extId);
         copy.collectedBy =  {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
         copy.firstName = ind.firstName;
         copy.middleName = ind.middleName;
@@ -72,8 +72,8 @@ export class IndividualService extends DatabaseService {
         copy.gender = ind.gender;
         copy.dob = new Date(ind.dob).getTime();
         copy.dobAspect = ind.dobAspect;
-        copy.mother = ind.mother != null ? ind.mother : this.getUnknownIndividual();
-        copy.father = ind.father != null ? ind.father : this.getUnknownIndividual();
+        copy.mother = ind.mother != null ? {extId: ind.mother.extId} : this.getUnknownIndividual();
+        copy.father = ind.father != null ? {extId: ind.mother.extId}  : this.getUnknownIndividual();
 
         return copy;
     }

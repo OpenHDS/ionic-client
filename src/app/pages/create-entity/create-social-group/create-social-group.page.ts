@@ -22,14 +22,19 @@ export class CreateSocialGroupPage implements OnInit {
   sgForm: SocialGroupFormGroup;
   lookupSGHead: boolean = false;
 
-  socialGroup: SocialGroup = new SocialGroup();
+  socialGroup: SocialGroup;
   constructor(public syncObserver: SynchonizationObservableService,  public navService: NavigationService, public router: Router,
               public sgProvider: SocialGroupService, public netConfig: NetworkConfigurationService, public modalController: ModalController,
               public authService: AuthService) {
 
     this.sgForm = new SocialGroupFormGroup();
 
-    this.socialGroup.collectedBy = this.navService.data.collectedBy;
+    this.sgForm.setValue({
+      collectedBy: this.navService.data.collectedBy,
+      groupName: '',
+      extId: '',
+      groupType: ''
+    });
 
     this.syncObserver.subscribe("Baseline:CreateSocialGroup", () => {
       console.log("Baseline Census: Create a Social Group");
@@ -56,15 +61,17 @@ export class CreateSocialGroupPage implements OnInit {
   }
 
   async submitForm(form){
-
+    let social = new SocialGroup();
     this.formSubmitted = true;
     if(form.valid){
       Object.keys(form.value).forEach((key, index) => {
-        this.socialGroup[key] = form.value[key];
+        social[key] = form.value[key];
       });
 
+      social.collectedBy = this.navService.data.collectedBy;
+      this.socialGroup = social;
+      console.log(this.socialGroup);
       this.formSubmitted = false;
-      console.log(this.lookupSGHead);
       if(this.lookupSGHead)
         this.lookupHead();
       else

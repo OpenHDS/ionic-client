@@ -80,11 +80,11 @@ export class LocationService extends DatabaseService {
 
     for(let i = 0; i < offline.length; i++){
       let shallow = await this.shallowCopy(offline[i]);
-      console.log(shallow);
       shallowCopies.push(shallow);
     }
 
-    await this.updateData(shallowCopies);
+    if(shallowCopies.length > 0)
+      await this.updateData(shallowCopies);
   }
 
   async updateData(locationData: Array<Location>) {
@@ -92,12 +92,10 @@ export class LocationService extends DatabaseService {
       'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
 
 
-    const url = this.systemConfig.getServerURL() + '/locations2/pushUpdates';
+    const url = this.systemConfig.getServerURL() + '/locations2/bulkInsert';
     console.log("Sending " + locationData.length + " locations to the server...");
 
-    await this.http.put(url, {locations: locationData, timestamp: new Date().getTime()}, {headers}).subscribe(data => {
-      console.log(data["syncTime"]);
-      console.log(data["errors"])
+    await this.http.post(url, {locations: locationData, timestamp: new Date().getTime()}, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data["syncTime"].toString());
       console.log('Update Successful');
     }, err => {

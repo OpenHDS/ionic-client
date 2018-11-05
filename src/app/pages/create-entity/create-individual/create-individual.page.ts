@@ -40,7 +40,6 @@ export class CreateIndividualPage implements OnInit {
     this.sg = this.navService.data.sg;
     this.loc = this.navService.data.loc;
 
-    this.individual.collectedBy = this.navService.data.collectedBy;
     this.individualForm = new CensusIndividualFormGroup();
     if (this.navService.data.createHead) {
       this.createHead = true;
@@ -55,7 +54,7 @@ export class CreateIndividualPage implements OnInit {
       Object.keys(form.value).forEach((key, index) => {
         this.individual[key] = form.value[key];
       });
-
+      this.individual.collectedBy = this.navService.data.collectedBy;
       this.formSubmitted = false;
       await this.individualProvider.saveDataLocally(this.individual);
       await this.createAndSaveCensusIndividual();

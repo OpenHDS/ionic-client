@@ -6,8 +6,8 @@ export class Individual{
   middleName?: string;
   lastName?: string;
   gender?: string;
-  father?: Individual;
-  mother?: Individual;
+  father?: any;
+  mother?: any;
   collectedBy?: any; // String for db storage. Fieldworker object for sending to server.
   deleted?: boolean;
   insertDate?: Date;

@@ -15,6 +15,7 @@ import {LocationHierarchyService} from "../LocationHierarchyService/location-hie
 import {Hierarchy} from "../../models/hierarchy";
 import {HierarchyLevel} from "../../models/hierarchy-level";
 import {loadElementInternal} from "@angular/core/src/render3/util";
+import {Location} from "../../models/location";
 
 /*
   Generated class for the SocialGroupProvider provider.
@@ -49,7 +50,6 @@ export class SocialGroupService extends DatabaseService {
   }
 
   async saveDataLocally(sg: SocialGroup) {
-    sg.collectedBy = this.authProvider.getLoggedInUser();
 
     if (!sg.uuid) {
       sg.uuid = UUID.UUID();
@@ -69,47 +69,42 @@ export class SocialGroupService extends DatabaseService {
   }
 
   async update(sg: SocialGroup) {
-    console.log('Updating SOCIAL GROUP...');
     this.db.socialGroup.put(sg).catch(err => console.log(err));
   }
 
   async synchronizeOfflineSocialGroups() {
-    console.log('Offline Social Group Sync');
-    // Filter locations for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
+    // Filter social groups for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
     const offline = await this.db.socialGroup
       .filter(sg => sg.syncedWithServer === false)
       .toArray();
 
-    // Process and send data to server.
-    await offline.forEach(async sg => {
-      if (sg.processed) {
-        await this.updateData(sg).then(() => {
-          sg.syncedWithServer = true;
-          this.update(sg);
-        }).catch(() => {
-          sg.syncedWithServer = false;
-          sg.processed = false;
-          this.update(sg);
-        });
-      }
-    });
-  }
+    const shallowCopies = [];
 
-  async updateData(socialGrpData: SocialGroup) {
+    for(let i = 0; i < offline.length; i++){
+      let shallow = await this.shallowCopy(offline[i]);
+      shallowCopies.push(shallow);
+    }
+
+    if(shallowCopies.length > 0)
+      await this.updateData(shallowCopies);  }
+
+  async updateData(socialGroupData: Array<SocialGroup>) {
     const headers = new HttpHeaders().set('authorization',
       'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
 
-    const url = this.systemConfig.getServerURL() + '/socialgroups2/pushUpdates';
-    const convertedSocialGroup = await this.serverCopy(socialGrpData);
-    await this.http.put(url, {socialGroups: [convertedSocialGroup], timestamp: new Date().getTime()}, {headers}).subscribe(data => {
-      localStorage.setItem('lastUpdate', data.toString());
+
+    const url = this.systemConfig.getServerURL() + '/socialgroups2/bulkInsert';
+    console.log("Sending " + socialGroupData.length + " social groups to the server...");
+
+    await this.http.post(url, {socialGroups: socialGroupData, timestamp: new Date().getTime()}, {headers}).subscribe(data => {
+      localStorage.setItem('lastUpdate', data["syncTime"].toString());
       console.log('Update Successful');
     }, err => {
       throw new Error('Updating failed...');
     });
   }
 
-  async serverCopy(socialGrp) {
+  async shallowCopy(socialGrp) {
     const sg = new SocialGroup();
     sg.uuid = socialGrp.uuid.replace(/-/g, '');  // Remove the dashes from the uuid.
     const fieldworker = await this.fwProvider.getFieldworker(socialGrp.collectedBy);
@@ -118,6 +113,7 @@ export class SocialGroupService extends DatabaseService {
     sg.groupName = socialGrp.groupName;
     sg.groupType = socialGrp.groupType;
     sg.groupHead = await this.individualProvider.shallowCopy(socialGrp.groupHead);
+
     return sg;
   }
 
