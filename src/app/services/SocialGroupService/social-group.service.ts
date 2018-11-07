@@ -12,10 +12,7 @@ import {SystemConfigService} from '../SystemService/system-config.service';
 import {AuthService} from '../AuthService/auth.service';
 import {OpenhdsDb} from '../DatabaseService/openhds-db';
 import {LocationHierarchyService} from "../LocationHierarchyService/location-hierarchy.service";
-import {Hierarchy} from "../../models/hierarchy";
-import {HierarchyLevel} from "../../models/hierarchy-level";
-import {loadElementInternal} from "@angular/core/src/render3/util";
-import {Location} from "../../models/location";
+
 
 /*
   Generated class for the SocialGroupProvider provider.

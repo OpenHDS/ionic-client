@@ -42,6 +42,8 @@ import {SystemConfigService} from '../SystemService/system-config.service';
     });
 
     entity.forEach(x => {
+      if(x.hasOwnProperty('collectedBy'))
+        x.collectedBy = x.collectedBy.extId;
       x.clientInsert = timestamp;
       x.processed = true;
       x.syncedWithServer = true;  // Any new records from the server are up to date.
