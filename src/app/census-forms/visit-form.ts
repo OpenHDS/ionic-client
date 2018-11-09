@@ -48,7 +48,8 @@ export class VisitFormGroup extends FormGroup {
     super({
       collectedBy: new VisitFormControl('Fieldworker', 'collectedBy', '', [], true),
       visitLocation: new VisitFormControl('Location Id', 'visitLocation', '', [], true),
-
+      roundNumber:  new VisitFormControl('Round Number', 'roundNumber', '',
+        [], true),
       extId: new VisitFormControl('External Id', 'extId', '',
         [Validators.compose([Validators.required,
           Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
@@ -56,9 +57,7 @@ export class VisitFormGroup extends FormGroup {
         [Validators.compose([Validators.required])]),
       realVisit: new VisitFormControl('Real Visit', 'realVisit', '',
         [Validators.compose([Validators.required,
-          Validators.pattern('(0|1)')])]),
-      roundNumber:  new VisitFormControl('Round Number', 'roundNumber', '',
-        Validators.compose([Validators.required, Validators.min(0)]))
+          Validators.pattern('(0|1)')])])
     });
   }
 

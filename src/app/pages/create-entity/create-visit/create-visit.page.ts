@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Fieldworker} from "../../../models/fieldworker";
 import {Location} from "../../../models/location";
-import {VisitFormGroup} from "../../../census-forms/visit-form";
+import {VisitFormControl, VisitFormGroup} from "../../../census-forms/visit-form";
 import {Visit} from "../../../models/visit";
 import {SynchonizationObservableService} from "../../../services/SynchonizationObserverable/synchonization-observable.service";
 import {NavigationService} from "../../../services/NavigationService/navigation.service";
@@ -10,6 +10,7 @@ import {NetworkConfigurationService} from "../../../services/NetworkService/netw
 import {AuthService} from "../../../services/AuthService/auth.service";
 import {ModalController, NavController} from "@ionic/angular";
 import {HelpPopoverComponent} from "../../../components/help-popover/help-popover.component";
+import {Validators} from "@angular/forms";
 
 @Component({
   selector: 'create-visit',
@@ -39,6 +40,17 @@ export class CreateVisitPage implements OnInit {
     this.visit.collectedBy =  this.navParams.data["collectedBy"];
 
     this.visitForm = new VisitFormGroup();
+
+    this.visitForm.setValue({
+      collectedBy: this.navParams.data.collectedBy,
+      visitLocation: this.navParams.data.visitLocation,
+
+      extId: '',
+      visitDate: '',
+      realVisit: '',
+      roundNumber: 0
+
+    })
   }
 
   ngOnInit(){
@@ -53,16 +65,22 @@ export class CreateVisitPage implements OnInit {
     if(form.valid){
       Object.keys(form.value).forEach((key, index) => {
         this.visit[key] = form.value[key];
+        console.log(this.visit[key] + " " + form.value[key])
       });
+
+      this.visit.visitLocation = this.navParams.data["visitLocation"];
+      this.visit.collectedBy =  this.navParams.data["collectedBy"];
+      this.visit.roundNumber = 0;
 
       this.visitProvider.saveDataLocally(this.visit);
       this.formSubmitted = false;
 
-      this.navController.goBack();
+      this.goBackToCensus();
     }
   }
 
   goBackToCensus(){
+    this.syncObserver.publishChange("Visit:Create:Success", this.visit);
     this.navController.navigateBack("/baseline");
   }
 

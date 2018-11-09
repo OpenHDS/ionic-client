@@ -2,6 +2,7 @@
   "defaultURL": "http://130.111.131.33:8081/openhds/api2/rest",
   "defaultUser": "admin",
   "defaultPassword": "test",
+  "dev": true,
 
   "locationHierarchyLevel1": "Country",
   "locationHierarchyLevel2": "Region",

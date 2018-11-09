@@ -127,13 +127,8 @@ export class DatabaseSyncPage implements OnInit {
     // Sync Locations, Social Groups
     await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
     await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err); this.sgSyncSuccess = false;});
+    await this.indProvider.synchronizeOfflineIndividuals().catch(err => {console.log(err); this.individualSyncSuccess = false;});;
 
-    // Sync CensusIndividuals
-    // TODO: code needs to be moved to census individual provider
-    const censusIndividuals = await this.censusProvider.getAllCensusSubmissions();
-    censusIndividuals.forEach(async cenInd => {
-      await this.censusProvider.sendCensusIndividual(cenInd);
-    });
 
   }
 }
