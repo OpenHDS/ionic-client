@@ -53,6 +53,7 @@ export class LocationService extends DatabaseService {
       loc.uuid = UUID.UUID();
     }
 
+
     loc.deleted = false;
     loc.syncedWithServer = false;
     loc.processed = false;
@@ -144,8 +145,9 @@ export class LocationService extends DatabaseService {
 
   async buildHierarchyForLocation(locExtId){
     let l = await this.findLocationByExtId(locExtId);
-    let hierarchy = await this.locHierarchyService.buildHierarchy(l[0]);
 
+    let hierarchy = await this.locHierarchyService.buildHierarchy(l[0]);
+    console.log(hierarchy);
     return hierarchy;
   }
 }

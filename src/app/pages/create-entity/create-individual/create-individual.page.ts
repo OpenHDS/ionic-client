@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {HelpPopoverComponent} from "../../../components/help-popover/help-popover.component";
 import {CensusIndividualFormGroup} from "../../../census-forms/individual-form";
-import {SocialGroup} from "../../../models/social-group";
-import {Location} from "../../../models/location";
+
 import {Individual} from "../../../models/individual";
 import {SynchonizationObservableService} from "../../../services/SynchonizationObserverable/synchonization-observable.service";
 import {NavigationService} from "../../../services/NavigationService/navigation.service";
@@ -25,8 +24,7 @@ export class CreateIndividualPage implements OnInit {
   createHead: boolean;
   formSubmitted: boolean = false;
   individualForm: CensusIndividualFormGroup;
-  sg: SocialGroup;
-  loc: Location;
+
 
   individual: Individual = new Individual();
 
@@ -37,23 +35,39 @@ export class CreateIndividualPage implements OnInit {
               public fieldworkerProvider: FieldworkerService) {
 
 
-    this.sg = this.navService.data.sg;
-    this.loc = this.navService.data.loc;
-
     this.individualForm = new CensusIndividualFormGroup();
+    this.individual.collectedBy = this.navService.data.collectedBy;
     if (this.navService.data.createHead) {
       this.createHead = true;
     } else {
       this.createHead = false;
     }
+
+
+    this.individualForm.setValue({
+      collectedBy: this.individual.collectedBy,
+      extId: '',
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      dob: '',
+      dobAspect: '',
+      bIsToA: '',
+      gender: '',
+      spouse: ''
+    });
   }
 
   async submitForm(form) {
     this.formSubmitted = true;
     if (form.valid) {
       Object.keys(form.value).forEach((key, index) => {
-        this.individual[key] = form.value[key];
+        if(key === 'dob')
+          this.individual[key] = form.value[key].year.text + "-" + form.value[key].month.text + "-" + form.value[key].day.text;
+        else
+          this.individual[key] = form.value[key];
       });
+
       this.individual.collectedBy = this.navService.data.collectedBy;
       this.formSubmitted = false;
       await this.individualProvider.saveDataLocally(this.individual);
@@ -72,21 +86,23 @@ export class CreateIndividualPage implements OnInit {
   }
 
   async createAndSaveCensusIndividual() {
+    console.log("Creating Census Individual...");
+
     var censusInd = new CensusIndividual();
     censusInd.uuid = this.individual.uuid;
-    censusInd.locationExtId = this.loc.extId;
-    censusInd.socialGroupExtId = this.sg.extId;
+    censusInd.locationExtId = this.navService.data.locationExtId;
+    censusInd.socialGroupExtId = this.navService.data.socialGroup.extId;
     if(this.createHead)
       censusInd.socialGroupHeadExtId = this.individual.extId;
     else
-      censusInd.socialGroupHeadExtId= this.sg.groupHead.extId;
-    censusInd.individual = await this.individualProvider.shallowCopy(this.individual);
+      censusInd.socialGroupHeadExtId= this.navService.data.socialGroup.groupHead.extId;
+    censusInd.individual = this.individual;
     censusInd.bIsToA= this.individual.bIsToA;
     censusInd.spouse = this.individual.spouse != undefined ? await this.individualProvider.findIndividualByExtId(this.individual.spouse)[0] : null;
 
     let fieldworker = await this.fieldworkerProvider.getFieldworker(this.individual.collectedBy);
-    censusInd.collectedBy = fieldworker[0];
-    censusInd.individual.collectedBy = {extId: fieldworker[0].extId, uuid: fieldworker[0].uuid};
+    censusInd.collectedBy = fieldworker[0].extId;
+    censusInd.individual.collectedBy = fieldworker[0].extId;
     await this.censusSub.saveCensusInformationForApproval(censusInd);
   }
 

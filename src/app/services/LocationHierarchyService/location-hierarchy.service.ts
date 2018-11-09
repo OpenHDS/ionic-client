@@ -87,18 +87,21 @@ export class LocationHierarchyService extends DatabaseService {
 
     //Build the hierarchy for a given location
     async buildHierarchy(location: Location){
-      console.log(location);
       let hierarchies = [];
       let levelCount = await this.getLevelsInHierarchy();
 
-      hierarchies.push(location.locationLevel);
 
-      let parent = location.locationLevel;
+
+      let hLevel = await this.findHierarchy(location.locationLevel);
+
+      hierarchies.push(hLevel[0]);
+      let parent = hLevel[0].parent;
 
       //Stop before Country level
       for(let i = levelCount; i > 2; i--){
-        parent = parent.parent;
-        hierarchies.push(parent);
+        hLevel = await this.findHierarchy(parent.extId);
+        parent = hLevel[0].parent;
+        hierarchies.push(hLevel[0]);
       }
 
       return hierarchies;

@@ -94,6 +94,7 @@ export class CreateSocialGroupPage implements OnInit {
     this.navService.data.collectedBy = this.navService.data.collectedBy;
     this.navService.data.socialGroupLocation = this.navService.data.location;
     this.navService.data.socialGroup = this.socialGroup;
+    this.navService.data.createHead = true;
     this.router.navigate(['/create-individual']);
   }
 

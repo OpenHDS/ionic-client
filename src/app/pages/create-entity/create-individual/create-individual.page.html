@@ -25,12 +25,11 @@
       <ion-item>
         <ion-label>{{control.label}}</ion-label>
 
-        <ion-input type="date" float-right *ngIf="control.label == 'Date of Birth'" formControlName="{{control.modelProperty}}"
-                 ></ion-input>
+        <ion-datetime displayFormat="YYYY-MM-DD" float-right *ngIf="control.label == 'Date of Birth'" formControlName="{{control.modelProperty}}"
+                 ></ion-datetime>
 
         <!---- Other form fields that aren't selection based ---->
         <ion-input *ngIf="control.label != 'Date of Birth'"
-                   [(ngModel)]="individual[control.modelProperty]"
                    formControlName="{{control.modelProperty}}"></ion-input>
         <ion-button type="button" fill="outline" spot="end"
                 [hidden]="control.label != 'Gender' && control.label != 'Partial Date' && control.label != 'Relationship to Head'"

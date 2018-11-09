@@ -5,9 +5,10 @@ import {SocialGroup} from "../../models/social-group";
 import {Individual} from "../../models/individual";
 import {LocationHierarchyService} from "../../services/LocationHierarchyService/location-hierarchy.service";
 import {Location} from "../../models/location";
-import {NavController} from "@ionic/angular";
+import {AlertController, NavController} from "@ionic/angular";
 import {NavigationService} from "../../services/NavigationService/navigation.service";
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
+import {Visit} from "../../models/visit";
 
 @Component({
   selector: 'baseline-census',
@@ -23,13 +24,17 @@ export class BaselineCensusPage implements OnInit {
   selectedLocation: Location;
   selectedSocialGroup: SocialGroup;
   selectedIndividuals: Array<Individual>;
+  selectedVisit: Visit;
   baselineStep = 'hierarchy';
   shownGroup = ['hierarchy'];
   editing = false;
+  entityErrors = [];
 
 
-  constructor(public syncObservable: SynchonizationObservableService, public locHierarchyService: LocationHierarchyService,
+  constructor(public syncObservable: SynchonizationObservableService,
+              public locHierarchyService: LocationHierarchyService,
               public navController: NavController,
+              public alertCtrl: AlertController,
               public navService: NavigationService) {
 
     this.syncObservable.subscribe("Location:Create:Success", (location) => {
@@ -41,7 +46,13 @@ export class BaselineCensusPage implements OnInit {
     });
 
     this.syncObservable.subscribe("Individual:Create:Success", (individual) => {
-      this.setSelectedSocialGroup(individual);
+      this.setSelectedIndividuals(individual.ind);
+    });
+
+
+    this.syncObservable.subscribe("Visit:Create:Success", (visit) => {
+      this.selectedVisit = visit;
+      this.displayCensusSubmission();
     });
   }
 
@@ -49,11 +60,16 @@ export class BaselineCensusPage implements OnInit {
     this.levels = await this.locHierarchyService.getLevels();
     this.selectedHierarchy = [];
     this.selectedIndividuals = [];
+  }
+
+  async ionViewWillEnter(){
+    console.log("ionViewWillEnter BaselineCensusPage");
+    await this.resetBaselineCensus();
+
     if(this.navService.data !== undefined) {
       this.editing = this.navService.data.entityEditing;
       this.processEditing();
     }
-
   }
 
   setSelectedHierarchy(hierarchy: Hierarchy) {
@@ -72,6 +88,7 @@ export class BaselineCensusPage implements OnInit {
   }
 
   setSelectedIndividuals(ind: Individual) {
+    console.log(ind);
     this.selectedIndividuals.push(ind);
     this.checkBaselineStepComplete();
   }
@@ -103,7 +120,15 @@ export class BaselineCensusPage implements OnInit {
   async goToCreatePage(){
     switch (this.baselineStep) {
       case 'location':
-        this.navService.data = {collectedBy: this.collectedBy, parentLevel: this.selectedHierarchy[this.selectedHierarchy.length -1].extId};
+        // If editing set these fields: editing, errors, and location
+        if(this.editing){
+          this.navService.data["editing"] = true;
+          this.navService.data["errors"] = this.entityErrors;
+          this.navService.data["location"] = this.selectedLocation;
+        } else {
+          this.navService.data = {collectedBy: this.collectedBy, parentLevel: this.selectedHierarchy[this.selectedHierarchy.length -1].extId};
+        }
+        console.log(this.navService.data);
         this.navController.navigateForward("/create-location").then(() => {
           this.syncObservable.publishChange("Baseline:CreateLocation");
         });
@@ -115,7 +140,7 @@ export class BaselineCensusPage implements OnInit {
         });
         break;
       case 'individual':
-        this.navService.data = {collectedBy: this.collectedBy, loc: this.selectedLocation, sg: this.selectedSocialGroup};
+        this.navService.data = {collectedBy: this.collectedBy, locationExtId: this.selectedLocation.extId, socialGroup: this.selectedSocialGroup};
         this.navController.navigateForward("/create-individual").then(() => {
           this.syncObservable.publishChange("Baseline:CreateIndividual");
         });
@@ -137,14 +162,10 @@ export class BaselineCensusPage implements OnInit {
       return false;
   }
 
-  segmentChanged(event){
-    this.baselineStep = event.value;
-    this.reloadEntityList()
-  }
 
   // Complete baseline: fillout visit form, and send to Summary page.
   completeBaselineCensus(){
-    this.navService.data = {collectedBy: this.collectedBy, visitLocation: this.selectedLocation};
+    this.navService.data = {collectedBy: this.collectedBy, visitLocation: this.selectedLocation.extId};
     this.navController.navigateForward("/create-visit").then(() => {
       this.syncObservable.publishChange("Baseline:CreateVisit")
     });
@@ -180,14 +201,17 @@ export class BaselineCensusPage implements OnInit {
     return this.shownGroup.indexOf(group) > -1;
   }
 
-  processEditing(){
+  async processEditing(){
+     console.log("Editing Entity: " + this.navService.data.entity);
      this.selectedHierarchy.push(new Hierarchy(), new Hierarchy()); //Filler for hierarchy root and country level
      this.navService.data.selectedHierarchy.forEach(hier => this.selectedHierarchy.push(hier));
+     console.log(this.selectedHierarchy);
      switch(this.navService.data.entity){
        case 'locations':
          this.selectedLocation = this.navService.data.selectedLocation;
          this.toggleGroup('location');
          this.baselineStep = 'location';
+         this.entityErrors = this.navService.data.errors;
          break;
        case 'socialGroups':
          this.selectedLocation = this.navService.data.selectedLocation;
@@ -206,7 +230,28 @@ export class BaselineCensusPage implements OnInit {
 
   }
 
-  saveBaselineReferences(){
-
+  async resetBaselineCensus() {
+    this.levels = await this.locHierarchyService.getLevels();
+    this.editing = false;
+    this.selectedHierarchy = [];
+    this.selectedLocation = undefined;
+    this.selectedSocialGroup = undefined;
+    this.selectedIndividuals = [];
+    this.selectedVisit = undefined;
+    this.baselineStep = 'hierarchy';
+    this.shownGroup = ['hierarchy'];
   }
+
+  async displayCensusSubmission(){
+      let alert = await this.alertCtrl.create({
+        header: "Baseline Submitted",
+        subHeader: "Census information was successfully submitted",
+        buttons: [{
+          text: "Confirm",
+          handler: () => {this.resetBaselineCensus()}
+        }]
+      });
+
+      alert.present();
+    }
 }
