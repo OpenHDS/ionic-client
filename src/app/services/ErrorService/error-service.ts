@@ -33,9 +33,11 @@ export class ErrorService {
   }
 
   async findAndMarkResolved(entityId){
-    let entity = this.db.errors.where('entityId').equals(entityId).toArray()[0];
-    entity.resolved = true;
-    await this.updateOrAddError(entity);
+    console.log("Marking resolved... " + entityId);
+    let entity = await this.db.errors.where('entityId').equals(entityId).toArray();
+    console.log(entity);
+    entity[0]["resolved"] = true;
+    await this.updateOrAddError(entity[0]);
   }
 
   mapErrorMessage(code) {
@@ -51,7 +53,7 @@ export class ErrorService {
       err.uuid = UUID.UUID();
     }
 
-    err.resolved = false;
+    err["resolved"] = false;
     err.timestamp = new Date().getTime();
 
     console.log(err);
