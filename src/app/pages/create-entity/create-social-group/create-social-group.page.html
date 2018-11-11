@@ -1,4 +1,4 @@
-<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="this.navService.data.editing ? 'Edit a Social Group': this.PAGE_NAME"></openhds-header>
 
 <ion-content>
   <div *ngIf="!this.netConfig.isConnected()">
@@ -40,15 +40,20 @@
 
     <br/>
 
-      <ion-button fill="outline" type="submit" [disabled]="formSubmitted && sgForm.invalid">Create Social Group Head</ion-button>
+      <ion-button *ngIf="!this.navService.data.editing" fill="outline" type="submit" [disabled]="formSubmitted && sgForm.invalid">Set Social Group Head</ion-button>
+      <ion-button *ngIf="this.navService.data.editing" fill="outline" type="submit" [disabled]="formSubmitted && sgForm.invalid"> Edit Social Group </ion-button>
   </form>
 
   <br>
   <ion-item-divider color="primary">Additional Options</ion-item-divider>
 
-  <ion-item>
+  <ion-item *ngIf="!this.navService.data.editing">
       <ion-label>Lookup Social Group Head</ion-label>
       <ion-toggle [(ngModel)]="lookupSGHead"></ion-toggle>
   </ion-item>
 
+  <ion-item *ngIf="this.navService.data.editing">
+    <ion-label> Group Head: {{this.navService.data.selectedSocialGroup.groupHead.extId}}</ion-label>
+    <ion-button slot="end"> Edit Group Head </ion-button>
+  </ion-item>
 </ion-content>

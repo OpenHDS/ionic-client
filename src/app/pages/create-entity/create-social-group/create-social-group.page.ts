@@ -29,12 +29,11 @@ export class CreateSocialGroupPage implements OnInit {
 
     this.sgForm = new SocialGroupFormGroup();
 
-    this.sgForm.setValue({
-      collectedBy: this.navService.data.collectedBy,
-      groupName: '',
-      extId: '',
-      groupType: ''
-    });
+    if(this.navService.data.editing){
+      this.setEditSocialGroupFormValues();
+    } else {
+      this.sgForm.get("collectedBy").setValue(this.navService.data.collectedBy);
+    }
 
     this.syncObserver.subscribe("Baseline:CreateSocialGroup", () => {
       console.log("Baseline Census: Create a Social Group");
@@ -54,6 +53,14 @@ export class CreateSocialGroupPage implements OnInit {
     });
   }
 
+  // Helper method for setting all fields of a location object
+  setEditSocialGroupFormValues(){
+    let sg = this.navService.data.socialGroup;
+    for(let prop in this.sgForm.controls){
+      console.log(sg[prop]);
+      this.sgForm.get(prop).setValue(sg[prop])
+    }
+  }
 
   //Dismiss the modal. Note: Data is not saved if the form is not completed!
   async dismissForm() {
@@ -64,6 +71,11 @@ export class CreateSocialGroupPage implements OnInit {
     let social = new SocialGroup();
     this.formSubmitted = true;
     if(form.valid){
+      if(this.navService.data.editing){
+        this.editSocialGroup();
+        return;
+      }
+
       Object.keys(form.value).forEach((key, index) => {
         social[key] = form.value[key];
       });
@@ -80,8 +92,19 @@ export class CreateSocialGroupPage implements OnInit {
   }
 
   setHeadLookup(){
-    console.log("Head lookup");
     this.lookupSGHead = true;
+  }
+
+  async editSocialGroup(){
+    for(let prop in this.sgForm.controls){
+      if(this.sgForm.get(prop).dirty){
+        this.navService.data.socialGroup[prop] = this.sgForm.get(prop).value;
+      }
+    }
+
+    await this.sgProvider.update(this.navService.data.socialGroup);
+    this.formSubmitted = false;
+    this.router.navigate(['/baseline']);
   }
 
   async goBackToCensus(socialGroup: SocialGroup){
