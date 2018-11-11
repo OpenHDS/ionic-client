@@ -16,27 +16,30 @@
 
     <!-- List of errors for selected entities -->
     <ion-col>
-        <ion-item *ngIf="this.errors.length === 0; else elseBlock">
-          <ion-text>
-            There are no errors for {{this.selectedLabel}}.
-          </ion-text>
-        </ion-item>
-        <ng-template #elseBlock>
-          <ion-list lines="full">
-            <ion-item *ngFor="let ent of this.errors">
-              <ion-item>
-                {{ent.entityExtId}}
-              </ion-item>
-              <ion-item>
-                {{ent.errorMessage}}
-              </ion-item>
-              <ion-item>
-                {{convertTimestamp(ent.timestamp)}}
-              </ion-item>
-              <ion-button fill="outline" slot="end" (click)="this.correctEntityError(ent)">Correct Error</ion-button>
-            </ion-item>
-          </ion-list>
-        </ng-template>
+      <ion-item *ngIf="this.errorKeys === undefined || this.errorKeys.length === 0 ; else elseBlock">
+        <ion-text>
+          There are no errors for {{this.selectedLabel}}.
+        </ion-text>
+      </ion-item>
+      <ng-template #elseBlock>
+        <ion-list lines="full">
+          <ion-item *ngFor="let ent of this.errorKeys">
+            <ion-col size="3">
+              {{ent}}
+            </ion-col>
+              <ion-col>
+                <ion-list *ngFor="let messages of this.errors[ent]">
+                  <ion-col size="6">
+                    <ion-text>
+                      {{messages["errorMessage"]}}
+                    </ion-text>
+                  </ion-col>
+                </ion-list>
+              </ion-col>
+            <ion-button fill="outline" slot="end" (click)="this.correctEntityError(ent)">Correct Error</ion-button>
+          </ion-item>
+        </ion-list>
+      </ng-template>
     </ion-col>
   </ion-row>
 </ion-content>

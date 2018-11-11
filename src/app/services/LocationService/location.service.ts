@@ -145,7 +145,8 @@ export class LocationService extends DatabaseService {
 
   async buildHierarchyForLocation(locExtId){
     let l = await this.findLocationByExtId(locExtId);
-
+    if(l[0].locationLevel.hasOwnProperty("extId"))
+      l[0].locationLevel = l[0].locationLevel.extId;
     let hierarchy = await this.locHierarchyService.buildHierarchy(l[0]);
     console.log(hierarchy);
     return hierarchy;

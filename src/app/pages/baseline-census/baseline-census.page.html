@@ -143,30 +143,11 @@
         <ion-text>The following errors have been identified and need to be corrected:</ion-text>
       </ion-item>
       <div>
-        <ion-list lines="full">
-          <div *ngIf="this.baselineStep ==='location'">
-            <ion-item *ngFor="let err of this.entityErrors">
-              {{err.errorMessage}}
-            </ion-item>
-          </div>
+        <ion-list *ngFor="let errors of this.entityErrors" lines="full">
+          <ion-item>
+            {{errors.errorMessage}}
 
-          <div *ngIf="this.baselineStep ==='socialGroups'">
-            <ion-item *ngFor="let err of this.entityErrors">
-              {{err.errorMessage}}
-            </ion-item>
-          </div>
-
-          <div *ngIf="this.baselineStep ==='individuals'">
-            <ion-item *ngFor="let err of this.entityErrors">
-              {{err.errorMessage}}
-            </ion-item>
-          </div>
-
-          <div *ngIf="this.baselineStep ==='visits'">
-            <ion-item *ngFor="let err of this.entityErrors">
-              {{err.errorMessage}}
-            </ion-item>
-          </div>
+          </ion-item>
         </ion-list>
       </div>
     </ion-col>

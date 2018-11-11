@@ -35,7 +35,7 @@ export class ErrorReportingComponent implements OnInit {
     let err = new DataError();
     err.entityType = this.entityType;
     err.errorMessage = this.errorMessage;
-    err.entityExtId = this.entityId;
+    err.entityId = this.entityId;
     err.resolved = false;
 
     console.log(err);

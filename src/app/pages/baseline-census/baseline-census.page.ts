@@ -128,13 +128,19 @@ export class BaselineCensusPage implements OnInit {
         } else {
           this.navService.data = {collectedBy: this.collectedBy, parentLevel: this.selectedHierarchy[this.selectedHierarchy.length -1].extId};
         }
-        console.log(this.navService.data);
         this.navController.navigateForward("/create-location").then(() => {
           this.syncObservable.publishChange("Baseline:CreateLocation");
         });
         break;
       case 'socialGroup':
-        this.navService.data = {collectedBy: this.collectedBy, location: this.selectedLocation};
+        if(this.editing){
+          this.navService.data["editing"] = true;
+          this.navService.data["errors"] = this.entityErrors;
+          this.navService.data["location"] = this.selectedLocation;
+          this.navService.data["socialGroup"] = this.selectedSocialGroup;
+        } else {
+          this.navService.data = {collectedBy: this.collectedBy, location: this.selectedLocation};
+        }
         this.navController.navigateForward("/create-social-group").then(() => {
           this.syncObservable.publishChange("Baseline:CreateSocialGroup");
         });
@@ -208,14 +214,17 @@ export class BaselineCensusPage implements OnInit {
      console.log(this.selectedHierarchy);
      switch(this.navService.data.entity){
        case 'locations':
+         console.log(this.navService.data);
          this.selectedLocation = this.navService.data.selectedLocation;
          this.toggleGroup('location');
          this.baselineStep = 'location';
          this.entityErrors = this.navService.data.errors;
          break;
        case 'socialGroups':
+         console.log(this.navService.data);
          this.selectedLocation = this.navService.data.selectedLocation;
          this.selectedSocialGroup = this.navService.data.selectedSocialGroup;
+         this.entityErrors = this.navService.data.errors;
          this.toggleGroup('socialGroup');
          this.baselineStep = 'socialGroup';
          break;
@@ -223,6 +232,7 @@ export class BaselineCensusPage implements OnInit {
          this.selectedLocation = this.navService.data.selectedLocation;
          this.selectedSocialGroup = this.navService.data.selectedSocialGroup;
          this.navService.data.selectedIndividuals.forEach(ind => this.selectedIndividuals.push(ind));
+         this.entityErrors = this.navService.data.errors;
          this.baselineStep = 'individual';
          this.toggleGroup('individual');
          break;

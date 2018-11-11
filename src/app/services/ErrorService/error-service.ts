@@ -19,8 +19,18 @@ export class ErrorService {
     }
   }
 
-  async getEntityErrors(labelName): Promise<DataError[]> {
-    return this.db.errors.where('entityType').equals(labelName).toArray();
+
+  async groupEntityErrorsByIds(labelName){
+    let errors = await this.db.errors.where('entityType').equals(labelName).toArray();
+    let groups = {};
+    errors.forEach(x => {
+      if (groups.hasOwnProperty(x.entityId))
+        groups[x.entityId].push({errorMessage: x.errorMessage, timestamp: x.timestamp});
+      else
+        groups[x.entityId] = [{errorMessage: x.errorMessage, timestamp: x.timestamp}];
+    });
+
+    return groups;
   }
 
   async validateErrorExistence(error: DataError) {

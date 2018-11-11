@@ -15,7 +15,8 @@ import {NavController} from "@ionic/angular";
 export class EntityCorrectionPage implements OnInit {
   readonly PAGE_NAME = 'Error Correction';
   readonly ENTITY_LABELS = ["Locations", "Social Groups", "Individuals", "Visits"];
-  errors = [];
+  errors: any;
+  errorKeys: any;
   selectedLabel = this.ENTITY_LABELS[0].toLowerCase();
 
   constructor(public navService: NavigationService, public errorService: ErrorService,
@@ -33,20 +34,22 @@ export class EntityCorrectionPage implements OnInit {
   }
 
   correctEntityError(entity){
-    switch(entity.entityType){
+    console.log(this.selectedLabel);
+    switch(this.selectedLabel.replace(' ', '')){
       case 'locations':
-        this.correctLocation(entity.entityExtId);
+        this.correctLocation(entity);
         break;
       case 'socialgroups':
-        this.correctSocialGroup(entity.entityExtId);
+        this.correctSocialGroup(entity);
         break;
       case 'individuals':
-        this.correctIndividual(entity.entityExtId);
+        this.correctIndividual(entity);
         break;
     }
   }
 
   async getLocation(entityId){
+    console.log(entityId);
     let hierarchy = await this.locationService.buildHierarchyForLocation(entityId);
 
     //Sort the hierarchy in descending order for baseline display
@@ -71,7 +74,7 @@ export class EntityCorrectionPage implements OnInit {
 
   async correctLocation(entityId){
     let locInfo = await this.getLocation(entityId);
-    let entityErrMessages = this.errors.filter(x => x.entityExtId === entityId);
+    let entityErrMessages = this.errors[entityId];
     this.navService.data = {
       entityEditing: true,
       entity: 'locations',
@@ -84,10 +87,12 @@ export class EntityCorrectionPage implements OnInit {
   async correctSocialGroup(entityId){
     let socialGroupInfo = await this.getSocialGroup(entityId);
     let locInfo = await this.getLocation(entityId.substring(0, 9));
+    let entityErrMessages = this.errors[entityId];
 
     this.navService.data ={
       entityEditing: true,
       entity: 'socialGroups',
+      errors: entityErrMessages,
       selectedHierarchy: locInfo['selectedHierarchy'],
       selectedLocation: locInfo['selectedLocation'],
       selectedSocialGroup: socialGroupInfo
@@ -115,7 +120,8 @@ export class EntityCorrectionPage implements OnInit {
   }
 
   async loadEntityErrors(){
-      this.errors = await this.errorService.getEntityErrors(this.selectedLabel.replace(" ", ""));
+      this.errors = await this.errorService.groupEntityErrorsByIds(this.selectedLabel.replace(" ", ""));
+      this.errorKeys = Object.keys(this.errors);
   }
 
   convertTimestamp(date){
