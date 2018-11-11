@@ -146,7 +146,19 @@ export class BaselineCensusPage implements OnInit {
         });
         break;
       case 'individual':
-        this.navService.data = {collectedBy: this.collectedBy, locationExtId: this.selectedLocation.extId, socialGroup: this.selectedSocialGroup};
+        if(this.editing){
+          this.navService.data["editing"] = true;
+          this.navService.data["errors"] = this.entityErrors;
+          this.navService.data["location"] = this.selectedLocation;
+          this.navService.data["socialGroup"] = this.selectedSocialGroup;
+          this.navService.data["individual"] = this.selectedIndividuals[0];
+        } else {
+          this.navService.data = {
+            collectedBy: this.collectedBy,
+            locationExtId: this.selectedLocation.extId,
+            socialGroup: this.selectedSocialGroup
+          };
+        }
         this.navController.navigateForward("/create-individual").then(() => {
           this.syncObservable.publishChange("Baseline:CreateIndividual");
         });

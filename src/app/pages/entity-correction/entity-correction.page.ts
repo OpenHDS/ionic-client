@@ -105,10 +105,13 @@ export class EntityCorrectionPage implements OnInit {
     let individual = await this.getIndividual(entityId);
     let socialGroupInfo = await this.getSocialGroup(entityId.substring(0,11));
     let locInfo = await this.getLocation(entityId.substring(0, 9));
+    let entityErrMessages = this.errors[entityId];
+
 
     this.navService.data ={
       entityEditing: true,
       entity: 'individuals',
+      errors: entityErrMessages,
       selectedHierarchy: locInfo['selectedHierarchy'],
       selectedLocation: locInfo['selectedLocation'],
       selectedSocialGroup: socialGroupInfo,

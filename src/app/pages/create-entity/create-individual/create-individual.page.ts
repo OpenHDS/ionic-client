@@ -36,31 +36,37 @@ export class CreateIndividualPage implements OnInit {
 
 
     this.individualForm = new CensusIndividualFormGroup();
-    this.individual.collectedBy = this.navService.data.collectedBy;
     if (this.navService.data.createHead) {
       this.createHead = true;
     } else {
       this.createHead = false;
     }
 
+    if(this.navService.data.editing){
+      this.setEditIndividualFormValues();
+    } else {
+      this.individualForm.get("collectedBy").setValue(this.navService.data.collectedBy);
+    }
 
-    this.individualForm.setValue({
-      collectedBy: this.individual.collectedBy,
-      extId: '',
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      dob: '',
-      dobAspect: '',
-      bIsToA: '',
-      gender: '',
-      spouse: ''
-    });
+  }
+
+  // Helper method for setting all fields of a location object
+  setEditIndividualFormValues(){
+    let individual = this.navService.data.individual;
+    for(let prop in this.individualForm.controls){
+      this.individualForm.get(prop).setValue(individual[prop])
+    }
   }
 
   async submitForm(form) {
     this.formSubmitted = true;
     if (form.valid) {
+
+      if (this.navService.data.editing){
+        this.editIndividual();
+        return;
+      }
+
       Object.keys(form.value).forEach((key, index) => {
         if(key === 'dob')
           this.individual[key] = form.value[key].year.text + "-" + form.value[key].month.text + "-" + form.value[key].day.text;
@@ -75,6 +81,22 @@ export class CreateIndividualPage implements OnInit {
 
       this.goBackToCensus();
     }
+  }
+
+  async editIndividual(){
+    for(let prop in this.individualForm.controls){
+      if(this.individualForm.get(prop).dirty){
+        if(prop === 'dob')
+          this.navService.data.individual[prop] = this.individualForm.value[prop].year.text + "-"
+            + this.individualForm.value[prop].month.text + "-" + this.individualForm.value[prop].day.text;
+        else
+          this.navService.data.individual[prop] = this.individualForm.get(prop).value;
+      }
+    }
+
+    await this.individualProvider.update(this.navService.data.individual);
+    this.formSubmitted = false;
+    this.router.navigate(['/baseline']);
   }
 
   async goBackToCensus(){

@@ -53,11 +53,10 @@ export class CreateSocialGroupPage implements OnInit {
     });
   }
 
-  // Helper method for setting all fields of a location object
+  // Helper method for setting all fields of a social group object
   setEditSocialGroupFormValues(){
     let sg = this.navService.data.socialGroup;
     for(let prop in this.sgForm.controls){
-      console.log(sg[prop]);
       this.sgForm.get(prop).setValue(sg[prop])
     }
   }

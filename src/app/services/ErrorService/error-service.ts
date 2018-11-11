@@ -65,8 +65,6 @@ export class ErrorService {
 
     err["resolved"] = false;
     err.timestamp = new Date().getTime();
-
-    console.log(err);
     this.updateOrAddError(err);
   }
 

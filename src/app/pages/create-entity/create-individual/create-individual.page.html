@@ -1,4 +1,4 @@
-<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="this.navService.data.editing ? 'Edit an Individual' : this.PAGE_NAME"></openhds-header>
 
 <ion-content padding>
   <div *ngIf="!this.netConfig.isConnected()">
@@ -48,7 +48,9 @@
       <ion-button fill="outline" [disabled]="!individualForm.valid && this.formSubmitted" type="submit"> Create Head</ion-button>
     </div>
     <ng-template #indButtonBlock>
-      <ion-button fill="outline" [disabled]="!individualForm.valid && this.formSubmitted" type="submit"> Create Individual</ion-button>
+      <ion-button *ngIf="!this.navService.data.editing" fill="outline" [disabled]="!individualForm.valid && this.formSubmitted" type="submit"> Create Individual</ion-button>
+
+      <ion-button *ngIf="this.navService.data.editing"fill="outline" [disabled]="!individualForm.valid && this.formSubmitted" type="submit"> Edit Individual</ion-button>
     </ng-template>
   </form>
 
