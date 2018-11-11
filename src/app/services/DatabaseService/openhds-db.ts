@@ -33,7 +33,7 @@ export class OpenhdsDb extends Dexie {
       individuals: 'uuid, extId, dob, dobAspect, firstName, middleName, lastName, gender, mother, father, bIsToA, deleted, insertDate',
       censusIndividuals: 'uuid, individual, locationExtId, socialGroupExtId, socialGroupHeadExtId, bIsToA, spouse, collectedBy',
       visits: 'uuid, extId, realVisit, roundNumber, visitDate, visitLocation, collectedBy',
-      errors: 'uuid, entityType, entity, errorMessage, timestamp, resolved',
+      errors: 'uuid, entityType, entityId, errorMessage, timestamp, resolved',
       userCache: 'uuid, username, password, roles'
     });
   }

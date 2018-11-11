@@ -36,13 +36,12 @@ export class CreateLocationPage implements OnInit {
 
     this.form = new LocationFormGroup();
 
-    this.form.setValue({
-      collectedBy: this.navService.data.collectedBy,
-      locationLevel: this.navService.data.parentLevel,
-      locationName: '',
-      extId: '',
-      locationType: ''
-    });
+    if(this.navService.data.editing){
+      this.setEditLocationFormValues();
+    } else {
+      this.form.get('collectedBy').setValue(this.navService.data.collectedBy);
+      this.form.get('locationLevel').setValue(this.navService.data.parentLevel);
+    }
 
     this.syncObserver.subscribe("Baseline:CreateLocation", () => {
       console.log("Baseline Census: Create a Location");
@@ -53,6 +52,15 @@ export class CreateLocationPage implements OnInit {
 
   }
 
+  // Helper method for setting all fields of a location object
+  setEditLocationFormValues(){
+    let location = this.navService.data.location;
+    for(let prop in this.form.controls){
+      console.log(prop);
+      console.log(location[prop]);
+      this.form.get(prop).setValue(location[prop])
+    }
+  }
   async getGeolocationInfo(loc){
     let loading = await this.loadingCtrl.create({
       message: "Gathering geolocation information..."
@@ -76,6 +84,12 @@ export class CreateLocationPage implements OnInit {
 
     this.formSubmitted = true;
     if(form.valid){
+
+      if(this.navService.data.editing){
+        this.editLocation();
+        return;
+      }
+
       Object.keys(form.value).forEach((key, index) => {
         loc[key] = form.value[key];
       });
@@ -88,6 +102,18 @@ export class CreateLocationPage implements OnInit {
       this.goBackToCensus(loc);
     }
   }
+
+  async editLocation(){
+    for(let prop in this.form.controls){
+      if(this.form.get(prop).dirty){
+        this.navService.data.location[prop] = this.form.get(prop).value;
+      }
+    }
+
+    await this.locProvider.update(this.navService.data.location);
+    this.formSubmitted = false;
+  }
+
 
   async goBackToCensus(location: Location){
     this.syncObserver.publishChange("Location:Create:Success", location);

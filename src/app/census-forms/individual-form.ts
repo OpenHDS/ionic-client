@@ -74,14 +74,14 @@ export class IndividualFormGroup extends FormGroup {
     return Object.keys(this.formHelpMessages);
   }
 
-  get individualFormControls(): IndividualFormControl[] {
+  get formControls(): IndividualFormControl[] {
     return Object.keys(this.controls)
       .map(k => this.controls[k] as IndividualFormControl);
   }
 
   getFormValidationMessages(form: any): string[] {
     const messages: string[] = [];
-    this.individualFormControls.forEach(c => c.getValidationMessages()
+    this.formControls.forEach(c => c.getValidationMessages()
       .forEach(m => messages.push(m)));
 
     console.log(messages);

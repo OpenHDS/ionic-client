@@ -1,4 +1,4 @@
-<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="this.navService.data.editing ? 'Edit a Location': this.PAGE_NAME"></openhds-header>
 <ion-content>
   <div *ngIf="!this.netConfig.isConnected()">
     <ion-card color="danger">
@@ -23,9 +23,8 @@
       </ion-list>
     </ion-item>
 
-
     <!------  Form Fields --------->
-    <div class="form-group" *ngFor="let control of form.locationControls">
+    <div class="form-group" *ngFor="let control of form.formControls">
       <ion-item>
         <ion-label>
           {{control.label}}
@@ -49,7 +48,8 @@
     </div>
 
     <br/>
-    <ion-button type="submit"  fill="outline" color="dark" [disabled]="formSubmitted && form.invalid" type="submit">Create Location</ion-button>
+    <ion-button *ngIf="!this.navService.data.editing" type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">Create Location</ion-button>
+    <ion-button *ngIf="this.navService.data.editing"  type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">Edit Location</ion-button>
   </form>
   <br/>
 

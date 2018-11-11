@@ -12,8 +12,9 @@ export class ErrorService {
 
   async updateOrAddError(error: DataError) {
     if (await this.validateErrorExistence(error) === true) {
-      return await this.db.errors.update(error.uuid, error);
+      return await this.db.errors.put(error);
     } else {
+      error["resolved"] = false;
       return await this.db.errors.add(error);
     }
   }
@@ -32,7 +33,7 @@ export class ErrorService {
   }
 
   async findAndMarkResolved(entityId){
-    let entity = this.db.errors.where('entityExtId').equals(entityId).toArray()[0];
+    let entity = this.db.errors.where('entityId').equals(entityId).toArray()[0];
     entity.resolved = true;
     await this.updateOrAddError(entity);
   }
@@ -53,6 +54,7 @@ export class ErrorService {
     err.resolved = false;
     err.timestamp = new Date().getTime();
 
+    console.log(err);
     this.updateOrAddError(err);
   }
 

@@ -36,10 +36,13 @@ export class EntityCorrectionPage implements OnInit {
     switch(entity.entityType){
       case 'locations':
         this.correctLocation(entity.entityExtId);
+        break;
       case 'socialgroups':
         this.correctSocialGroup(entity.entityExtId);
+        break;
       case 'individuals':
         this.correctIndividual(entity.entityExtId);
+        break;
     }
   }
 
@@ -68,10 +71,11 @@ export class EntityCorrectionPage implements OnInit {
 
   async correctLocation(entityId){
     let locInfo = await this.getLocation(entityId);
-
+    let entityErrMessages = this.errors.filter(x => x.entityExtId === entityId);
     this.navService.data = {
       entityEditing: true,
       entity: 'locations',
+      errors: entityErrMessages,
       selectedHierarchy: locInfo['selectedHierarchy'],
       selectedLocation: locInfo['selectedLocation']};
     this.navController.navigateForward("/baseline");

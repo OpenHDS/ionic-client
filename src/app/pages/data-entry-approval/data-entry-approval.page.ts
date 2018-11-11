@@ -11,8 +11,10 @@ import {IndividualService} from "../../services/IndividualService/individual.ser
 import {LocationService} from "../../services/LocationService/location.service";
 import {SocialGroupService} from "../../services/SocialGroupService/social-group.service";
 import {VisitService} from "../../services/VisitService/visit.service";
-import {DataError} from "../../models/data-error";
 import {ErrorService} from "../../services/ErrorService/error-service";
+import {ModalController} from "@ionic/angular";
+import {ErrorReportingComponent} from "../../components/error-reporting/error-reporting.component";
+import {NavigationService} from "../../services/NavigationService/navigation.service";
 
 @Component({
   selector: 'data-entry-approval',
@@ -22,10 +24,7 @@ import {ErrorService} from "../../services/ErrorService/error-service";
 export class DataEntryApprovalPage implements OnInit {
   readonly PAGE_NAME = 'Data Entry Approval';
 
-  locationForm: LocationFormGroup;
-  socialGroupForm: SocialGroupFormGroup;
-  individualForm: CensusIndividualFormGroup;
-  visitForm: VisitFormGroup;
+  form: any;
 
 
   filteredLocations: Location[];
@@ -37,7 +36,7 @@ export class DataEntryApprovalPage implements OnInit {
   viewMethod: string = "notApproved";
   selectedEntry: any;
 
-  constructor(public individualService: IndividualService, public locationService: LocationService,
+  constructor(public modalCtrl: ModalController, public navParams: NavigationService, public individualService: IndividualService, public locationService: LocationService,
               public socialGroupService: SocialGroupService, public visitService: VisitService, public errorService: ErrorService) {
   }
 
@@ -52,16 +51,20 @@ export class DataEntryApprovalPage implements OnInit {
   async filterByNonProcessedData(){
     switch (this.selectedForReview) {
       case 'locations':
-        await this.locationService.getAllLocations().then(x => this.filteredLocations = x.filter(entry => entry.processed == false));
+        await this.locationService.getAllLocations()
+          .then(x => this.filteredLocations = x.filter(entry => entry.processed == false));
         break;
       case 'socialgroups':
-        await this.socialGroupService.getAllSocialGroups().then(x => this.filteredSocialGroups = x.filter(entry => entry.processed == false));
+        await this.socialGroupService.getAllSocialGroups()
+          .then(x => this.filteredSocialGroups = x.filter(entry => entry.processed == false));
         break;
       case 'individuals':
-        await this.individualService.getAllIndividuals().then(x => this.filteredIndividuals = x.filter(entry => entry.processed == false));
+        await this.individualService.getAllIndividuals()
+          .then(x => this.filteredIndividuals = x.filter(entry => entry.processed == false));
         break;
       case 'visits':
-        await this.visitService.getAllVisits().then(x => this.filteredVisits = x.filter(entry => entry.processed == false));
+        await this.visitService.getAllVisits()
+          .then(x => this.filteredVisits = x.filter(entry => entry.processed == false));
         break;
     }
   }
@@ -69,43 +72,29 @@ export class DataEntryApprovalPage implements OnInit {
   async filterByProcessedData(){
     switch (this.selectedForReview) {
       case 'locations':
-        await this.locationService.getAllLocations().then(x => this.filteredLocations = x.filter(entry => entry.processed == true));
+        await this.locationService.getAllLocations()
+          .then(x => this.filteredLocations = x.filter(entry => entry.processed == true));
         break;
       case 'socialgroups':
-        await this.socialGroupService.getAllSocialGroups().then(x => this.filteredSocialGroups = x.filter(entry => entry.processed == true));
+        await this.socialGroupService.getAllSocialGroups()
+          .then(x => this.filteredSocialGroups = x.filter(entry => entry.processed == true));
         break;
       case 'individuals':
-        await this.individualService.getAllIndividuals().then(x => this.filteredIndividuals = x.filter(entry => entry.processed == true));
+        await this.individualService.getAllIndividuals()
+          .then(x => this.filteredIndividuals = x.filter(entry => entry.processed == true));
         break;
       case 'visits':
-        await this.visitService.getAllVisits().then(x => this.filteredVisits = x.filter(entry => entry.processed == true));
+        await this.visitService.getAllVisits()
+          .then(x => this.filteredVisits = x.filter(entry => entry.processed == true));
         break;
     }
   }
 
-  async filterAllData(){
-    switch (this.selectedForReview) {
-      case 'locations':
-        await this.locationService.getAllLocations().then(x => this.filteredLocations = x);
-        break;
-      case 'socialgroups':
-        await this.socialGroupService.getAllSocialGroups().then(x => this.filteredSocialGroups);
-        break;
-      case 'individuals':
-        await this.individualService.getAllIndividuals().then(x => this.filteredIndividuals = x);
-        break;
-      case 'visits':
-        await this.visitService.getAllVisits().then(x => this.filteredVisits = x);
-        break;
-    }
-  }
   async loadData() {
     if(this.viewMethod == 'notApproved'){
       this.filterByNonProcessedData()
     } else if(this.viewMethod == 'approved'){
       this.filterByProcessedData()
-    } else {
-      this.filterAllData();
     }
   }
 
@@ -123,6 +112,15 @@ export class DataEntryApprovalPage implements OnInit {
     this.selectedEntry.errorReported = true;
     if (this.selectedEntry.processed)
       this.selectedEntry.processed = false;
+
+    for(let prop in this.form.controls){
+      if(this.form.get(prop).dirty){
+        this.selectedEntry[prop] = this.form.get(prop).value;
+      }
+    }
+
+    this.createErrorModal();
+    this.updateDataEntry();
   }
 
   async updateDataEntry() {
@@ -149,29 +147,21 @@ export class DataEntryApprovalPage implements OnInit {
     this.viewEntry = true;
     switch (this.selectedForReview) {
       case 'locations':
-        this.locationForm = new LocationFormGroup();
-        for(let prop in this.locationForm.controls){
-          this.locationForm.get(prop).setValue(entry[prop])
-        }
+        this.form = new LocationFormGroup();
         break;
       case 'socialgroups':
-        this.socialGroupForm = new SocialGroupFormGroup();
-        for(let prop in this.socialGroupForm.controls){
-          this.socialGroupForm.get(prop).setValue(entry[prop])
-        }
+        this.form = new SocialGroupFormGroup();
         break;
       case 'individuals':
-        this.individualForm = new CensusIndividualFormGroup();
-        for(let prop in this.individualForm.controls){
-          this.individualForm.get(prop).setValue(entry[prop])
-        }
+        this.form = new CensusIndividualFormGroup();
         break;
       case 'visits':
-        this.visitForm = new VisitFormGroup();
-        for(let prop in this.visitForm.controls){
-          this.visitForm.get(prop).setValue(entry[prop])
-        }
+        this.form = new VisitFormGroup();
         break;
+    }
+
+    for(let prop in this.form.controls){
+      this.form.get(prop).setValue(entry[prop])
     }
   }
 
@@ -180,6 +170,16 @@ export class DataEntryApprovalPage implements OnInit {
     this.viewEntry = false;
     this.selectedEntry = null;
     await this.loadData();
+  }
+
+
+  async createErrorModal(){
+    this.navParams.data = {'entityId': this.selectedEntry.extId, 'entityType': this.selectedForReview};
+    let modal = await this.modalCtrl.create({
+      component: ErrorReportingComponent
+    });
+
+    return await modal.present();
   }
 
 }

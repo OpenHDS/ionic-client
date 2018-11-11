@@ -58,14 +58,14 @@ export class SocialGroupFormGroup extends FormGroup {
     });
   }
 
-  get socialGroupControls(): SocialGroupFormControl[] {
+  get formControls(): SocialGroupFormControl[] {
     return Object.keys(this.controls)
       .map(k => this.controls[k] as SocialGroupFormControl);
   }
 
   getFormValidationMessages(form: any): string[] {
     const messages: string[] = [];
-    this.socialGroupControls.forEach(c => c.getValidationMessages()
+    this.formControls.forEach(c => c.getValidationMessages()
       .forEach(m => messages.push(m)));
     return messages;
   }

@@ -57,14 +57,14 @@ export class LocationFormGroup extends FormGroup {
       });
   }
 
-  get locationControls(): LocationFormControl[] {
+  get formControls(): LocationFormControl[] {
     return Object.keys(this.controls)
       .map(k => this.controls[k] as LocationFormControl);
   }
 
   getFormValidationMessages(form: any): string[] {
     const messages: string[] = [];
-    this.locationControls.forEach(c => c.getValidationMessages()
+    this.formControls.forEach(c => c.getValidationMessages()
       .forEach(m => messages.push(m)));
 
     console.log(messages);

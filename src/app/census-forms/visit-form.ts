@@ -61,14 +61,14 @@ export class VisitFormGroup extends FormGroup {
     });
   }
 
-  get visitControls(): VisitFormControl[] {
+  get formControls(): VisitFormControl[] {
     return Object.keys(this.controls)
       .map(k => this.controls[k] as VisitFormControl);
   }
 
   getFormValidationMessages(form: any) : string[] {
     const messages: string[] = [];
-    this.visitControls.forEach(c => c.getValidationMessages()
+    this.formControls.forEach(c => c.getValidationMessages()
       .forEach(m => messages.push(m)));
 
     console.log(messages);

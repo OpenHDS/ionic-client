@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DataError} from "../../models/data-error";
 import {ErrorService} from "../../services/ErrorService/error-service";
+import {NavigationService} from "../../services/NavigationService/navigation.service";
 
 @Component({
   selector: 'error-reporting',
@@ -9,11 +10,13 @@ import {ErrorService} from "../../services/ErrorService/error-service";
 })
 export class ErrorReportingComponent implements OnInit {
 
-  @Input() entityType: string;
-  @Input() entityId: string;
+  entityType: string;
+  entityId: string;
   errorMessage: string;
   showErrorReporting: boolean = false;
-  constructor(public errProvider: ErrorService) {
+  constructor(public errProvider: ErrorService, public navParams: NavigationService) {
+    this.entityId = this.navParams.data.entityId;
+    this.entityType = this.navParams.data.entityType;
   }
 
   ionViewDidLoad() {
@@ -33,7 +36,9 @@ export class ErrorReportingComponent implements OnInit {
     err.entityType = this.entityType;
     err.errorMessage = this.errorMessage;
     err.entityExtId = this.entityId;
+    err.resolved = false;
 
+    console.log(err);
     this.errProvider.saveError(err);
   }
 

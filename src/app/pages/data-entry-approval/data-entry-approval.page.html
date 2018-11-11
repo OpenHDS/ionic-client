@@ -4,7 +4,7 @@
   <ion-radio-group (ionChange)="this.loadData()" [(ngModel)]="this.viewMethod" [ngModelOptions]="{standalone: true}">
   <ion-row>
     <ion-col inset size="3">
-      <ion-list-header>View Data Entries By: </ion-list-header>
+      <ion-item-divider>View Data Entries By: </ion-item-divider>
     </ion-col>
     <ion-col size="3">
       <ion-item>
@@ -17,12 +17,6 @@
       <ion-item>
         <ion-label>Approved</ion-label>
         <ion-radio value="approved"></ion-radio>
-      </ion-item>
-    </ion-col>
-    <ion-col size="3">
-      <ion-item>
-        <ion-label>Approved and Not Approved</ion-label>
-        <ion-radio value="all"></ion-radio>
       </ion-item>
     </ion-col>
   </ion-row>
@@ -120,11 +114,9 @@
     </ion-col>
 
     <ion-col col-4 *ngIf="this.viewEntry == true">
-      <div [ngSwitch]="this.selectedForReview">
 
-        <div *ngSwitchCase="'locations'">
-          <form [formGroup]="locationForm">
-            <div class="form-group" *ngFor="let control of locationForm.locationControls">
+          <form [formGroup]="form">
+            <div class="form-group" *ngFor="let control of form.formControls">
               <ion-item>
                 <ion-label>{{control.label}}</ion-label>
                 <ion-input class="form-control"
@@ -137,66 +129,6 @@
           <ion-button fill="outline" (click)="this.approve()">Approve Entry</ion-button>
           <ion-button color="danger" fill="outline" (click)="this.markForCorrection()">Needs Correction</ion-button>
 
-          <br><br><br><br>
-          <error-reporting [entityId]="this.selectedEntry.extId" [entityType]="this.selectedForReview"></error-reporting>
-
-        </div>
-
-        <div *ngSwitchCase="'socialgroups'">
-          <form [formGroup]="socialGroupForm">
-            <div class="form-group" *ngFor="let control of socialGroupForm.socialGroupControls">
-              <ion-item>
-                <ion-label>{{control.label}}</ion-label>
-                <ion-input class="form-control"
-                           formControlName="{{control.modelProperty}}"></ion-input>
-              </ion-item>
-            </div>
-          </form>
-          <br><br><br><br>
-
-          <ion-button fill="outline" (click)="this.approve()">Approve Entry</ion-button>
-          <ion-button color="danger" fill="outline" (click)="this.markForCorrection()">Needs Correction</ion-button>
-          <br>
-          <error-reporting [entityId]="this.selectedEntry.extId" [entityType]="this.selectedForReview"></error-reporting>
-        </div>
-
-        <div *ngSwitchCase="'individuals'">
-          <form [formGroup]="individualForm">
-            <div class="form-group" *ngFor="let control of individualForm.individualFormControls">
-              <ion-item>
-                <ion-label>{{control.label}}</ion-label>
-                <ion-input class="form-control"
-                           formControlName="{{control.modelProperty}}"></ion-input>
-              </ion-item>
-            </div>
-          </form>
-          <br>
-
-          <ion-button fill="outline" (click)="this.approve()">Approve Entry</ion-button>
-          <ion-button color="danger" fill="outline" (click)="this.markForCorrection()">Needs Correction</ion-button>
-          <br><br><br><br>
-          <error-reporting [entityId]="this.selectedEntry.extId" [entityType]="this.selectedForReview"></error-reporting>
-
-        </div>
-
-        <div *ngSwitchCase="'visits'">
-          <form [formGroup]="visitForm">
-            <div class="form-group" *ngFor="let control of visitForm.visitControls">
-              <ion-item>
-                <ion-label>{{control.label}}</ion-label>
-                <ion-input class="form-control"
-                           formControlName="{{control.modelProperty}}"></ion-input>
-              </ion-item>
-            </div>
-          </form>
-          <br>
-
-          <ion-button fill="outline" (click)="this.approve()">Approve Entry</ion-button>
-          <ion-button color="danger" fill="outline" (click)="this.markForCorrection()">Needs Correction</ion-button>
-          <br><br><br><br>
-          <error-reporting [entityId]="this.selectedEntry.extId" [entityType]="this.selectedForReview"></error-reporting>
-        </div>
-      </div>
     </ion-col>
   </ion-row>
 
