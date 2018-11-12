@@ -28,16 +28,16 @@ export class CensusSubmissionService {
     console.log('Hello CensusSubmissionProvider Provider');
   }
 
-
-
   saveCensusInformationForApproval(censusInd: CensusIndividual) {
+    censusInd.status = 'C';
     censusInd.processed = false;
+    censusInd.errorReported = false;
     censusInd.syncedWithServer = false;
     this.db.censusIndividuals.add(censusInd).catch(err => console.log(err));
   }
 
 
-  async updateCensusInformationForApproval(individual: Individual) {
+  async updateCensusInformationForApproval(individual: Individual, processed, status, errorReported) {
     console.log('Updating census individual...');
     const lookup = await this.db.censusIndividuals.toArray();
 
@@ -47,7 +47,10 @@ export class CensusSubmissionService {
 
         // Update occured. Fix representation of individual.
         x.individual.collectedBy = x.individual.collectedBy.extId;
+        x.status = status;
         x.individual.syncedWithServer = false;
+        x.processed = x.processed;
+        x.errorReported = errorReported;
         this.db.censusIndividuals.put(x);
       }
     });

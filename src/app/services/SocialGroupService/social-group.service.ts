@@ -29,7 +29,7 @@ export class SocialGroupService extends DatabaseService {
   private db: OpenhdsDb;
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigurationService,
-              public errorsProvider: ErrorService, public fwProvider: FieldworkerService,
+              public errorsService: ErrorService, public fwProvider: FieldworkerService,
               public individualProvider: IndividualService, public locHierarchyService: LocationHierarchyService,
               public systemConfig: SystemConfigService, public authProvider: AuthService) {
     super(http, systemConfig);
@@ -51,6 +51,8 @@ export class SocialGroupService extends DatabaseService {
     if (!sg.uuid) {
       sg.uuid = UUID.UUID();
     }
+    sg.status = 'C';
+    sg.errorReported = false;
     sg.deleted = false;
     sg.syncedWithServer = false;
     sg.processed = false;
@@ -71,21 +73,46 @@ export class SocialGroupService extends DatabaseService {
 
   async synchronizeOfflineSocialGroups() {
     // Filter social groups for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
-    const offline = await this.db.socialGroup
-      .filter(sg => sg.syncedWithServer === false)
+    const postOffline = await this.db.socialGroup
+      .filter(sg => sg.syncedWithServer === false && sg.status === 'C' &&  sg.processed === true && sg.errorReported === false)
       .toArray();
 
     const shallowCopies = [];
 
-    for(let i = 0; i < offline.length; i++){
-      let shallow = await this.shallowCopy(offline[i]);
+    for(let i = 0; i < postOffline.length; i++){
+      let shallow = await this.shallowCopy(postOffline[i]);
       shallowCopies.push(shallow);
     }
 
     if(shallowCopies.length > 0)
-      await this.updateData(shallowCopies);  }
+      await this.postData(shallowCopies);
 
-  async updateData(socialGroupData: Array<SocialGroup>) {
+    await this.db.socialGroup
+      .filter(sg => sg.syncedWithServer === false && sg.status === 'C' &&  sg.processed === true &&  sg.errorReported === false )
+      .modify({syncedWithServer: true});
+
+
+    //Send updated data currently offline
+    const updateOffline = await this.db.socialGroup
+      .filter(sg => sg.syncedWithServer === false && sg.status === 'U' &&  sg.processed === true && sg.errorReported === false)
+      .toArray();
+
+    let updatedShallowCopies = [];
+
+    for(let i = 0; i < updateOffline.length; i++){
+      let shallow = await this.shallowCopy(updateOffline[i]);
+      updatedShallowCopies.push(shallow);
+    }
+
+    if(updatedShallowCopies.length > 0)
+      await this.updateData(updatedShallowCopies);
+
+    await this.db.socialGroup
+      .filter(sg => sg.syncedWithServer === false && sg.status === 'U' &&  sg.processed === true &&  sg.errorReported === false )
+      .modify({syncedWithServer: true});
+  }
+
+  async postData(socialGroupData: Array<SocialGroup>) {
     const headers = new HttpHeaders().set('authorization',
       'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
 
@@ -95,10 +122,45 @@ export class SocialGroupService extends DatabaseService {
 
     await this.http.post(url, {socialGroups: socialGroupData, timestamp: new Date().getTime()}, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data["syncTime"].toString());
-      console.log('Update Successful');
+      if(data["errors"] != undefined)
+        for(let sg in data["errors"]){
+          let id = data["errors"][sg].entityId;
+          this.setErrorStatus(id);
+        }
+
+      this.errorsService.processErrors(data["errors"]);
     }, err => {
       throw new Error('Updating failed...');
     });
+  }
+
+  async updateData(socialGroupData: Array<SocialGroup>) {
+    const headers = new HttpHeaders().set('authorization',
+      'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
+
+
+    const url = this.systemConfig.getServerURL() + '/socialgroups2/bulkUpdate';
+    console.log("Sending " + socialGroupData.length + " social groups to the server...");
+
+    await this.http.post(url, {socialGroups: socialGroupData, timestamp: new Date().getTime()}, {headers}).subscribe(data => {
+      localStorage.setItem('lastUpdate', data["syncTime"].toString());
+      if(data["errors"] != undefined)
+        for(let sg in data["errors"]){
+          let id = data["errors"][sg].entityId;
+          this.setErrorStatus(id);
+        }
+
+      this.errorsService.processErrors(data["errors"]);
+    }, err => {
+      throw new Error('Updating failed...');
+    });
+  }
+
+  setErrorStatus(id){
+    let social = this.db.socialGroup.where('extId').equals(id).toArray();
+    social[0]["errorReported"]= true;
+
+    this.update(social[0]);
   }
 
   async shallowCopy(socialGrp) {

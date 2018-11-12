@@ -13,5 +13,6 @@ export class SocialGroup {
   processed: boolean;
   errorReported?: boolean;
   syncedWithServer?: boolean;
+  status?: string;
   selected?: boolean;
 }

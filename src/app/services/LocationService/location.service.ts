@@ -10,6 +10,7 @@ import {SystemConfigService} from '../SystemService/system-config.service';
 import {Hierarchy} from '../../models/hierarchy';
 import {Events} from "@ionic/angular";
 import {LocationHierarchyService} from "../LocationHierarchyService/location-hierarchy.service";
+import {ErrorService} from "../ErrorService/error-service";
 
 
 /*
@@ -26,7 +27,8 @@ export class LocationService extends DatabaseService {
   public db: OpenhdsDb;
 
   constructor(public http: HttpClient, public event: Events, public authProvider: AuthService, public fwProvider: FieldworkerService,
-              public systemConfig: SystemConfigService, public locHierarchyService: LocationHierarchyService) {
+              public systemConfig: SystemConfigService, public locHierarchyService: LocationHierarchyService,
+              public errorsService: ErrorService) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
   }
@@ -42,27 +44,20 @@ export class LocationService extends DatabaseService {
   }
 
   async saveDataLocally(loc: Location) {
-    // Check to see if location already exists!
-    const find = await this.db.locations.where('extId').equals(loc.extId).toArray();
-
-    if (find.length != 0) {
-      throw new Error(('Location with given external Id already exists.'));
-    }
-
     if (!loc.uuid) {
       loc.uuid = UUID.UUID();
     }
 
-
-    loc.deleted = false;
+    loc.status = 'C';
+    loc.errorReported = false;
     loc.syncedWithServer = false;
     loc.processed = false;
+    loc.deleted = false;
     loc.clientInsert = new Date().getTime();
 
     await this.insert(loc);
   }
 
-  // Abstract Updates and Adds to prevent errors
   async insert(loc: Location) {
     this.db.locations.put(loc).catch(err => console.log(err));
   }
@@ -73,22 +68,45 @@ export class LocationService extends DatabaseService {
 
   async synchronizeOfflineLocations() {
     // Filter locations for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
-    const offline = await this.db.locations
-      .filter(loc => loc.syncedWithServer === false)
+    const postOffline = await this.db.locations
+      .filter(loc => loc.syncedWithServer === false && loc.status === 'C'   &&  loc.processed === true && loc.errorReported === false)
       .toArray();
 
     const shallowCopies = [];
 
-    for(let i = 0; i < offline.length; i++){
-      let shallow = await this.shallowCopy(offline[i]);
+    for(let i = 0; i < postOffline.length; i++){
+      let shallow = await this.shallowCopy(postOffline[i]);
       shallowCopies.push(shallow);
     }
 
     if(shallowCopies.length > 0)
-      await this.updateData(shallowCopies);
+      await this.postData(shallowCopies);
+
+    await this.db.locations
+      .filter(loc => loc.syncedWithServer === false && loc.status === 'C' &&  loc.processed === true && loc.errorReported === false)
+      .modify({syncedWithServer: true});
+
+
+    //Send updated data currently offline
+    const updateOffline = await this.db.locations
+      .filter(loc => loc.syncedWithServer === false && loc.status === 'U'  &&  loc.processed === true  && loc.errorReported === false).toArray();
+
+    let updatedShallowCopies = [];
+
+    for(let i = 0; i < updateOffline.length; i++){
+      let shallow = await this.shallowCopy(updateOffline[i]);
+      updatedShallowCopies.push(shallow);
+    }
+
+    if(updatedShallowCopies.length > 0)
+      await this.updateData(updatedShallowCopies);
+
+    await this.db.locations
+      .filter(loc => loc.syncedWithServer === false && loc.status === 'U' &&  loc.processed === true && loc.errorReported === false)
+      .modify({syncedWithServer: true});
   }
 
-  async updateData(locationData: Array<Location>) {
+  async postData(locationData: Array<Location>) {
     const headers = new HttpHeaders().set('authorization',
       'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
 
@@ -98,10 +116,44 @@ export class LocationService extends DatabaseService {
 
     await this.http.post(url, {locations: locationData, timestamp: new Date().getTime()}, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data["syncTime"].toString());
-      console.log('Update Successful');
+      if(data["errors"] != undefined)
+        for(let loc in data["errors"]){
+          let id = data["errors"][loc].entityId;
+          this.setErrorStatus(id);
+        }
+
+        this.errorsService.processErrors(data["errors"]);
     }, err => {
       throw new Error('Updating failed...');
     });
+  }
+
+  async updateData(locationData: Array<Location>){
+    const headers = new HttpHeaders().set('authorization',
+      'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
+
+
+    const url = this.systemConfig.getServerURL() + '/locations2/bulkUpdate';
+    console.log("Sending " + locationData.length + " location updates to the server...");
+
+    await this.http.put(url, {locations: locationData, timestamp: new Date().getTime()}, {headers}).subscribe(data => {
+      localStorage.setItem('lastUpdate', data["syncTime"].toString());
+      if(data["errors"] != undefined)
+        for(let loc in data["errors"]){
+          let id = data["errors"][loc];
+          this.setErrorStatus(id);
+        }
+        this.errorsService.processErrors(data["errors"]);
+    }, err => {
+      throw new Error('Updating failed...');
+    });
+  }
+
+  setErrorStatus(id){
+    let location = this.db.locations.where('extId').equals(id).toArray();
+    location[0]["errorReported"]= true;
+
+    this.update(location[0]);
   }
 
   async shallowCopy(loc) {

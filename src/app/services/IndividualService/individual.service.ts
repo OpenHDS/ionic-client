@@ -22,7 +22,7 @@ export class IndividualService extends DatabaseService {
 
 
   constructor(public http: HttpClient, public ev: Events, public networkConfig: NetworkConfigurationService,
-              public errorsProvider: ErrorService, public fieldworkerProvider: FieldworkerService,
+              public errorsService: ErrorService, public fieldworkerProvider: FieldworkerService,
               public systemConfig: SystemConfigService, public censusProvider: CensusSubmissionService) {
     super(http, systemConfig);
     this.db = new OpenhdsDb();
@@ -47,6 +47,8 @@ export class IndividualService extends DatabaseService {
       ind.uuid = UUID.UUID().toString();
     }
 
+    ind.status = 'C';
+    ind.errorReported = false;
     ind.deleted = false;
     ind.processed = false;
     ind.syncedWithServer = false;
@@ -60,29 +62,51 @@ export class IndividualService extends DatabaseService {
   async update(ind: Individual) {
     console.log(ind);
     this.db.individuals.put(ind).catch(err => console.log(err));
-    this.censusProvider.updateCensusInformationForApproval(await this.shallowCopy(ind));
+    this.censusProvider.updateCensusInformationForApproval(await this.shallowCopy(ind), ind.processed, ind.status, ind.errorReported);
   }
 
   async synchronizeOfflineIndividuals() {
     console.log("Synchonizing offline individuals...");
     // Filter social groups for ones inserted in offline mode, or ones that have been updated (changed values, fixes to errors, ect.)
-    const offline = await this.db.censusIndividuals
-      .filter(ind => ind.syncedWithServer == false)
+    const postOffline = await this.db.censusIndividuals
+      .filter(ind => ind.syncedWithServer === false && ind.status === 'C' &&  ind.processed === true &&  ind.errorReported === false )
       .toArray();
 
     const shallowCopies = [];
 
-    for (let i = 0; i < offline.length; i++) {
-      let shallow = await this.shallowCensusCopy(offline[i]);
+    for(let i = 0; i < postOffline.length; i++){
+      let shallow = await this.shallowCensusCopy(postOffline[i]);
       shallowCopies.push(shallow);
     }
 
-    console.log(shallowCopies);
-    if (shallowCopies.length > 0)
-      await this.updateData(shallowCopies);
+    if(shallowCopies.length > 0)
+      await this.postData(shallowCopies);
+
+    await this.db.censusIndividuals
+      .filter(ind => ind.syncedWithServer === false && ind.status === 'C' &&  ind.processed === true && ind.errorReported === false)
+      .modify({syncedWithServer: true});
+
+
+    //Send updated data currently offline
+    const updateOffline = await this.db.censusIndividuals
+      .filter(ind => ind.syncedWithServer === false && ind.status === 'U' &&  ind.processed === true  && ind.errorReported === false).toArray();
+
+    let updatedShallowCopies = [];
+
+    for(let i = 0; i < updateOffline.length; i++){
+      let shallow = await this.shallowCensusCopy(updateOffline[i]);
+      updatedShallowCopies.push(shallow);
+    }
+
+    if(updatedShallowCopies.length > 0)
+      await this.updateData(updatedShallowCopies);
+
+    await this.db.censusIndividuals
+      .filter(ind => ind.syncedWithServer === false && ind.status === 'U' &&  ind.processed === true  && ind.errorReported === false)
+      .modify({syncedWithServer: true});
   }
 
-  async updateData(censusIndData: Array<CensusIndividual>) {
+  async postData(censusIndData: Array<CensusIndividual>) {
     const headers = new HttpHeaders().set('authorization',
       'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
 
@@ -95,8 +119,44 @@ export class IndividualService extends DatabaseService {
       updateTimestamp: new Date().getTime()
     }, {headers}).subscribe(data => {
       localStorage.setItem('lastUpdate', data["syncTime"].toString());
-      console.log(data["errors"])
+      if(data["errors"] != undefined)
+        for(let ind in data["errors"]){
+          let id = data["errors"][ind].entityId;
+          this.setErrorStatus(id);
+        }
+
+      this.errorsService.processErrors(data["errors"]);
     })
+  }
+
+  async updateData(censusIndData: Array<CensusIndividual>) {
+    const headers = new HttpHeaders().set('authorization',
+      'Basic ' + btoa(this.systemConfig.getDefaultUser() + ':' + this.systemConfig.getDefaultPassword()));
+
+
+    const url = this.systemConfig.getServerURL() + '/census/bulkInsert';
+    console.log("Sending " + censusIndData.length + " individuals to the server...");
+
+    await this.http.put(url, {
+      individuals: censusIndData,
+      updateTimestamp: new Date().getTime()
+    }, {headers}).subscribe(data => {
+      localStorage.setItem('lastUpdate', data["syncTime"].toString());
+      if(data["errors"] != undefined)
+        for(let ind in data["errors"]){
+          let id = data["errors"][ind].entityId;
+          this.setErrorStatus(id);
+        }
+
+      this.errorsService.processErrors(data["errors"]);
+    })
+  }
+
+  setErrorStatus(id){
+    let ind = this.db.individuals.where('extId').equals(id).toArray();
+    ind[0]["errorReported"]= true;
+
+    this.update(ind[0]);
   }
 
   async shallowCensusCopy(censusInd) {

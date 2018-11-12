@@ -6,6 +6,7 @@ import {OpenhdsDb} from '../DatabaseService/openhds-db';
 @Injectable({ providedIn: 'root' })
 export class ErrorService {
   private db: OpenhdsDb;
+  entityTypes = {location: "locations", socialGroup: 'socialgroups', individual: "individuals"};
   constructor() {
     this.db = new OpenhdsDb();
   }
@@ -21,7 +22,10 @@ export class ErrorService {
 
 
   async groupEntityErrorsByIds(labelName){
-    let errors = await this.db.errors.where('entityType').equals(labelName).toArray();
+    let errors = await this.db.errors.filter(function(entity) {
+      return entity.entityType === labelName && entity.resolved === false;
+    }).toArray();
+
     let groups = {};
     errors.forEach(x => {
       if (groups.hasOwnProperty(x.entityId))
@@ -66,6 +70,25 @@ export class ErrorService {
     err["resolved"] = false;
     err.timestamp = new Date().getTime();
     this.updateOrAddError(err);
+  }
+
+  mapSingularToPluralEntityType(type){
+    return this.entityTypes[type];
+  }
+
+  processErrors(errors){
+    for(let err in errors){
+      let dataErr = new DataError();
+      dataErr.entityId = errors[err].entityId;
+
+      dataErr["collectedBy"] = errors[err].fieldworkerExtId;
+      dataErr.entityType = this.mapSingularToPluralEntityType(errors[err].entityType);
+
+      for(let viol in errors[err].violations){
+        dataErr.errorMessage = errors[err]['violations'][viol];
+        this.saveError(dataErr);
+      }
+    }
   }
 
 }

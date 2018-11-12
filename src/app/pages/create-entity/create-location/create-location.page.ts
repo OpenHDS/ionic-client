@@ -110,6 +110,7 @@ export class CreateLocationPage implements OnInit {
       }
     }
 
+    this.navService.data.location.status = 'U';
     await this.locProvider.update(this.navService.data.location);
     this.formSubmitted = false;
   }

@@ -94,6 +94,7 @@ export class CreateIndividualPage implements OnInit {
       }
     }
 
+    this.navService.data.individual.status = 'U';
     await this.individualProvider.update(this.navService.data.individual);
     this.formSubmitted = false;
     this.router.navigate(['/baseline']);

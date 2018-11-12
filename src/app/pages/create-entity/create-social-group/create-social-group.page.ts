@@ -101,6 +101,7 @@ export class CreateSocialGroupPage implements OnInit {
       }
     }
 
+    this.navService.data.socialGroup.status = 'U';
     await this.sgProvider.update(this.navService.data.socialGroup);
     this.formSubmitted = false;
     this.router.navigate(['/baseline']);
