@@ -9,6 +9,7 @@ import {AlertController, NavController} from "@ionic/angular";
 import {NavigationService} from "../../services/NavigationService/navigation.service";
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 import {Visit} from "../../models/visit";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'baseline-census',
@@ -31,7 +32,8 @@ export class BaselineCensusPage implements OnInit {
   entityErrors = [];
 
 
-  constructor(public syncObservable: SynchonizationObservableService,
+  constructor(public router: Router,
+              public syncObservable: SynchonizationObservableService,
               public locHierarchyService: LocationHierarchyService,
               public navController: NavController,
               public alertCtrl: AlertController,
@@ -54,6 +56,10 @@ export class BaselineCensusPage implements OnInit {
       this.selectedVisit = visit;
       this.displayCensusSubmission();
     });
+
+    this.syncObservable.subscribe("Entity:Correction", () => {
+      this.displayCorrectionMessage();
+    })
   }
 
   async ngOnInit() {
@@ -64,11 +70,13 @@ export class BaselineCensusPage implements OnInit {
 
   async ionViewWillEnter(){
     console.log("ionViewWillEnter BaselineCensusPage");
-    await this.resetBaselineCensus();
-
-    if(this.navService.data !== undefined) {
-      this.editing = this.navService.data.entityEditing;
-      this.processEditing();
+    console.log(this.navService.data);
+    if(this.navService.data !== undefined && this.navService.data.editing !== undefined) {
+        this.editing = this.navService.data.entityEditing;
+        await this.resetBaselineCensus();
+        this.processEditing();
+    } else {
+      this.editing = false;
     }
   }
 
@@ -181,7 +189,6 @@ export class BaselineCensusPage implements OnInit {
   }
 
 
-  // Complete baseline: fillout visit form, and send to Summary page.
   completeBaselineCensus(){
     this.navService.data = {collectedBy: this.collectedBy, visitLocation: this.selectedLocation.extId};
     this.navController.navigateForward("/create-visit").then(() => {
@@ -276,4 +283,17 @@ export class BaselineCensusPage implements OnInit {
 
       alert.present();
     }
+
+  async displayCorrectionMessage(){
+    let alert = await this.alertCtrl.create({
+      header: "Edit Successful",
+      subHeader: "Information was successfully edited and saved.",
+      buttons: [{
+        text: "Confirm",
+        handler: () => {this.router.navigate(["/entity-correction"])}
+      }]
+    });
+
+    alert.present();
+  }
 }

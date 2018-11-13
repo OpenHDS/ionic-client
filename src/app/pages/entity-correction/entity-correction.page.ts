@@ -89,7 +89,7 @@ export class EntityCorrectionPage implements OnInit {
     let locInfo = await this.getLocation(entityId.substring(0, 9));
     let entityErrMessages = this.errors[entityId];
 
-    this.navService.data ={
+    this.navService.data = {
       entityEditing: true,
       entity: 'socialGroups',
       errors: entityErrMessages,
@@ -108,7 +108,7 @@ export class EntityCorrectionPage implements OnInit {
     let entityErrMessages = this.errors[entityId];
 
 
-    this.navService.data ={
+    this.navService.data = {
       entityEditing: true,
       entity: 'individuals',
       errors: entityErrMessages,

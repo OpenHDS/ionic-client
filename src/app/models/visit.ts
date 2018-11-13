@@ -4,9 +4,12 @@ export class Visit {
   realVisit: number;
   roundNumber: number;
   visitDate: Date;
-  collectedBy: string;
-  visitLocation: string;
+  collectedBy: any;
+  visitLocation: any;
+  deleted?:boolean;
+  clientInsert?: number;
   processed?: boolean;
+  status?: string;
   errorReported?: boolean;
   syncedWithServer?: boolean;
 }

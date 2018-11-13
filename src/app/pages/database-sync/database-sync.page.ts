@@ -8,6 +8,7 @@ import {SocialGroupService} from '../../services/SocialGroupService/social-group
 import {IndividualService} from '../../services/IndividualService/individual.service';
 import {CensusSubmissionService} from '../../services/CensusSubmissionService/census-submission.service';
 import {FieldworkerService} from '../../services/FieldworkerService/fieldworker.service';
+import {VisitService} from "../../services/VisitService/visit.service";
 
 @Component({
   selector: 'synchronize-db',
@@ -27,7 +28,8 @@ export class DatabaseSyncPage implements OnInit {
               public errProvider: ErrorService,
               public lhProvider: LocationHierarchyService, public locProvider: LocationService,
               public sgProvider: SocialGroupService, public indProvider: IndividualService,
-              public censusProvider: CensusSubmissionService, public fwProvider: FieldworkerService) {
+              public censusProvider: CensusSubmissionService, public fwProvider: FieldworkerService,
+              public visitService: VisitService) {
   }
 
   ngOnInit() {
@@ -124,11 +126,9 @@ export class DatabaseSyncPage implements OnInit {
   }
 
   async syncNewDataWithServer() {
-    // Sync Locations, Social Groups
-    await this.locProvider.synchronizeOfflineLocations().catch((err) => { console.log(err); this.locationSyncSuccess = false; });
+    await this.locProvider.synchronizeOfflineLocations().catch((err) => {console.log(err); this.locationSyncSuccess = false; });
     await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err); this.sgSyncSuccess = false;});
-    await this.indProvider.synchronizeOfflineIndividuals().catch(err => {console.log(err); this.individualSyncSuccess = false;});;
-
-
+    await this.indProvider.synchronizeOfflineIndividuals().catch(err => {console.log(err); this.individualSyncSuccess = false;});
+    await this.visitService.synchronizeOfflineVisits().catch(err => console.log(err));
   }
 }
