@@ -85,5 +85,10 @@
     "platforms": [
       "android"
     ]
+  },
+
+  "engines": {
+    "node": "8.9.4",
+    "npm": "6.4.1"
   }
 }
