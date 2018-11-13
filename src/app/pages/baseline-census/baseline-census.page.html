@@ -61,7 +61,7 @@
           </ion-text>
         </div>
       </div>
-      <div (click)="this.toggleGroup('individual')">
+      <div (click)="this.toggleGroup('individual')" [hidden]="this.baselineStep === 'visit' && this.editing">
         <ion-item-divider>
           <ion-text [color]="this.baselineStep === 'individual' ? 'primary': 'medium'">
             <h4>Individual</h4>
@@ -71,6 +71,20 @@
         <div [hidden]="!this.isGroupShown('individual')">
           <ion-text padding-start *ngFor="let ind of this.selectedIndividuals">
             Name: {{ind.firstName}} {{ind.lastName}} <br/>
+          </ion-text>
+        </div>
+      </div>
+
+      <div (click)="this.toggleGroup('visit')" *ngIf="this.editing && this.baselineStep === 'visit'">
+        <ion-item-divider>
+          <ion-text [color]="this.baselineStep === 'visit' ? 'primary': 'medium'">
+            <h4>Visit</h4>
+          </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('visit') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+        </ion-item-divider>
+        <div [hidden]="!this.isGroupShown('visit')">
+          <ion-text padding-start>
+            Round Number: {{this.selectedVisit.roundNumber}}<br/>
           </ion-text>
         </div>
       </div>
@@ -117,7 +131,7 @@
         <br>
       </div>
 
-      <div *ngIf="this.baselineStep === 'individual'" responsive (click)="this.goToCreatePage()">
+      <div *ngIf="this.baselineStep === 'individual'"  responsive (click)="this.goToCreatePage()">
         <ion-button fill="outline" expand="full" >
           Create Individual
         </ion-button>
@@ -172,6 +186,11 @@
       <div *ngIf="this.baselineStep === 'individual'" responsive (click)="this.goToCreatePage()">
         <ion-button fill="outline" expand="full" >
           Edit Individual
+        </ion-button>
+      </div>
+      <div *ngIf="this.baselineStep === 'visit'" responsive (click)="this.goToCreatePage()">
+        <ion-button fill="outline" expand="full" >
+          Edit Visit
         </ion-button>
       </div>
     </ion-col>

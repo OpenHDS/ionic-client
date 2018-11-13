@@ -5,6 +5,7 @@ import {SocialGroupService} from "../../services/SocialGroupService/social-group
 import {IndividualService} from "../../services/IndividualService/individual.service";
 import {ErrorService} from "../../services/ErrorService/error-service";
 import {NavController} from "@ionic/angular";
+import {VisitService} from "../../services/VisitService/visit.service";
 
 @Component({
   selector: 'entity-correction',
@@ -19,7 +20,7 @@ export class EntityCorrectionPage implements OnInit {
   errorKeys: any;
   selectedLabel = this.ENTITY_LABELS[0].toLowerCase();
 
-  constructor(public navService: NavigationService, public errorService: ErrorService,
+  constructor(public navService: NavigationService, public errorService: ErrorService, public visitService: VisitService,
               public locationService: LocationService, public socialGroupService: SocialGroupService,
               public individualService: IndividualService, public navController: NavController) {}
 
@@ -45,6 +46,8 @@ export class EntityCorrectionPage implements OnInit {
       case 'individuals':
         this.correctIndividual(entity);
         break;
+      case 'visits':
+        this.correctVisit(entity);
     }
   }
 
@@ -70,6 +73,11 @@ export class EntityCorrectionPage implements OnInit {
   async getIndividual(entityId){
     let individual = await this.individualService.findIndividualByExtId(entityId);
     return individual[0];
+  }
+
+  async getVisit(entityId){
+    let visit = await this.visitService.getVisit(entityId);
+    return visit[0];
   }
 
   async correctLocation(entityId){
@@ -116,6 +124,27 @@ export class EntityCorrectionPage implements OnInit {
       selectedLocation: locInfo['selectedLocation'],
       selectedSocialGroup: socialGroupInfo,
       selectedIndividuals: [individual] //Baseline census page uses array of individuals
+    };
+
+    this.navController.navigateForward("/baseline");
+
+  }
+
+  async correctVisit(entityId){
+    let entityErrMessages = this.errors[entityId];
+    let locInfo = await this.getLocation(entityId.substring(0, 9));
+    let socialGroupInfo = await this.getSocialGroup(entityId.substring(0,11));
+    let visitInfo = await this.getVisit(entityId);
+
+    this.navService.data = {
+      entityEditing: true,
+      entity: 'visits',
+      errors: entityErrMessages,
+      selectedHierarchy: locInfo['selectedHierarchy'],
+      selectedLocation: locInfo['selectedLocation'],
+      selectedSocialGroup: socialGroupInfo,
+      selectedVisit: visitInfo
+
     };
 
     this.navController.navigateForward("/baseline");

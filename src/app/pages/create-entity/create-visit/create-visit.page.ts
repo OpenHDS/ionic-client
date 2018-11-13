@@ -45,12 +45,6 @@ export class CreateVisitPage implements OnInit {
       this.visitForm.get("visitLocation").setValue(this.navParams.data.visitLocation);
       this.visitForm.get("roundNumber").setValue(0);
     }
-
-    //Set fields that are passed from parent, and aren't filled in by fieldworker.
-    this.visit.visitLocation = this.navParams.data["visitLocation"].extId;
-    this.visit.collectedBy =  this.navParams.data["collectedBy"];
-
-
   }
 
   ngOnInit(){

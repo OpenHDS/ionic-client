@@ -167,4 +167,7 @@ export class VisitService extends DatabaseService {
     return copy;
   }
 
+  async getVisit(visitId){
+    return await this.db.visits.where("extId").equals(visitId).toArray();
+  }
 }

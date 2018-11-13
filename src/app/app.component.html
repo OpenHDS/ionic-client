@@ -16,6 +16,9 @@
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-item button (click)="this.logoutUser()">
+            Logout
+          </ion-item>
         </ion-list>
 
       </ion-content>
@@ -37,9 +40,13 @@
             </ion-label>
           </ion-item>
         </ion-menu-toggle>
+        <ion-item button (click)="this.logoutUser()">
+          Logout
+        </ion-item>
       </ion-list>
 
     </ion-content>
+
   </ion-menu>
 
 

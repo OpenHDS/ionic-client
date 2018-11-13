@@ -71,9 +71,10 @@ export class BaselineCensusPage implements OnInit {
   async ionViewWillEnter(){
     console.log("ionViewWillEnter BaselineCensusPage");
     console.log(this.navService.data);
-    if(this.navService.data !== undefined && this.navService.data.editing !== undefined) {
-        this.editing = this.navService.data.entityEditing;
+    if(this.navService.data !== undefined && this.navService.data.entityEditing !== undefined) {
         await this.resetBaselineCensus();
+        this.editing = this.navService.data.entityEditing;
+
         this.processEditing();
     } else {
       this.editing = false;
@@ -171,6 +172,14 @@ export class BaselineCensusPage implements OnInit {
           this.syncObservable.publishChange("Baseline:CreateIndividual");
         });
         break;
+      case 'visit':
+          this.navService.data["editing"] = true;
+          this.navService.data["errors"] = this.entityErrors;
+          this.navService.data["visit"] = this.selectedVisit;
+        this.navController.navigateForward("/create-visit").then(() => {
+          this.syncObservable.publishChange("Baseline:CreateVisit");
+        });
+        break;
       default: break;
     }
   }
@@ -187,7 +196,6 @@ export class BaselineCensusPage implements OnInit {
     else
       return false;
   }
-
 
   completeBaselineCensus(){
     this.navService.data = {collectedBy: this.collectedBy, visitLocation: this.selectedLocation.extId};
@@ -255,8 +263,14 @@ export class BaselineCensusPage implements OnInit {
          this.baselineStep = 'individual';
          this.toggleGroup('individual');
          break;
+       case 'visits':
+         this.selectedLocation = this.navService.data.selectedLocation;
+         this.selectedSocialGroup = this.navService.data.selectedSocialGroup;
+         this.selectedVisit = this.navService.data.selectedVisit;
+         this.entityErrors = this.navService.data.errors;
+         this.baselineStep = 'visit';
+         break;
      }
-
   }
 
   async resetBaselineCensus() {
