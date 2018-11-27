@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title>Help: {{this.label}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-item>
+        Valid inputs for this field are:
+    </ion-item>
+    <ion-list lines="full">
+      <ion-item *ngFor="let message of this.helpMessage">
+       {{message}}
+      </ion-item>
+    </ion-list>
+</ion-content>

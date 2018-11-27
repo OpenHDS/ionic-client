@@ -1,0 +1,200 @@
+<openhds-header [headerTitle]="this.editing ? 'Edit Baseline Census Entry' : this.PAGE_NAME"></openhds-header>
+
+<ion-content padding>
+  <ion-row>
+    <ion-col size="4">
+      <div (click)="this.toggleGroup('hierarchy')">
+        <ion-item-divider>
+          <ion-text [color]="this.baselineStep === 'hierarchy' ? 'primary': 'medium'">
+            <h4>Hierarchy</h4>
+          </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('hierarchy') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+        </ion-item-divider>
+
+        <!-- Load the hierarchy levels, and display the information for selected  --->
+        <div [hidden]="!this.isGroupShown('hierarchy')" padding-start *ngFor="let level of this.levels; let i = index">
+          <ion-text *ngIf="level.name != this.levels[0].name">
+            {{level.name}}:
+            <ion-text *ngIf="this.selectedHierarchy[i+1] != undefined">
+              {{this.selectedHierarchy[i + 1].name}}
+            </ion-text>
+          </ion-text>
+        </div>
+      </div>
+
+      <div (click)="this.toggleGroup('location')">
+        <ion-item-divider>
+          <ion-text [color]="this.baselineStep === 'location' ? 'primary': 'medium'">
+            <h4>Location</h4>
+          </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('location') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+        </ion-item-divider>
+        <div padding-start *ngIf="this.selectedLocation !== undefined && this.isGroupShown('location')">
+          <ion-text>
+            Name: {{selectedLocation.locationName}}
+          </ion-text>
+          <br/>
+          <ion-text>
+            Type: {{selectedLocation.locationType}}
+          </ion-text>
+        </div>
+      </div>
+      <div (click)="this.toggleGroup('socialGroup')">
+        <ion-item-divider>
+          <ion-text [color]="this.baselineStep === 'socialGroup' ? 'primary': 'medium'">
+            <h4>Social Group</h4>
+          </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('socialGroup') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+
+        </ion-item-divider>
+        <div *ngIf="this.selectedSocialGroup !== undefined && this.isGroupShown('socialGroup')" padding-start>
+          <ion-text>
+            Name: {{selectedSocialGroup.groupName}}
+          </ion-text>
+          <br/>
+          <ion-text>
+            Type: {{selectedSocialGroup.groupType}}
+          </ion-text>
+          <br/>
+          <ion-text>
+            Group Head: {{selectedSocialGroup.groupHead.firstName}} {{selectedSocialGroup.groupHead.lastName}}
+          </ion-text>
+        </div>
+      </div>
+      <div (click)="this.toggleGroup('individual')" [hidden]="this.baselineStep === 'visit' && this.editing">
+        <ion-item-divider>
+          <ion-text [color]="this.baselineStep === 'individual' ? 'primary': 'medium'">
+            <h4>Individual</h4>
+          </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('individual') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+        </ion-item-divider>
+        <div [hidden]="!this.isGroupShown('individual')">
+          <ion-text padding-start *ngFor="let ind of this.selectedIndividuals">
+            Name: {{ind.firstName}} {{ind.lastName}} <br/>
+          </ion-text>
+        </div>
+      </div>
+
+      <div (click)="this.toggleGroup('visit')" *ngIf="this.editing && this.baselineStep === 'visit'">
+        <ion-item-divider>
+          <ion-text [color]="this.baselineStep === 'visit' ? 'primary': 'medium'">
+            <h4>Visit</h4>
+          </ion-text>
+          <ion-icon slot="end" [name]="this.isGroupShown('visit') ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+        </ion-item-divider>
+        <div [hidden]="!this.isGroupShown('visit')">
+          <ion-text padding-start>
+            Round Number: {{this.selectedVisit.roundNumber}}<br/>
+          </ion-text>
+        </div>
+      </div>
+    </ion-col>
+
+    <!---------------------------- Creating Baseline Census Entity ---------------------------->
+
+    <ion-col size="4" *ngIf="!this.editing; else elseBlock">
+      <hierarchy-list *ngIf="this.baselineStep === 'hierarchy'"
+                               (selectedHierarchy)="this.setSelectedHierarchy($event)">
+      </hierarchy-list>
+
+      <location-list *ngIf="this.baselineStep ==='location'"
+                     (selectedLoc)="this.setSelectedLocation($event)"
+                     [parentLevel]="this.selectedHierarchy[this.selectedHierarchy.length - 1]"
+                     [collectedBy]="this.collectedBy">
+      </location-list>
+
+      <social-group-list *ngIf="this.baselineStep === 'socialGroup'"
+                         (selectedSg)="this.setSelectedSocialGroup($event)"
+                         [collectedBy]="this.collectedBy"
+                         [sgHierarchy]="this.selectedHierarchy"
+                         [sgLocation]="this.selectedLocation">
+
+      </social-group-list>
+      <individual-list *ngIf="this.baselineStep === 'individual'"
+                       (selectedIndividual)="this.setSelectedIndividuals($event)"
+                       [collectedBy]="this.collectedBy" [loc]="this.selectedLocation" [sg]="this.selectedSocialGroup">
+      </individual-list>
+    </ion-col>
+
+
+
+    <!--- Create Entity Options -->
+    <ion-col *ngIf="!this.editing; else editBlock">
+      <div *ngIf="this.baselineStep === 'location'" responsive>
+          <ion-button fill="outline" expand="full" (click)="this.goToCreatePage()">Create Location</ion-button>
+      </div>
+
+      <div *ngIf="this.baselineStep === 'socialGroup'">
+        <ion-button fill="outline" expand="full" responsive (click)="this.goToCreatePage()">
+          Create Social Group
+        </ion-button>
+        <br>
+      </div>
+
+      <div *ngIf="this.baselineStep === 'individual'"  responsive (click)="this.goToCreatePage()">
+        <ion-button fill="outline" expand="full" >
+          Create Individual
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+
+
+  <ion-row *ngIf="!this.editing">
+    <ion-col>
+      <ion-button [disabled]="!this.isEligableToSubmit()" responsive fill="outline" expand="full" (click)="this.completeBaselineCensus()">Complete Baseline Census</ion-button>
+    </ion-col>
+  </ion-row>
+
+
+  <!---------------------------- Editing Baseline Census Entity ---------------------------->
+
+
+  <ng-template #elseBlock> <!--- Editing, instead of displaying list of entities, display error message -->
+    <ion-col size="4">
+      <ion-item>
+        <ion-text>The following errors have been identified and need to be corrected:</ion-text>
+      </ion-item>
+      <div>
+        <ion-list *ngFor="let errors of this.entityErrors" lines="full">
+          <ion-item>
+            {{errors.errorMessage}}
+
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-col>
+
+
+
+
+  </ng-template>
+  <ng-template #editBlock>
+    <ion-col>
+      <div *ngIf="this.baselineStep === 'location'" responsive>
+        <ion-button fill="outline" expand="full" (click)="this.goToCreatePage()">Edit Location</ion-button>
+      </div>
+
+      <div *ngIf="this.baselineStep === 'socialGroup'">
+        <ion-button fill="outline" expand="full" responsive (click)="this.goToCreatePage()">
+          Edit Social Group
+        </ion-button>
+        <br>
+      </div>
+
+      <div *ngIf="this.baselineStep === 'individual'" responsive (click)="this.goToCreatePage()">
+        <ion-button fill="outline" expand="full" >
+          Edit Individual
+        </ion-button>
+      </div>
+      <div *ngIf="this.baselineStep === 'visit'" responsive (click)="this.goToCreatePage()">
+        <ion-button fill="outline" expand="full" >
+          Edit Visit
+        </ion-button>
+      </div>
+    </ion-col>
+  </ng-template>
+</ion-content>
+
+

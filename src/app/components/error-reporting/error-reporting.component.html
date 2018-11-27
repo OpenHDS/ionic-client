@@ -1,0 +1,10 @@
+<openhds-header [headerTitle]="'Report an Error'"></openhds-header>
+<ion-content padding>
+  <form novalidate>
+    <ion-textarea
+      placeholder=" Report an error for the data entered above. Fieldworker will be notified of error."
+      [(ngModel)]="this.errorMessage" [ngModelOptions]="{standalone: true}">
+    </ion-textarea>
+    <ion-button fill="outline" (click)="this.saveError()">Submit Error</ion-button>
+  </form>
+</ion-content>

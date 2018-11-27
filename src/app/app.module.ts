@@ -1,76 +1,45 @@
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
+import { RouteReuseStrategy } from '@angular/router';
 
-import { MyApp } from './app.component';
-import { BaselineCensusPage } from "../pages/baseline-census/baseline-census";
-import { LocationListPage } from "../pages/entity-lists/location-list";
-import { LocationsProvider } from '../providers/locations/locations-provider';
-import { HttpClientModule } from "@angular/common/http";
-import { Network } from "@ionic-native/network";
-import { NetworkConfigProvider } from "../providers/network-config/network-config";
-import { CreateLocationPage } from "../pages/create-entities/create-location";
-import { Geolocation } from "@ionic-native/geolocation";
-import { ErrorsProvider } from '../providers/errors/errors';
-import { FieldworkerMenuPage } from "../pages/fieldworker-menu/menu";
-import { ErrorDisplayPage } from "../pages/error-display/error-display";
-import { SystemConfigProvider } from '../providers/system-config/system-config';
-import { SystemConfigPage } from "../pages/system-config/system-config";
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
-import { File} from "@ionic-native/file";
-
-import { SupervisorModePage } from "../pages/supervisor-mode/supervisor-mode";
-import { SynchronizeDbPage } from "../pages/synchronize-db/synchronize-db";
-import { SupervisorMenuPage} from "../pages/supervisor-menu/supervisor-menu";
+import {AppComponent} from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import {HttpClientModule} from '@angular/common/http';
+import {Network} from '@ionic-native/network/ngx';
+import {Geolocation} from '@ionic-native/geolocation/ngx';
+import {ComponentsModule} from "./components/components";
+import {LocationService} from "./services/LocationService/location.service";
+import {IndividualService} from "./services/IndividualService/individual.service";
+import {LocationHierarchyService} from "./services/LocationHierarchyService/location-hierarchy.service";
+import {SocialGroupService} from "./services/SocialGroupService/social-group.service";
+import {CensusSubmissionService} from "./services/CensusSubmissionService/census-submission.service";
+import {FieldworkerService} from "./services/FieldworkerService/fieldworker.service";
+import {SynchonizationObservableService} from "./services/SynchonizationObserverable/synchonization-observable.service";
+import {VisitService} from "./services/VisitService/visit.service";
 
 @NgModule({
-  declarations: [
-    MyApp,
-    FieldworkerMenuPage,
-    BaselineCensusPage,
-    LocationListPage,
-    CreateLocationPage,
-    ErrorDisplayPage,
-    SystemConfigPage,
-    SupervisorModePage,
-    SupervisorMenuPage,
-    SynchronizeDbPage
-  ],
-
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    IonicModule.forRoot(MyApp)
-  ],
-
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    FieldworkerMenuPage,
-    BaselineCensusPage,
-    CreateLocationPage,
-    ErrorDisplayPage,
-    SystemConfigPage,
-    SupervisorModePage,
-    SupervisorMenuPage,
-    SynchronizeDbPage
-  ],
-
+  declarations: [AppComponent],
+  entryComponents: [],
+  imports: [ComponentsModule, BrowserModule, IonicModule.forRoot(), HttpClientModule, AppRoutingModule],
   providers: [
     StatusBar,
-    SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
     Network,
     Geolocation,
-    NetworkConfigProvider,
-    LocationsProvider,
-    ErrorsProvider,
-    SystemConfigProvider,
-    File
-  ]
+    SplashScreen,
+    SynchonizationObservableService,
+    FieldworkerService,
+    LocationHierarchyService,
+    LocationService,
+    SocialGroupService,
+    IndividualService,
+    VisitService,
+    CensusSubmissionService,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+  ],
+  bootstrap: [AppComponent]
 })
-
 export class AppModule {}
-

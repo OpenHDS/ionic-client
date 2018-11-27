@@ -1,0 +1,55 @@
+<ion-app>
+
+    <ion-menu  menuId="fieldworkerMenu" persistent="true" type="push" content="content">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Menu</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+
+        <ion-list lines="full">
+          <ion-menu-toggle auto-hide="true" *ngFor="let p of fieldworkerPages">
+            <ion-item button (click)="this.openPage(p.url)">
+              <ion-label>
+                {{p.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-item button (click)="this.logoutUser()">
+            Logout
+          </ion-item>
+        </ion-list>
+
+      </ion-content>
+    </ion-menu>
+
+  <ion-menu menuId="adminMenu" persistent="true" type="push" content="content">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+
+      <ion-list lines="full">
+        <ion-menu-toggle auto-hide="true" *ngFor="let p of adminPages">
+          <ion-item button (click)="this.openPage(p.url)">
+            <ion-label>
+              {{p.title}}
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-item button (click)="this.logoutUser()">
+          Logout
+        </ion-item>
+      </ion-list>
+
+    </ion-content>
+
+  </ion-menu>
+
+
+    <ion-router-outlet main #content></ion-router-outlet>
+
+</ion-app>

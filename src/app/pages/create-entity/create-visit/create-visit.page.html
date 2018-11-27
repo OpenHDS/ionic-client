@@ -1,0 +1,61 @@
+<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+
+<ion-content>
+  <div *ngIf="!this.netConfig.isConnected()">
+    <ion-card color="danger">
+      <ion-card-content>
+        <p>There is currently no network connection. You data will be uploaded to the server when there
+          is a connection!</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <form novalidate [formGroup]="visitForm" (ngSubmit)="submitForm(visitForm)">
+    <ion-item color="danger" *ngIf="formSubmitted && visitForm.invalid">
+      <ion-text>
+        There are problems with the form:
+      </ion-text>
+      <ion-list>
+        <ion-item color="danger" *ngFor="let error of visitForm.getFormValidationMessages(visitForm)">
+          <ion-text>
+            {{error}}
+          </ion-text>
+        </ion-item>
+      </ion-list>
+    </ion-item>
+
+
+    <!------  Form Fields --------->
+    <div class="form-group" *ngFor="let control of visitForm.formControls">
+      <ion-item>
+        <ion-label>
+          {{control.label}}
+        </ion-label>
+        <ion-input class="form-control"
+                   formControlName="{{control.modelProperty}}">
+        </ion-input>
+        <ion-button type="button" fill="outline" color="clear" spot="end"
+                    [hidden]="control.label != 'Real Visit'" (click)="helpPopup(control.label)">
+          <ion-icon name="help-circle" ></ion-icon>
+        </ion-button>
+
+
+
+      </ion-item>
+      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
+        <p color="danger" *ngFor="let error of control.getValidationMessages()">
+          {{error}}
+        </p>
+      </ion-item>
+    </div>
+
+    <br/>
+    <ion-button type="submit"  fill="outline" [disabled]="formSubmitted && visitForm.invalid" type="submit">Create Visit</ion-button>
+  </form>
+  <br/>
+
+  <ion-button fill="outline" (click)="this.goBackToCensus()">
+    Cancel
+  </ion-button>
+</ion-content>
+

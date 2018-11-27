@@ -1,0 +1,56 @@
+<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+
+<ion-content padding>
+  <ion-row>
+    <ion-col size="5"></ion-col>
+    <ion-col size="2">
+      <ion-item>
+        <ion-img style="height: 200px;width: 200px;" [src]="'src/assets/imgs/logo-login-colored.png'"></ion-img>
+      </ion-item>
+    </ion-col>
+    <ion-col size="5"></ion-col>
+  </ion-row>
+
+  <form [formGroup]="loginForm" (ngSubmit)="this.onLogin(loginForm.value)">
+      <ion-item>
+        <ion-label>Username</ion-label>
+        <ion-input formControlName="username" name="username" type="text">
+        </ion-input>
+      </ion-item>
+      <ion-item *ngIf="loginForm.controls['username'].invalid && (loginForm.controls['username'].dirty || loginForm.controls['username'].touched)">
+        <ion-text color="danger">
+          The username entered is either incorrect or not valid.
+        </ion-text>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Password</ion-label>
+        <ion-input formControlName="password" name="password" type="password" required>
+        </ion-input>
+      </ion-item>
+      <ion-item *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
+        <ion-text color="danger">
+          The password entered is either incorrect or not valid.
+        </ion-text>
+      </ion-item>
+
+    <ion-row>
+      <ion-col>
+        <ion-button type="submit" expand="block">Login</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+  <ion-item>
+    <ion-label>Supervisor Login (Unselect if Fieldworker)</ion-label>
+    <ion-checkbox checked="true" [(ngModel)]="this.loginAsSuper"></ion-checkbox>
+  </ion-item>
+
+  <ion-card [hidden]="!this.showLoginError">
+    <ion-card-content>
+      <ion-text color="danger" text-center>
+        ERROR: INVALID USERNAME AND/OR PASSWORD
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

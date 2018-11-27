@@ -1,23 +1,79 @@
-import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import {BaselineCensusPage} from "../pages/baseline-census/baseline-census";
+import {Component, Input, ViewChild} from '@angular/core';
+
+import {Nav, Platform} from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import {User} from "./models/user";
+import {AuthService} from "./services/AuthService/auth.service";
+import {Router} from "@angular/router";
+
+export interface PageInterface {
+  title: string;
+  url: string;
+}
 
 @Component({
-  templateUrl: 'app.html'
+  selector: 'app-root',
+  templateUrl: 'app.component.html'
 })
-export class MyApp {
-  rootPage:any = BaselineCensusPage;
+export class AppComponent {
+  @ViewChild(Nav) nav: Nav;
+  user: User;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
-      platform.ready().then(() => {
+  fieldworkerPages: PageInterface[] = [
+    { title: 'Dashboard', url: "/fieldworker-dash" },
+    { title: 'Baseline Census', url: "/baseline"},
+    { title: 'Search For a Record', url: "/search"},
+    { title: 'Data Entry Correction', url: '/correction-routine'}
+  ];
+  adminPages: PageInterface[] = [
+    { title: 'Dashboard', url: "/supervisor-dash" },
+    { title: 'Baseline Census', url: '/baseline'},
+    { title: 'Search For a Record', url: '/search'},
+    { title: 'Synchronization', url: "/database-sync"},
+    { title: 'Data Entry Approval', url: '/approval'},
+    { title: 'System Configurations', url: '/system-config'},
+    { title: 'Data Entry Correction', url: '/correction-routine'}
 
-        // Okay, so the platform is ready and our plugins are available.
-        // Here you can do any higher level native things you might need.
-        statusBar.styleDefault();
-        splashScreen.hide();
-      });
+  ];
+
+  rootPage: any;
+
+  constructor(
+    private platform: Platform,
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar,
+    private router: Router,
+    private authService: AuthService
+  ) {
+
+    if(this.authService.hasSupervisorLoggedIn() === false || this.authService.hasFieldworkerLoggedIn() === false){
+      this.router.navigate(['/login'])
+    } else if(this.authService.hasSupervisorLoggedIn()){
+      this.router.navigate(['/supervisor-dash']);
+      this.authService.setMenu();
+    } else {
+      this.router.navigate(['/fieldworker-dash']);
+      this.authService.setMenu();
+    }
+
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+    });
+  }
+
+  openPage(page){
+    this.router.navigate([page])
+  }
+
+  logoutUser() {
+    this.router.navigate(["/login"]).then(() => this.authService.logout());
   }
 }
+
 

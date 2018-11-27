@@ -1,7 +1,8 @@
 {
-  "defaultURL": "http://130.111.126.71:8081/openhds2/api2/rest/",
+  "defaultURL": "http://130.111.131.33:8081/openhds/api2/rest",
   "defaultUser": "admin",
   "defaultPassword": "test",
+  "dev": true,
 
   "locationHierarchyLevel1": "Country",
   "locationHierarchyLevel2": "Region",
@@ -12,6 +13,8 @@
   "locationHierarchyLevel7": null,
   "locationHierarchyLevel8": null,
   "locationHierarchyLevel9": null,
+
+  "socialGroupLookupLevel": 5,
 
   "minAgeOfMarriage": 12,
   "dataStatusClosed": "C",

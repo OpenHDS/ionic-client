@@ -1,0 +1,45 @@
+<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<ion-content padding>
+  <ion-row>
+
+    <!-- List of Entities to select from and view errors for -->
+    <ion-col responsive size="3">
+      <ion-list>
+        <ion-item lines="full" *ngFor="let label of this.ENTITY_LABELS"
+                  (click)="this.changeEntity(label)">
+          <ion-text [color]="this.selectedLabel === label.toLowerCase() ? 'primary': 'dark'">
+            {{label}}
+          </ion-text>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+
+    <!-- List of errors for selected entities -->
+    <ion-col>
+      <ion-item *ngIf="this.errorKeys === undefined || this.errorKeys.length === 0 ; else elseBlock">
+        <ion-text>
+          There are no errors for {{this.selectedLabel}}.
+        </ion-text>
+      </ion-item>
+      <ng-template #elseBlock>
+        <ion-list lines="full">
+          <ion-item *ngFor="let ent of this.errorKeys">
+            <ion-col size="3">
+              {{ent}}
+            </ion-col>
+              <ion-col>
+                <ion-list *ngFor="let messages of this.errors[ent]">
+                  <ion-col size="6">
+                    <ion-text>
+                      {{messages["errorMessage"]}}
+                    </ion-text>
+                  </ion-col>
+                </ion-list>
+              </ion-col>
+            <ion-button fill="outline" slot="end" (click)="this.correctEntityError(ent)">Correct Error</ion-button>
+          </ion-item>
+        </ion-list>
+      </ng-template>
+    </ion-col>
+  </ion-row>
+</ion-content>
