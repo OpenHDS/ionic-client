@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { NavigationServiceService } from './navigation.service';
+import { NavigationService} from './navigation.service';
 
-describe('NavigationServiceService', () => {
+describe('NavigationService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [NavigationServiceService]
+      providers: [NavigationService]
     });
   });
 
-  it('should be created', inject([NavigationServiceService], (service: NavigationServiceService) => {
+  it('should be created', inject([NavigationService], (service: NavigationService) => {
     expect(service).toBeTruthy();
   }));
 });

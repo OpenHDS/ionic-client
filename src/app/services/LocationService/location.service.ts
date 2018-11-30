@@ -26,7 +26,7 @@ import {ErrorService} from "../ErrorService/error-service";
 export class LocationService extends DatabaseService {
   public db: OpenhdsDb;
 
-  constructor(public http: HttpClient, public event: Events, public authProvider: AuthService, public fwProvider: FieldworkerService,
+  constructor(public http: HttpClient, public event: Events, public fwProvider: FieldworkerService,
               public systemConfig: SystemConfigService, public locHierarchyService: LocationHierarchyService,
               public errorsService: ErrorService) {
     super(http, systemConfig);
@@ -43,7 +43,7 @@ export class LocationService extends DatabaseService {
       return await this.db.locations.toArray();
   }
 
-  async saveDataLocally(loc: Location) {
+  async saveDataLocally(loc) {
     if (!loc.uuid) {
       loc.uuid = UUID.UUID();
     }

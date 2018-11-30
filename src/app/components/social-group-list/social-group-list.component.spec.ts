@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SocialGroupComponentComponent } from './social-group-list.component';
+import { SocialGroupListComponent } from './social-group-list.component';
 
 describe('SocialGroupComponentComponent', () => {
-  let component: SocialGroupComponentComponent;
-  let fixture: ComponentFixture<SocialGroupComponentComponent>;
+  let component: SocialGroupListComponent;
+  let fixture: ComponentFixture<SocialGroupListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SocialGroupComponentComponent ]
+      declarations: [ SocialGroupListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SocialGroupComponentComponent);
+    fixture = TestBed.createComponent(SocialGroupListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
