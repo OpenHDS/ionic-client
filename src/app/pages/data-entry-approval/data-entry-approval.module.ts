@@ -11,7 +11,9 @@ import {ComponentsModule} from "../../components/components";
 const routes: Routes = [
   {
     path: '',
-    component: DataEntryApprovalPage
+    component: DataEntryApprovalPage,
+    runGuardsAndResolvers: 'always'
+
   }
 ];
 

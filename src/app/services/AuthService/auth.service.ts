@@ -84,6 +84,10 @@ export class AuthService {
         return this.loggedInSupervisor !== undefined;
     }
 
+    getLoggedIn(){
+      return this.isUserLoggedIn;
+    }
+
     canAccess() {
 
     }

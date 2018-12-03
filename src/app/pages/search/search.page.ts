@@ -8,7 +8,7 @@ import {IndividualService} from "../../services/IndividualService/individual.ser
 import {NavigationService} from "../../services/NavigationService/navigation.service";
 import {Location} from "../../models/location";
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'search',
@@ -24,6 +24,7 @@ export class SearchPage implements OnInit {
   //Option for looking up head of social group
   searchForHead: boolean = false;
   entityType: string = 'locations';
+  navigationSubscription;
 
   constructor(public syncObservable: SynchonizationObservableService, public router: Router,
               public navService: NavigationService, public sgProvider: SocialGroupService, public alertCtrl: AlertController,
@@ -32,8 +33,32 @@ export class SearchPage implements OnInit {
     if(this.navService.data !== undefined)
       this.entityType = this.navService.data.entity;
 
+    console.log("Head Lookup")
     if(this.navService.data !== undefined)
       this.searchForHead = this.navService.data.headLookup;
+
+    // Reload page when clicked on from menu to remove data from when last loaded
+    this.navigationSubscription = this.router.events.subscribe((e: any) => {
+      // If it is a NavigationEnd event re-initalise the component
+      if (e instanceof NavigationEnd) {
+        this.reloadPage();
+      }
+    });
+  }
+
+  reloadPage(){
+    this.filteredLocations = undefined;
+    this.filteredSocialGroups = undefined;
+    this.filteredIndividuals = undefined;
+    this.entityType = 'locations';
+
+    if(this.navService.data !== undefined)
+      this.entityType = this.navService.data.entity;
+
+    if(this.navService.data !== undefined)
+      this.searchForHead = this.navService.data.headLookup;
+
+    this.loadList()
   }
 
   async ngOnInit() {

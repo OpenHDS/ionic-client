@@ -1,4 +1,4 @@
-<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="this.editing ? 'Edit a Visit' : this.PAGE_NAME"></openhds-header>
 
 <ion-content>
   <div *ngIf="!this.netConfig.isConnected()">
@@ -50,7 +50,9 @@
     </div>
 
     <br/>
-    <ion-button type="submit"  fill="outline" [disabled]="formSubmitted && visitForm.invalid" type="submit">Create Visit</ion-button>
+    <ion-button *ngIf="!this.navParams.data.editing" type="submit"  fill="outline" [disabled]="formSubmitted && visitForm.invalid" type="submit">Create Visit</ion-button>
+    <ion-button *ngIf="this.navParams.data.editing" type="submit"  fill="outline"  [disabled]="formSubmitted && visitForm.invalid" type="submit">Edit Visit</ion-button>
+
   </form>
   <br/>
 

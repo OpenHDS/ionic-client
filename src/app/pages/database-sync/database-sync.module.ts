@@ -11,7 +11,9 @@ import {ComponentsModule} from "../../components/components";
 const routes: Routes = [
   {
     path: '',
-    component: DatabaseSyncPage
+    component: DatabaseSyncPage,
+    runGuardsAndResolvers: 'always'
+
   }
 ];
 

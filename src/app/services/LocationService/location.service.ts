@@ -26,7 +26,7 @@ import {ErrorService} from "../ErrorService/error-service";
 export class LocationService extends DatabaseService {
   public db: OpenhdsDb;
 
-  constructor(public http: HttpClient, public event: Events, public authProvider: AuthService, public fwProvider: FieldworkerService,
+  constructor(public http: HttpClient, public event: Events, public fwProvider: FieldworkerService,
               public systemConfig: SystemConfigService, public locHierarchyService: LocationHierarchyService,
               public errorsService: ErrorService) {
     super(http, systemConfig);
@@ -43,7 +43,7 @@ export class LocationService extends DatabaseService {
       return await this.db.locations.toArray();
   }
 
-  async saveDataLocally(loc: Location) {
+  async saveDataLocally(loc) {
     if (!loc.uuid) {
       loc.uuid = UUID.UUID();
     }
@@ -55,11 +55,18 @@ export class LocationService extends DatabaseService {
     loc.deleted = false;
     loc.clientInsert = new Date().getTime();
 
-    await this.insert(loc);
+    return await this.insert(loc);
   }
 
   async insert(loc: Location) {
-    this.db.locations.put(loc).catch(err => console.log(err));
+    let success = false;
+
+    //Don't process null entity
+    if(loc === null || loc === undefined)
+      return success;
+
+    this.db.locations.put(loc).then(() => success = true).catch(err => {success = false});
+    return success;
   }
 
   async update(loc: Location) {

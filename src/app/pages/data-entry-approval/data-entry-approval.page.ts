@@ -15,6 +15,7 @@ import {ErrorService} from "../../services/ErrorService/error-service";
 import {ModalController} from "@ionic/angular";
 import {ErrorReportingComponent} from "../../components/error-reporting/error-reporting.component";
 import {NavigationService} from "../../services/NavigationService/navigation.service";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'data-entry-approval',
@@ -35,11 +36,30 @@ export class DataEntryApprovalPage implements OnInit {
   viewEntry: boolean;
   viewMethod: string = "notApproved";
   selectedEntry: any;
+  navigationSubscription;
 
-  constructor(public modalCtrl: ModalController, public navParams: NavigationService, public individualService: IndividualService, public locationService: LocationService,
+  constructor(public router: Router, public modalCtrl: ModalController, public navParams: NavigationService, public individualService: IndividualService, public locationService: LocationService,
               public socialGroupService: SocialGroupService, public visitService: VisitService, public errorService: ErrorService) {
+
+    // Reload page when clicked on from menu to remove data from when last loaded
+    this.navigationSubscription = this.router.events.subscribe((e: any) => {
+      // If it is a NavigationEnd event re-initalise the component
+      if (e instanceof NavigationEnd) {
+        this.reloadPage();
+      }
+    });
   }
 
+  reloadPage(){
+    this.filteredLocations = undefined;
+    this.filteredSocialGroups = undefined;
+    this.filteredIndividuals = undefined;
+    this.filteredVisits = undefined;
+    this.selectedForReview = "locations";
+    this.viewEntry = undefined;
+    this.viewMethod = "notApproved";
+    this.selectedEntry = undefined
+  }
   ngOnInit() {
     this.loadData();
   }
