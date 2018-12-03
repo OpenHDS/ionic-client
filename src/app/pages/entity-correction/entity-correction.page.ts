@@ -6,6 +6,7 @@ import {IndividualService} from "../../services/IndividualService/individual.ser
 import {ErrorService} from "../../services/ErrorService/error-service";
 import {NavController} from "@ionic/angular";
 import {VisitService} from "../../services/VisitService/visit.service";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'entity-correction',
@@ -19,10 +20,27 @@ export class EntityCorrectionPage implements OnInit {
   errors: any;
   errorKeys: any;
   selectedLabel = this.ENTITY_LABELS[0].toLowerCase();
+  navigationSubscription;
 
-  constructor(public navService: NavigationService, public errorService: ErrorService, public visitService: VisitService,
+  constructor(public router: Router, public navService: NavigationService, public errorService: ErrorService, public visitService: VisitService,
               public locationService: LocationService, public socialGroupService: SocialGroupService,
-              public individualService: IndividualService, public navController: NavController) {}
+              public individualService: IndividualService, public navController: NavController) {
+
+    // Reload page when clicked on from menu to remove data from when last loaded
+    this.navigationSubscription = this.router.events.subscribe((e: any) => {
+      // If it is a NavigationEnd event re-initalise the component
+      if (e instanceof NavigationEnd) {
+        this.initializeCorrectionPage();
+      }
+    });
+  }
+
+  initializeCorrectionPage(){
+    this.errors = undefined;
+    this.errorKeys = undefined;
+    this.selectedLabel = this.ENTITY_LABELS[0].toLowerCase();
+    this.loadEntityErrors();
+  }
 
   ngOnInit() {
     this.loadEntityErrors();

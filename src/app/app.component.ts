@@ -47,14 +47,8 @@ export class AppComponent {
     private authService: AuthService
   ) {
 
-    if(this.authService.hasSupervisorLoggedIn() === false || this.authService.hasFieldworkerLoggedIn() === false){
+    if(this.authService.getLoggedIn() === false){
       this.router.navigate(['/login'])
-    } else if(this.authService.hasSupervisorLoggedIn()){
-      this.router.navigate(['/supervisor-dash']);
-      this.authService.setMenu();
-    } else {
-      this.router.navigate(['/fieldworker-dash']);
-      this.authService.setMenu();
     }
 
     this.initializeApp();

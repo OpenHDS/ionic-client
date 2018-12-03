@@ -9,6 +9,7 @@ import {IndividualService} from '../../services/IndividualService/individual.ser
 import {CensusSubmissionService} from '../../services/CensusSubmissionService/census-submission.service';
 import {FieldworkerService} from '../../services/FieldworkerService/fieldworker.service';
 import {VisitService} from "../../services/VisitService/visit.service";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'synchronize-db',
@@ -23,13 +24,32 @@ export class DatabaseSyncPage implements OnInit {
   sgSyncSuccess: boolean;
   individualSyncSuccess: boolean;
   errors: Object[] = [];
+  navigationSubscription;
 
-  constructor(public event: Events, public loadingCtrl: LoadingController, public networkConfig: NetworkConfigurationService,
+  constructor(public router: Router, public event: Events, public loadingCtrl: LoadingController, public networkConfig: NetworkConfigurationService,
               public errProvider: ErrorService,
               public lhProvider: LocationHierarchyService, public locProvider: LocationService,
               public sgProvider: SocialGroupService, public indProvider: IndividualService,
               public censusProvider: CensusSubmissionService, public fwProvider: FieldworkerService,
               public visitService: VisitService) {
+
+    // Reload page when clicked on from menu to remove data from when last loaded
+    this.navigationSubscription = this.router.events.subscribe((e: any) => {
+      // If it is a NavigationEnd event re-initalise the component
+      if (e instanceof NavigationEnd) {
+        this.reloadPage();
+      }
+    });
+
+  }
+
+  reloadPage(){
+    this.fieldworkerSyncSuccess = false;
+    this.locationLevelsSyncSuccess = false;
+    this.locationSyncSuccess = false;
+    this.sgSyncSuccess = false;
+    this.individualSyncSuccess = false;
+    this.errors = undefined;
   }
 
   ngOnInit() {

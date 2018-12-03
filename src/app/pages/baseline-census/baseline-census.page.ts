@@ -9,7 +9,7 @@ import {AlertController, NavController} from "@ionic/angular";
 import {NavigationService} from "../../services/NavigationService/navigation.service";
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 import {Visit} from "../../models/visit";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'baseline-census',
@@ -30,7 +30,7 @@ export class BaselineCensusPage implements OnInit {
   shownGroup = ['hierarchy'];
   editing = false;
   entityErrors = [];
-
+  navigationSubscription;
 
   constructor(public router: Router,
               public syncObservable: SynchonizationObservableService,
@@ -60,6 +60,14 @@ export class BaselineCensusPage implements OnInit {
     this.syncObservable.subscribe("Entity:Correction", () => {
       this.displayCorrectionMessage();
     })
+
+    // Reload page when clicked on from menu to remove data from when last loaded
+    this.navigationSubscription = this.router.events.subscribe((e: any) => {
+      // If it is a NavigationEnd event re-initalise the component
+      if (e instanceof NavigationEnd) {
+        this.resetBaselineCensus();
+      }
+    });
   }
 
   async ngOnInit() {

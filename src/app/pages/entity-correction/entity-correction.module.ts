@@ -11,7 +11,8 @@ import {ComponentsModule} from "../../components/components";
 const routes: Routes = [
   {
     path: '',
-    component: EntityCorrectionPage
+    component: EntityCorrectionPage,
+    runGuardsAndResolvers: 'always'
   }
 ];
 

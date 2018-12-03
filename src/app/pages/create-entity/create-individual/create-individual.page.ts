@@ -12,7 +12,7 @@ import {AuthService} from "../../../services/AuthService/auth.service";
 import {CensusSubmissionService} from "../../../services/CensusSubmissionService/census-submission.service";
 import {FieldworkerService} from "../../../services/FieldworkerService/fieldworker.service";
 import {CensusIndividual} from "../../../models/census-individual";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'create-individual',
@@ -24,7 +24,7 @@ export class CreateIndividualPage implements OnInit {
   createHead: boolean;
   formSubmitted: boolean = false;
   individualForm: CensusIndividualFormGroup;
-
+  navigationSubscription;
 
   individual: Individual = new Individual();
 
@@ -47,8 +47,8 @@ export class CreateIndividualPage implements OnInit {
     } else {
       this.individualForm.get("collectedBy").setValue(this.navService.data.collectedBy);
     }
-
   }
+
 
   // Helper method for setting all fields of a location object
   setEditIndividualFormValues(){
