@@ -65,11 +65,22 @@ export class BaselineCensusPage implements OnInit {
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
       // If it is a NavigationEnd event re-initalise the component
       if (e instanceof NavigationEnd) {
-        this.resetBaselineCensus();
+        this.reloadPage();
       }
     });
   }
 
+  async reloadPage(){
+    this.levels = await this.locHierarchyService.getLevels();
+    this.editing = false;
+    this.selectedHierarchy = [];
+    this.selectedLocation = undefined;
+    this.selectedSocialGroup = undefined;
+    this.selectedIndividuals = [];
+    this.selectedVisit = undefined;
+    this.baselineStep = 'hierarchy';
+    this.shownGroup = ['hierarchy'];
+  }
   async ngOnInit() {
     this.levels = await this.locHierarchyService.getLevels();
     this.selectedHierarchy = [];

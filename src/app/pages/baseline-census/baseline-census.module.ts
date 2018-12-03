@@ -11,7 +11,8 @@ import {ComponentsModule} from "../../components/components";
 const routes: Routes = [
   {
     path: '',
-    component: BaselineCensusPage
+    component: BaselineCensusPage,
+    runGuardsAndResolvers: 'always'
   }
 ];
 
