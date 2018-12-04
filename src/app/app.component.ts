@@ -48,7 +48,7 @@ export class AppComponent {
   ) {
 
     if(this.authService.getLoggedIn() === false){
-      this.router.navigate(['/login'])
+      this.router.navigate(['/login']);
     }
 
     this.initializeApp();
