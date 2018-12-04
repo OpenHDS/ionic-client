@@ -21,6 +21,8 @@ import {FieldworkerService} from "./services/FieldworkerService/fieldworker.serv
 import {SynchonizationObservableService} from "./services/SynchonizationObserverable/synchonization-observable.service";
 import {VisitService} from "./services/VisitService/visit.service";
 
+import {HashLocationStrategy, LocationStrategy} from "@angular/common";
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -38,7 +40,8 @@ import {VisitService} from "./services/VisitService/visit.service";
     IndividualService,
     VisitService,
     CensusSubmissionService,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })
