@@ -59,15 +59,15 @@ export class BaselineCensusPage implements OnInit {
 
     this.syncObservable.subscribe("Entity:Correction", () => {
       this.displayCorrectionMessage();
-    })
-
-    // Reload page when clicked on from menu to remove data from when last loaded
-    this.navigationSubscription = this.router.events.subscribe((e: any) => {
-      // If it is a NavigationEnd event re-initalise the component
-      if (e instanceof NavigationEnd) {
-        this.reloadPage();
-      }
     });
+
+    // // Reload page when clicked on from menu to remove data from when last loaded
+    // this.navigationSubscription = this.router.events.subscribe((e: any) => {
+    //   // If it is a NavigationEnd event re-initalise the component
+    //   if (e instanceof NavigationEnd) {
+    //     this.reloadPage();
+    //   }
+    // });
   }
 
   async reloadPage(){

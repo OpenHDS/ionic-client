@@ -41,7 +41,7 @@ import {HashLocationStrategy, LocationStrategy} from "@angular/common";
     VisitService,
     CensusSubmissionService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent]
 })

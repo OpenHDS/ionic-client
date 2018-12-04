@@ -98,7 +98,7 @@
           <ion-card *ngIf="this.filteredVisits != undefined && this.filteredVisits.length != 0; else elseVisitBlock">
             <ion-card-content>
               <ion-item *ngFor="let visit of this.filteredVisits">
-                {{visit.uuid}}
+                {{visit.extId}} {{visit.visitDate}}
                 <ion-icon name="alert" color="danger" *ngIf="this.visit.errorReported" slot="end"></ion-icon>
                 <ion-icon name="checkbox-outline" color="primary" *ngIf="this.visit.processed" slot="end"></ion-icon>
                 <ion-button slot="end" fill="outline" [color]="this.visit.errorReported ? 'danger': 'primary'"

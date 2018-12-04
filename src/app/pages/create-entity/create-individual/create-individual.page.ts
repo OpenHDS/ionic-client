@@ -7,7 +7,7 @@ import {SynchonizationObservableService} from "../../../services/SynchonizationO
 import {NavigationService} from "../../../services/NavigationService/navigation.service";
 import {IndividualService} from "../../../services/IndividualService/individual.service";
 import {NetworkConfigurationService} from "../../../services/NetworkService/network-config";
-import {ModalController} from "@ionic/angular";
+import {ModalController, NavController} from "@ionic/angular";
 import {AuthService} from "../../../services/AuthService/auth.service";
 import {CensusSubmissionService} from "../../../services/CensusSubmissionService/census-submission.service";
 import {FieldworkerService} from "../../../services/FieldworkerService/fieldworker.service";
@@ -28,7 +28,7 @@ export class CreateIndividualPage implements OnInit {
 
   individual: Individual = new Individual();
 
-  constructor(public syncObserver: SynchonizationObservableService,public navService: NavigationService,
+  constructor(public syncObserver: SynchonizationObservableService,public navService: NavigationService, public navCtrl: NavController,
               public individualProvider: IndividualService, public netConfig: NetworkConfigurationService,
               public modalCtrl: ModalController, public router: Router,
               public authService: AuthService, public censusSub: CensusSubmissionService,
@@ -97,7 +97,7 @@ export class CreateIndividualPage implements OnInit {
     this.navService.data.individual.status = 'U';
     await this.individualProvider.update(this.navService.data.individual);
     this.formSubmitted = false;
-    this.router.navigate(['/baseline']);
+    this.navCtrl.goBack();
   }
 
   async goBackToCensus(){
@@ -105,7 +105,7 @@ export class CreateIndividualPage implements OnInit {
       this.syncObserver.publishChange('Create:Individual:GroupHead', {ind: this.individual, head: false});
     else
       this.syncObserver.publishChange('Individual:Create:Success', {ind: this.individual, head: false});
-    this.router.navigate(["/baseline"])
+    this.navCtrl.goBack();
   }
 
   async createAndSaveCensusIndividual() {

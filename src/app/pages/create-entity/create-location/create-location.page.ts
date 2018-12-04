@@ -119,7 +119,7 @@ export class CreateLocationPage implements OnInit {
   async goBackToCensus(location: Location){
     this.syncObserver.publishChange("Location:Create:Success", location);
     this.syncObserver.publishChange("Location:Create:ListUpdate");
-    this.navController.navigateBack("/baseline")
+    this.navController.goBack(); //Go back to baseline
   }
 
 

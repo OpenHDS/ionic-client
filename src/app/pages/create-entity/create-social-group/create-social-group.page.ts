@@ -5,7 +5,7 @@ import {SocialGroupFormGroup} from "../../../census-forms/social-group-form";
 import {SynchonizationObservableService} from "../../../services/SynchonizationObserverable/synchonization-observable.service";
 import {SocialGroupService} from "../../../services/SocialGroupService/social-group.service";
 import {NetworkConfigurationService} from "../../../services/NetworkService/network-config";
-import {ModalController} from "@ionic/angular";
+import {ModalController, NavController} from "@ionic/angular";
 import {AuthService} from "../../../services/AuthService/auth.service";
 import {NavigationService} from "../../../services/NavigationService/navigation.service";
 import {Router} from "@angular/router";
@@ -23,7 +23,7 @@ export class CreateSocialGroupPage implements OnInit {
   lookupSGHead: boolean = false;
 
   socialGroup: SocialGroup;
-  constructor(public syncObserver: SynchonizationObservableService,  public navService: NavigationService, public router: Router,
+  constructor(public navCtrl: NavController, public syncObserver: SynchonizationObservableService,  public navService: NavigationService, public router: Router,
               public sgProvider: SocialGroupService, public netConfig: NetworkConfigurationService, public modalController: ModalController,
               public authService: AuthService) {
 
@@ -63,7 +63,7 @@ export class CreateSocialGroupPage implements OnInit {
 
   //Dismiss the modal. Note: Data is not saved if the form is not completed!
   async dismissForm() {
-    this.router.navigate(["/baseline"]);
+    this.navCtrl.goBack();
   }
 
   async submitForm(form){
@@ -104,13 +104,13 @@ export class CreateSocialGroupPage implements OnInit {
     this.navService.data.socialGroup.status = 'U';
     await this.sgProvider.update(this.navService.data.socialGroup);
     this.formSubmitted = false;
-    this.router.navigate(['/baseline']);
+    this.navCtrl.goBack();
   }
 
   async goBackToCensus(socialGroup: SocialGroup){
     this.syncObserver.publishChange("SocialGroup:Create:Success", socialGroup);
     this.syncObserver.publishChange("SocialGroup:Create:ListUpdate");
-    this.router.navigate(["/baseline"])
+    this.navCtrl.goBack();
   }
 
   async createHead(){

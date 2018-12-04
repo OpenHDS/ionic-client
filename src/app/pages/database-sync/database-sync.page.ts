@@ -49,7 +49,7 @@ export class DatabaseSyncPage implements OnInit {
     this.locationSyncSuccess = false;
     this.sgSyncSuccess = false;
     this.individualSyncSuccess = false;
-    this.errors = undefined;
+    this.errors = [];
   }
 
   ngOnInit() {
