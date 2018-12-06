@@ -19,7 +19,7 @@ export class SystemConfigService {
   constructor(public http: HttpClient, public platform: Platform) {
     // Location of config file, dependent on device the application is running on.
     if (this.platform.is('ipad') || this.platform.is('tablet')) {
-      this.propertiesUrl = '../www/assets/resources/config.json';
+      this.propertiesUrl = '../www/assets/resources/config.json' || "./assets/resources/config.json";
     } else {
       this.propertiesUrl = '../../assets/resources/config.json';
     }
