@@ -21,33 +21,26 @@ export class IndividualListComponent implements OnInit {
 
   constructor(public syncObserver: SynchonizationObservableService, public indProvider: IndividualService) {
     this.syncObserver.subscribe("submitIndividual", async (ind) => {
-      await this.getAllIndividuals().catch(err => console.log(err))
-        .then(() =>
-        {
-          this.individuals = this.filterBySGExtId();
+          this.individuals = await this.filterBySGExtId();
           this.selectIndividual(ind["ind"]);
-        });
     });
 
-    this.syncObserver.subscribe('Census:Reload:Individual', () => {
-      this.individuals = this.filterBySGExtId();
+    this.syncObserver.subscribe('Census:Reload:Individual', async () => {
+      this.individuals = await this.filterBySGExtId();
     });
 
   }
 
   async ngOnInit() {
-    await this.getAllIndividuals().catch(err => console.log(err));
+    this.individuals = await this.filterBySGExtId()
   }
 
-  async getAllIndividuals(){
-    let ind = await this.indProvider.getAllIndividuals();
-    this.syncObserver.publishChange("individual", ind);
-  }
 
-  filterBySGExtId(){
-    if(this.individuals == null)
+  async filterBySGExtId(){
+    let indByExtId = await this.indProvider.filterBySGExtId(this.sg.extId);
+    if(indByExtId == null)
       return [];
-    return this.individuals.filter(ind => ind.extId.startsWith(this.sg.extId));
+    return indByExtId
   }
 
   selectIndividual(ind){
@@ -71,5 +64,4 @@ export class IndividualListComponent implements OnInit {
       return this.individuals.slice(pageIndex, pageIndex + this.itemsPerPage);
     return [];
   }
-
 }

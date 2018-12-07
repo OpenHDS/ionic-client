@@ -192,4 +192,9 @@ export class IndividualService extends DatabaseService {
   getUnknownIndividual() {
     return {extId: 'UNK'};
   }
+
+  async filterBySGExtId(extId){
+    let individuals = await this.getAllIndividuals();
+    return individuals.filter(ind => ind.extId.startsWith(extId))
+  }
 }
