@@ -25,18 +25,14 @@ export class HierarchyListComponent implements OnInit {
   constructor( public ev: Events, public syncObserver: SynchonizationObservableService,
               public lhProvider: LocationHierarchyService) {
 
+    this.syncObserver.subscribe("Census:Reload:Hierarchy", async () => {
+      this.setupHierarchy().then(() => this.changePage(1));
+    });
 
   }
 
   async ngOnInit(){
-    this.levels = await this.lhProvider.getLevels();
-
-    //Process and setup of location hierarchy
-    this.levels = this.levels.sort((a, b) => {
-      return a.keyIdentifier - b.keyIdentifier;
-    }).filter(x => x.keyIdentifier > 1);
-
-    this.hierarchy = await this.lhProvider.getHierarchy();
+    this.setupHierarchy();
   }
 
   ionViewDidLoad() {
@@ -61,6 +57,17 @@ export class HierarchyListComponent implements OnInit {
     this.levelInHierarchy++;
   }
 
+  async setupHierarchy(){
+    this.levels = await this.lhProvider.getLevels();
+
+    //Process and setup of location hierarchy
+    this.levels = this.levels.sort((a, b) => {
+      return a.keyIdentifier - b.keyIdentifier;
+    }).filter(x => x.keyIdentifier > 1);
+
+    this.hierarchy = await this.lhProvider.getHierarchy();
+  }
+
   getLevelCount(){
     return this.levels.length;
   }
@@ -76,10 +83,10 @@ export class HierarchyListComponent implements OnInit {
     return 0;
   }
 
-  get locationDetails(): Hierarchy[] {
+  get hierarchyDetails(): Hierarchy[] {
     let pageIndex = (this.selectedPage - 1) * this.itemsPerPage;
     if(this.hierarchy != undefined)
-      return this.hierarchy.slice(pageIndex, pageIndex + this.itemsPerPage);
+      return this.filterByLevel(this.levelInHierarchy).slice(pageIndex, pageIndex + this.itemsPerPage);
     return [];
   }
 

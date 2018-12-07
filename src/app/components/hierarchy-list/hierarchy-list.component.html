@@ -1,7 +1,7 @@
 <div>
       <div *ngFor="let level of this.levels">
         <ion-list no-lines *ngIf="this.levelInHierarchy == level.keyIdentifier">
-          <ion-card *ngFor="let hier of this.filterByLevel(this.levelInHierarchy)" (click)="this.setSelectedLevel(this.levelInHierarchy, hier)">
+          <ion-card *ngFor="let hier of hierarchyDetails" (click)="this.setSelectedLevel(this.levelInHierarchy, hier)">
             <ion-card-content>
               <h1>{{hier.name}}</h1>
               <h5>External Id: {{hier.extId}}</h5>

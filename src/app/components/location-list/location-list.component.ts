@@ -30,7 +30,7 @@ export class LocationListComponent implements OnInit {
       this.getAllLocations().then(() => this.changePage(1));
     });
 
-    this.syncObserver.subscribe("Baseline:Reload:Location", async () => {
+    this.syncObserver.subscribe("Census:Reload:Location", async () => {
       this.getAllLocations().then(() => this.changePage(1));
     });
   }

@@ -39,6 +39,11 @@ export class SocialGroupListComponent implements OnInit {
        await this.getAllSocialGroups();
     });
 
+    this.syncObserver.subscribe("Census:Reload:SocialGroup", async () => {
+      await this.getAllSocialGroups();
+    });
+
+
     this.hierarchyLookupLevel = this.systemConfig.getSocialLookupLevel();
   }
 

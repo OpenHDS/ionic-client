@@ -29,14 +29,10 @@ export class IndividualListComponent implements OnInit {
         });
     });
 
-    this.syncObserver.subscribe('syncIndividual', () => {
-      console.log("Sync Individual Subscription...");
-      this.indProvider.loadInitData().then(async () => await this.getAllIndividuals()).catch(err => console.log(err));
+    this.syncObserver.subscribe('Census:Reload:Individual', () => {
+      this.individuals = this.filterBySGExtId();
     });
 
-    this.syncObserver.subscribe("individual", async (ind) => {
-      this.individuals = ind;
-    });
   }
 
   async ngOnInit() {

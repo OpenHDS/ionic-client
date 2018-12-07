@@ -10,6 +10,7 @@ import {CensusSubmissionService} from '../../services/CensusSubmissionService/ce
 import {FieldworkerService} from '../../services/FieldworkerService/fieldworker.service';
 import {VisitService} from "../../services/VisitService/visit.service";
 import {NavigationEnd, Router} from "@angular/router";
+import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
 
 @Component({
   selector: 'synchronize-db',
@@ -31,7 +32,7 @@ export class DatabaseSyncPage implements OnInit {
               public lhProvider: LocationHierarchyService, public locProvider: LocationService,
               public sgProvider: SocialGroupService, public indProvider: IndividualService,
               public censusProvider: CensusSubmissionService, public fwProvider: FieldworkerService,
-              public visitService: VisitService) {
+              public visitService: VisitService, public syncObserver: SynchonizationObservableService) {
 
     // Reload page when clicked on from menu to remove data from when last loaded
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
@@ -69,6 +70,8 @@ export class DatabaseSyncPage implements OnInit {
     await this.syncSocialGroups();
     await this.syncIndividuals();
 
+    // Publish change so baseline census page picks up sync changes (reloads data field display)
+    this.syncObserver.publishChange("Baseline:Load");
   }
 
   async syncFieldworkers() {
@@ -102,6 +105,8 @@ export class DatabaseSyncPage implements OnInit {
     });
     loading.dismiss();
 
+    this.syncObserver.publishChange('Census:Reload:Hierarchy');
+
   }
   async syncLocations() {
     this.locationSyncSuccess = true;
@@ -115,6 +120,8 @@ export class DatabaseSyncPage implements OnInit {
       this.locationSyncSuccess = false;
     });
     loading.dismiss();
+    this.syncObserver.publishChange('Census:Reload:Location');
+
   }
 
   async syncSocialGroups() {
@@ -128,6 +135,9 @@ export class DatabaseSyncPage implements OnInit {
       this.errors.push('Social Group Sync: ' + this.errProvider.mapErrorMessage(err.status));
       this.sgSyncSuccess = false;
     });
+
+    this.syncObserver.publishChange('Census:Reload:SocialGroup');
+
     loading.dismiss();
   }
 
@@ -142,6 +152,8 @@ export class DatabaseSyncPage implements OnInit {
       this.errors.push('Individual Sync: ' + this.errProvider.mapErrorMessage(err.status));
       this.individualSyncSuccess = false;
     });
+    this.syncObserver.publishChange('Census:Reload:Individual');
+
     loading.dismiss();
   }
 

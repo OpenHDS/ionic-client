@@ -39,27 +39,10 @@ export class BaselineCensusPage implements OnInit {
               public alertCtrl: AlertController,
               public navService: NavigationService) {
 
-    this.syncObservable.subscribe("Location:Create:Success", (location) => {
-      this.setSelectedLocation(location);
+    this.syncObservable.subscribe("Baseline:Load", (location) => {
+      this.reloadPage();
     });
 
-    this.syncObservable.subscribe("SocialGroup:Create:Success", (socialGroup) => {
-      this.setSelectedSocialGroup(socialGroup);
-    });
-
-    this.syncObservable.subscribe("Individual:Create:Success", (individual) => {
-      this.setSelectedIndividuals(individual.ind);
-    });
-
-
-    this.syncObservable.subscribe("Visit:Create:Success", (visit) => {
-      this.selectedVisit = visit;
-      this.displayCensusSubmission();
-    });
-
-    this.syncObservable.subscribe("Entity:Correction", () => {
-      this.displayCorrectionMessage();
-    });
 
     // // Reload page when clicked on from menu to remove data from when last loaded
     // this.navigationSubscription = this.router.events.subscribe((e: any) => {

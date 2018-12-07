@@ -88,6 +88,12 @@
           </ion-text>
         </div>
       </div>
+
+      <ion-row *ngIf="!this.editing">
+        <ion-col>
+          <ion-button [disabled]="!this.isEligableToSubmit()" responsive fill="outline" expand="full" (click)="this.completeBaselineCensus()">Complete Baseline Census</ion-button>
+        </ion-col>
+      </ion-row>
     </ion-col>
 
     <!---------------------------- Creating Baseline Census Entity ---------------------------->
@@ -140,14 +146,7 @@
   </ion-row>
 
 
-
-  <ion-row *ngIf="!this.editing">
-    <ion-col>
-      <ion-button [disabled]="!this.isEligableToSubmit()" responsive fill="outline" expand="full" (click)="this.completeBaselineCensus()">Complete Baseline Census</ion-button>
-    </ion-col>
-  </ion-row>
-
-
+  
   <!---------------------------- Editing Baseline Census Entity ---------------------------->
 
 
