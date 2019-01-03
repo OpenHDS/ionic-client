@@ -22,6 +22,7 @@ import {SynchonizationObservableService} from "./services/SynchonizationObserver
 import {VisitService} from "./services/VisitService/visit.service";
 
 import {HashLocationStrategy, LocationStrategy} from "@angular/common";
+import {SyncInfoService} from "./services/SyncInfoService/sync-info.service";
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +38,7 @@ import {HashLocationStrategy, LocationStrategy} from "@angular/common";
     LocationHierarchyService,
     LocationService,
     SocialGroupService,
+    SyncInfoService,
     IndividualService,
     VisitService,
     CensusSubmissionService,

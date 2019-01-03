@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {HelpPopoverComponent} from "../../../components/help-popover/help-popover.component";
 import {CensusIndividualFormGroup} from "../../../census-forms/individual-form";
 
@@ -102,6 +102,7 @@ export class CreateIndividualPage implements OnInit {
       this.syncObserver.publishChange('Create:Individual:GroupHead', {ind: this.individual, head: false});
     else
       this.syncObserver.publishChange('Individual:Create:Success', {ind: this.individual, head: false});
+      this.syncObserver.publishChange("Census:Reload:Individual", {ind: this.individual});
     this.navCtrl.goBack();
   }
 

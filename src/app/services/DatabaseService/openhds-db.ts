@@ -9,8 +9,10 @@ import {DataError} from '../../models/data-error';
 import {CensusIndividual} from '../../models/census-individual';
 import {Visit} from '../../models/visit';
 import {User} from '../../models/user';
+import {SyncInfo} from "../../models/sync";
 
 export class OpenhdsDb extends Dexie {
+  sync: Dexie.Table<SyncInfo, string>;
   fieldworkers: Dexie.Table<Fieldworker, string>;
   levels: Dexie.Table<HierarchyLevel, string>;
   locationhierarchies: Dexie.Table<Hierarchy, string>;
@@ -25,6 +27,7 @@ export class OpenhdsDb extends Dexie {
   constructor() {
     super('OpenHDS');
     this.version(1).stores({
+      sync: 'uuid, entity, success, time',
       fieldworkers: 'uuid, extId, firstName, lastName, passwordHash, processed',
       levels: 'uuid, extId, name, keyIdentifier',
       locationhierarchies: 'uuid, extId, name, level, parent',

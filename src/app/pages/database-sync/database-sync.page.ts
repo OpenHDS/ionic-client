@@ -11,6 +11,8 @@ import {FieldworkerService} from '../../services/FieldworkerService/fieldworker.
 import {VisitService} from "../../services/VisitService/visit.service";
 import {NavigationEnd, Router} from "@angular/router";
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
+import {SyncInfoService} from "../../services/SyncInfoService/sync-info.service";
+import {SyncInfo} from "../../models/sync";
 
 @Component({
   selector: 'synchronize-db',
@@ -19,16 +21,16 @@ import {SynchonizationObservableService} from "../../services/SynchonizationObse
 })
 export class DatabaseSyncPage implements OnInit {
   readonly PAGE_NAME = "OpenHDS Database Synchronization";
-  fieldworkerSyncSuccess: boolean;
-  locationLevelsSyncSuccess: boolean;
-  locationSyncSuccess: boolean;
-  sgSyncSuccess: boolean;
-  individualSyncSuccess: boolean;
+  fieldworkerSync: SyncInfo;
+  hierarchySync: SyncInfo;
+  locationSync: SyncInfo;
+  socialGroupSync: SyncInfo;
+  individualSync: SyncInfo;
   errors: Object[] = [];
   navigationSubscription;
 
   constructor(public router: Router, public event: Events, public loadingCtrl: LoadingController, public networkConfig: NetworkConfigurationService,
-              public errProvider: ErrorService,
+              public errProvider: ErrorService, public syncService: SyncInfoService,
               public lhProvider: LocationHierarchyService, public locProvider: LocationService,
               public sgProvider: SocialGroupService, public indProvider: IndividualService,
               public censusProvider: CensusSubmissionService, public fwProvider: FieldworkerService,
@@ -45,15 +47,16 @@ export class DatabaseSyncPage implements OnInit {
   }
 
   reloadPage(){
-    this.fieldworkerSyncSuccess = false;
-    this.locationLevelsSyncSuccess = false;
-    this.locationSyncSuccess = false;
-    this.sgSyncSuccess = false;
-    this.individualSyncSuccess = false;
+    this.ngOnInit();
     this.errors = [];
   }
 
   ngOnInit() {
+    this.getFieldworkerSyncInfo();
+    this.getHierarchySyncInfo();
+    this.getLocationSyncInfo();
+    this.getSocialGroupInfo();
+    this.getIndividualInfo();
   }
 
   ionViewDidLoad() {
@@ -75,66 +78,101 @@ export class DatabaseSyncPage implements OnInit {
   }
 
   async syncFieldworkers() {
-    this.fieldworkerSyncSuccess = true;
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing fieldworkers... Please wait',
     });
 
     loading.present();
-    await this.fwProvider.loadInitData().catch((err) => {
+
+    this.fwProvider.loadInitData().then(() => {
+      let syncInfo = new SyncInfo();
+      syncInfo.entity = 'fieldworker';
+      syncInfo.success = true;
+      syncInfo.time = new Date();
+      this.fieldworkerSync = syncInfo;
+      this.syncService.insertSyncInfo(syncInfo);
+    }).catch((err) => {
+      console.log(err);
       this.errors.push('Fieldworker Sync: ' + this.errProvider.mapErrorMessage(err.status));
-      this.fieldworkerSyncSuccess = false; });
+    });
+
     loading.dismiss();
   }
 
   async syncLocLevels() {
-    this.locationLevelsSyncSuccess = true;
+    let syncInfo = new SyncInfo();
+    syncInfo.entity = 'hierarchy';
+    syncInfo.time = new Date();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing location levels... Please wait'
     });
 
     loading.present();
-    await this.lhProvider.loadLevels().catch((err) =>  {
-      this.errors.push('Location Hierachy Level Sync: ' + this.errProvider.mapErrorMessage(err.status));
-      this.locationLevelsSyncSuccess = false;
+    await this.lhProvider.loadLevels().then( () => {
+      syncInfo.success = true;
+    }).catch((err) =>  {
+      this.errors.push('Location Hierarchy Level Sync: ' + this.errProvider.mapErrorMessage(err.status));
+      syncInfo.success = false;
     });
-    await this.lhProvider.loadHierarchy().catch((err) => {
+
+    await this.lhProvider.loadHierarchy().then(() => {
+      syncInfo.success = true;
+    }).catch((err) => {
       this.errors.push('Location Hierarchy Sync: ' + this.errProvider.mapErrorMessage(err.status));
-      this.locationLevelsSyncSuccess = false;
+      syncInfo.success = true;
     });
+
+    this.syncService.insertSyncInfo(syncInfo);
+    this.hierarchySync = syncInfo;
     loading.dismiss();
 
     this.syncObserver.publishChange('Census:Reload:Hierarchy');
-
   }
+
   async syncLocations() {
-    this.locationSyncSuccess = true;
+    let syncInfo = new SyncInfo();
+    syncInfo.entity = 'location';
+    syncInfo.time = new Date();
+
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing location... Please wait'
     });
 
     loading.present();
-    await this.locProvider.loadInitData().catch((err) => {
+    await this.locProvider.loadInitData().then(() => {
+      syncInfo.success = true;
+    }).catch((err) => {
       this.errors.push('Location Sync: ' + this.errProvider.mapErrorMessage(err.status));
-      this.locationSyncSuccess = false;
+      syncInfo.success = false;
     });
     loading.dismiss();
+
+    this.locationSync = syncInfo;
+    this.syncService.insertSyncInfo(syncInfo);
     this.syncObserver.publishChange('Census:Reload:Location');
 
   }
 
   async syncSocialGroups() {
-    this.sgSyncSuccess = true;
+    let syncInfo = new SyncInfo();
+    syncInfo.entity = 'socialGroup';
+    syncInfo.time = new Date();
+
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing social groups... Please wait'
     });
 
     loading.present();
-    await this.sgProvider.loadInitData().catch((err) => {
+    await this.sgProvider.loadInitData().then(() => {
+      syncInfo.success = true;
+    }).catch((err) => {
       this.errors.push('Social Group Sync: ' + this.errProvider.mapErrorMessage(err.status));
-      this.sgSyncSuccess = false;
+      syncInfo.success = false;
     });
+
+    this.syncService.insertSyncInfo(syncInfo);
+    this.socialGroupSync = syncInfo;
 
     this.syncObserver.publishChange('Census:Reload:SocialGroup');
 
@@ -142,16 +180,25 @@ export class DatabaseSyncPage implements OnInit {
   }
 
   async syncIndividuals() {
-    this.individualSyncSuccess = true;
+    let syncInfo = new SyncInfo();
+    syncInfo.entity = 'individual';
+    syncInfo.time = new Date();
+
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing individuals... Please wait'
     });
 
     loading.present();
-    await this.indProvider.loadInitData().catch((err) => {
+    await this.indProvider.loadInitData().then(() => {
+      syncInfo.success = true;
+    }).catch((err) => {
       this.errors.push('Individual Sync: ' + this.errProvider.mapErrorMessage(err.status));
-      this.individualSyncSuccess = false;
+      syncInfo.success = false;
     });
+
+    this.syncService.insertSyncInfo(syncInfo);
+    this.individualSync = syncInfo;
+
     this.syncObserver.publishChange('Census:Reload:Individual');
 
     loading.dismiss();
@@ -162,5 +209,25 @@ export class DatabaseSyncPage implements OnInit {
     await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err); this.sgSyncSuccess = false;});
     await this.indProvider.synchronizeOfflineIndividuals().catch(err => {console.log(err); this.individualSyncSuccess = false;});
     await this.visitService.synchronizeOfflineVisits().catch(err => console.log(err));
+  }
+
+  async getFieldworkerSyncInfo(){
+    this.fieldworkerSync = await this.syncService.findSyncInfo('fieldworker');
+  }
+
+  async getHierarchySyncInfo(){
+    this.hierarchySync = await this.syncService.findSyncInfo('hierarchy');
+  }
+
+  async getLocationSyncInfo(){
+    this.locationSync = await this.syncService.findSyncInfo('location')
+  }
+
+  async getSocialGroupInfo(){
+    this.socialGroupSync = await this.syncService.findSyncInfo('socialGroup');
+  }
+
+  async getIndividualInfo(){
+    this.individualSync = await this.syncService.findSyncInfo('individual');
   }
 }
