@@ -1,0 +1,24 @@
+.login { width: 50%;
+  height: auto;
+  margin: auto;
+  border: 2px solid var(--ion-color-primary);
+}
+
+.logo{
+  width: 50%;
+  height: auto;
+  margin: auto;
+}
+
+.image{
+  margin:auto;
+}
+
+.error{
+  width:auto;
+  height: auto;
+  margin:auto;
+  background-color: rgba(#d9534f, 0.5);
+  color: rgba(#983a37, 1.0);
+  text-align:center;
+}

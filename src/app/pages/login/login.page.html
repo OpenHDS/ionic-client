@@ -1,17 +1,14 @@
-<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<!--<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>-->
 
-<ion-content padding>
-  <ion-row>
-    <ion-col size="5"></ion-col>
-    <ion-col size="2">
-      <ion-item>
-        <ion-img style="height: 200px;width: 200px;" [src]="'../assets/imgs/logo-login-colored.png' || './assets/imgs/logo-login-colored.png'"></ion-img>
-      </ion-item>
-    </ion-col>
-    <ion-col size="5"></ion-col>
-  </ion-row>
+<ion-content padding class="background">
+  <ion-card class="login">
+    <ion-row>
+        <ion-item class="logo">
+          <ion-img class="image" style="height: 200px;width: 200px;" [src]="'../assets/imgs/logo-login-colored.png' || './assets/imgs/logo-login-colored.png'"></ion-img>
+        </ion-item>
+    </ion-row>
 
-  <form [formGroup]="loginForm" (ngSubmit)="this.onLogin(loginForm.value)">
+    <form [formGroup]="loginForm" (ngSubmit)="this.onLogin(loginForm.value)">
       <ion-item>
         <ion-label>Username</ion-label>
         <ion-input formControlName="username" name="username" type="text">
@@ -34,23 +31,25 @@
         </ion-text>
       </ion-item>
 
-    <ion-row>
-      <ion-col>
-        <ion-button type="submit" expand="block">Login</ion-button>
-      </ion-col>
-    </ion-row>
-  </form>
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" expand="block">Login</ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
 
-  <ion-item>
-    <ion-label>Supervisor Login (Unselect if Fieldworker)</ion-label>
-    <ion-checkbox checked="true" [(ngModel)]="this.loginAsSuper"></ion-checkbox>
-  </ion-item>
+    <ion-item>
+      <ion-label>Supervisor Login (Unselect if Fieldworker)</ion-label>
+      <ion-checkbox checked="true" [(ngModel)]="this.loginAsSuper"></ion-checkbox>
+    </ion-item>
 
-  <ion-card [hidden]="!this.showLoginError">
-    <ion-card-content>
-      <ion-text color="danger" text-center>
-        ERROR: INVALID USERNAME AND/OR PASSWORD
-      </ion-text>
-    </ion-card-content>
-  </ion-card>
+    <ion-card [hidden]="!this.showLoginError" class="error">
+      <ion-card-content>
+        <ion-text>
+          <b>Error: Invalid username and/or password was provided.</b>
+        </ion-text>
+      </ion-card-content>
+    </ion-card>
+
+</ion-card>
 </ion-content>
