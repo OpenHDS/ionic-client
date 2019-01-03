@@ -1,6 +1,6 @@
 import {Component, Input, ViewChild} from '@angular/core';
 
-import {Nav, Platform} from '@ionic/angular';
+import {Platform} from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import {User} from "./models/user";
@@ -17,7 +17,6 @@ export interface PageInterface {
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
-  @ViewChild(Nav) nav: Nav;
   user: User;
 
   fieldworkerPages: PageInterface[] = [

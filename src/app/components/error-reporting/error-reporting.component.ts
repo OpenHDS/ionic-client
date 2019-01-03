@@ -13,7 +13,6 @@ export class ErrorReportingComponent implements OnInit {
   entityType: string;
   entityId: string;
   errorMessage: string;
-  showErrorReporting: boolean = false;
   constructor(public errProvider: ErrorService, public navParams: NavigationService) {
     this.entityId = this.navParams.data.entityId;
     this.entityType = this.navParams.data.entityType;
@@ -23,13 +22,6 @@ export class ErrorReportingComponent implements OnInit {
     console.log('ionViewDidLoad ErrorReportingPage');
   }
 
-  toggleErrorReportingView(){
-    if(this.showErrorReporting){
-      this.showErrorReporting = false;
-    } else {
-      this.showErrorReporting = true;
-    }
-  }
 
   saveError(){
     let err = new DataError();
