@@ -16,6 +16,7 @@ export interface PageInterface {
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
+
 export class AppComponent {
   user: User;
 

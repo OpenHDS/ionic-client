@@ -68,9 +68,6 @@ export class CreateIndividualPage implements OnInit {
       }
 
       Object.keys(form.value).forEach((key, index) => {
-        if(key === 'dob')
-          this.individual[key] = form.value[key].year.text + "-" + form.value[key].month.text + "-" + form.value[key].day.text;
-        else
           this.individual[key] = form.value[key];
       });
 
