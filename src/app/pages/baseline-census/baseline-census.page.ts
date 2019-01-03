@@ -39,10 +39,13 @@ export class BaselineCensusPage implements OnInit {
               public alertCtrl: AlertController,
               public navService: NavigationService) {
 
-    this.syncObservable.subscribe("Baseline:Load", (location) => {
+    this.syncObservable.subscribe("Baseline:Load", () => {
       this.reloadPage();
     });
 
+    this.syncObservable.subscribe(("Individual:Create:Success"), (ind) => {
+      this.selectedIndividuals.push(ind.ind);
+    })
 
     // // Reload page when clicked on from menu to remove data from when last loaded
     // this.navigationSubscription = this.router.events.subscribe((e: any) => {
