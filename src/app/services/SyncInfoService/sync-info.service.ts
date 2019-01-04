@@ -21,6 +21,7 @@ export class SyncInfoService {
       return a.time - b.time
     });
 
+    //Get last time stamp.
     return syncs[syncs.length-1];
   }
 }

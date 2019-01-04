@@ -21,7 +21,7 @@ export class CreateLocationPage implements OnInit {
   readonly PAGE_NAME = "Create a Location";
   collectedBy: Fieldworker;
   parentLevel: HierarchyLevel;
-  geoloc: boolean = false;
+  geolocEnabled: boolean = true;
   formSubmitted: boolean = false;
   form: LocationFormGroup;
 
@@ -61,6 +61,7 @@ export class CreateLocationPage implements OnInit {
       this.form.get(prop).setValue(location[prop])
     }
   }
+
   async getGeolocationInfo(loc){
     let loading = await this.loadingCtrl.create({
       message: "Gathering geolocation information..."
@@ -77,6 +78,8 @@ export class CreateLocationPage implements OnInit {
       this.geoloc = true;
       loading.dismiss();
     });
+
+    return loc;
   }
 
   async submitForm(form: NgForm){
@@ -96,8 +99,11 @@ export class CreateLocationPage implements OnInit {
 
       loc.locationLevel = this.navService.data.parentLevel;
       loc.collectedBy = this.navService.data.collectedBy;
+      if(this.geolocEnabled)
+        loc = await this.getGeolocationInfo(loc);
 
       await this.locProvider.saveDataLocally(loc);
+
       this.formSubmitted = false;
       this.goBackToCensus(loc);
     }

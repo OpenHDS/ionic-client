@@ -56,4 +56,13 @@
   <ion-button fill="outline" (click)="this.goBackToCensus()">
     Cancel
   </ion-button>
+
+  <br>
+
+  <ion-item-divider color="primary">Additional Options</ion-item-divider>
+
+  <ion-item>
+    <ion-label>Geolocation Enabled</ion-label>
+    <ion-toggle [(ngModel)]="geolocEnabled"></ion-toggle>
+  </ion-item>
 </ion-content>
