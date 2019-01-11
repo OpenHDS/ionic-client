@@ -1,0 +1,10 @@
+{
+  "loginUsername": "Username",
+  "usernameFormError": "A username is required.",
+  "loginPassword": "Password",
+  "passwordFormError": "A password is required",
+  "loginErrorMessage": "Wrong username or password. Please try again.",
+  "loginButton": "Login",
+  "loginSupervisor": "Supervisor Login (Unselect if Fieldworker)",
+  "logoutSuccess": "Logout successful."
+}

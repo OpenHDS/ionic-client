@@ -205,9 +205,9 @@ export class DatabaseSyncPage implements OnInit {
   }
 
   async syncNewDataWithServer() {
-    await this.locProvider.synchronizeOfflineLocations().catch((err) => {console.log(err); this.locationSyncSuccess = false; });
-    await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err); this.sgSyncSuccess = false;});
-    await this.indProvider.synchronizeOfflineIndividuals().catch(err => {console.log(err); this.individualSyncSuccess = false;});
+    await this.locProvider.synchronizeOfflineLocations().catch((err) => {console.log(err)});
+    await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err)});
+    await this.indProvider.synchronizeOfflineIndividuals().catch(err => {console.log(err)});
     await this.visitService.synchronizeOfflineVisits().catch(err => console.log(err));
   }
 

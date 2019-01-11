@@ -75,7 +75,6 @@ export class CreateLocationPage implements OnInit {
       loc.altitude = resp.coords.altitude;
       loc.accuracy = resp.coords.altitudeAccuracy;
     }).catch(err => console.log(err)).then(() => {
-      this.geoloc = true;
       loading.dismiss();
     });
 

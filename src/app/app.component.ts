@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import {User} from "./models/user";
 import {AuthService} from "./services/AuthService/auth.service";
 import {Router} from "@angular/router";
+import {TranslateService} from "@ngx-translate/core";
 
 export interface PageInterface {
   title: string;
@@ -44,8 +45,15 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) {
+
+    // this language will be used as a fallback when a translation isn't found in the current language
+    translate.setDefaultLang('en');
+
+    // the lang to use, if the lang isn't available, it will use the current loader to get them
+    translate.use('en');
 
     if(this.authService.getLoggedIn() === false){
       this.router.navigate(['/login']);
