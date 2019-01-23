@@ -5,6 +5,7 @@ import {ComponentsModule} from "../../components/components";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {IonicModule} from "@ionic/angular";
 import {CommonModule} from "@angular/common";
+import {TranslateModule} from "@ngx-translate/core";
 
 const routes: Routes = [
   {
@@ -19,7 +20,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule, ReactiveFormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    TranslateModule.forChild()
+
   ],
 
   declarations: [SystemConfigPage]

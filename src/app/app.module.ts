@@ -23,7 +23,7 @@ import {VisitService} from "./services/VisitService/visit.service";
 
 import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 import {SyncInfoService} from "./services/SyncInfoService/sync-info.service";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 
 export function createTranslateLoader(http: HttpClient) {

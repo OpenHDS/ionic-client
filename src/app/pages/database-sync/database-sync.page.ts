@@ -88,7 +88,7 @@ export class DatabaseSyncPage implements OnInit {
       let syncInfo = new SyncInfo();
       syncInfo.entity = 'fieldworker';
       syncInfo.success = true;
-      syncInfo.time = new Date();
+      syncInfo.time = new Date().getTime();
       this.fieldworkerSync = syncInfo;
       this.syncService.insertSyncInfo(syncInfo);
     }).catch((err) => {
@@ -102,7 +102,7 @@ export class DatabaseSyncPage implements OnInit {
   async syncLocLevels() {
     let syncInfo = new SyncInfo();
     syncInfo.entity = 'hierarchy';
-    syncInfo.time = new Date();
+    syncInfo.time = new Date().getTime();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing location levels... Please wait'
@@ -133,7 +133,7 @@ export class DatabaseSyncPage implements OnInit {
   async syncLocations() {
     let syncInfo = new SyncInfo();
     syncInfo.entity = 'location';
-    syncInfo.time = new Date();
+    syncInfo.time = new Date().getTime();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing location... Please wait'
@@ -157,7 +157,7 @@ export class DatabaseSyncPage implements OnInit {
   async syncSocialGroups() {
     let syncInfo = new SyncInfo();
     syncInfo.entity = 'socialGroup';
-    syncInfo.time = new Date();
+    syncInfo.time = new Date().getTime();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing social groups... Please wait'
@@ -182,7 +182,7 @@ export class DatabaseSyncPage implements OnInit {
   async syncIndividuals() {
     let syncInfo = new SyncInfo();
     syncInfo.entity = 'individual';
-    syncInfo.time = new Date();
+    syncInfo.time = new Date().getTime();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing individuals... Please wait'

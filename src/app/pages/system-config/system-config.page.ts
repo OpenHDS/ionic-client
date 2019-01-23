@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {SystemConfigService} from "../../services/SystemService/system-config.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'system-config',
@@ -18,7 +19,7 @@ export class SystemConfigPage implements OnInit {
   editingLH: boolean;
   editingCodes: boolean;
 
-  constructor(public configuration: SystemConfigService) {
+  constructor(public configuration: SystemConfigService, public translate: TranslateService) {
     this.setServerUrl();
     this.setHierarchy();
     this.setCodes();

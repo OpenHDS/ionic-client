@@ -1,27 +1,28 @@
-<openhds-header [headerTitle]="this.navService.data.editing ? 'Edit a Location': this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="this.navService.data.editing ? 'locationEdit' : 'locationCreate'"></openhds-header>
+
 <ion-content>
   <div *ngIf="!this.netConfig.isConnected()">
-    <ion-card color="danger">
+    <ion-card>
       <ion-card-content>
-        <p>There is currently no network connection. You data will be uploaded to the server when there
-          is a connection!</p>
+        <ion-text>{{'networkErrorPrompt' | translate}}</ion-text>
       </ion-card-content>
     </ion-card>
   </div>
 
   <form novalidate [formGroup]="form" (ngSubmit)="submitForm(form)">
-    <ion-item color="danger" *ngIf="formSubmitted && form.invalid">
-      <ion-text>
-        There are problems with the form:
-      </ion-text>
-      <ion-list>
-        <ion-item color="danger" *ngFor="let error of form.getFormValidationMessages(form)">
+
+    <div class="error" *ngIf="formSubmitted && form.invalid">
+        <ion-item>
           <ion-text>
-            {{error}}
+            There are problems with the form:
           </ion-text>
         </ion-item>
-      </ion-list>
-    </ion-item>
+        <ion-item lines="none" *ngFor="let error of form.getFormValidationMessages()">
+          <ion-text>
+            {{ error }}
+          </ion-text>
+        </ion-item>
+    </div>
 
     <!------  Form Fields --------->
     <div class="form-group" *ngFor="let control of form.formControls">
@@ -32,18 +33,18 @@
         <ion-input class="form-control"
                    formControlName="{{control.modelProperty}}">
         </ion-input>
-          <ion-button type="button" fill="outline" color="clear" spot="end"
-                      [hidden]="control.label != 'Location Type'" (click)="helpPopup(control.label)">
-            <ion-icon name="help-circle" ></ion-icon>
-          </ion-button>
+        <ion-button type="button" fill="outline" color="clear" spot="end"
+                    [hidden]="control.label != 'Location Type'" (click)="helpPopup(control.label)">
+          <ion-icon name="help-circle" ></ion-icon>
+        </ion-button>
 
 
 
       </ion-item>
       <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
-        <p color="danger" *ngFor="let error of control.getValidationMessages()">
-          {{error}}
-        </p>
+        <ion-text color="danger" *ngFor="let error of control.getValidationMessages()">
+          {{error }}
+        </ion-text>
       </ion-item>
     </div>
 
@@ -59,7 +60,9 @@
 
   <br>
 
-  <ion-item-divider color="primary">Additional Options</ion-item-divider>
+  <ion-item>
+    <ion-item-divider color="primary">Additional Options</ion-item-divider>
+  </ion-item>
 
   <ion-item>
     <ion-label>Geolocation Enabled</ion-label>

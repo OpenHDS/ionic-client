@@ -6,5 +6,31 @@
   "loginErrorMessage": "Wrong username or password. Please try again.",
   "loginButton": "Login",
   "loginSupervisor": "Supervisor Login (Unselect if Fieldworker)",
-  "logoutSuccess": "Logout successful."
+  "logoutSuccess": "Logout successful.",
+
+  "systemConfigPageTitle": "System Configurations",
+  "databaseURL": "OpenHDS Server URL",
+  "locationHierarchyConfig": "Location Hierarchy Configuration",
+  "codesConfig": "Codes and Parameters",
+
+  "locationCreate":"Create Location",
+  "locationEdit":"Edit Location",
+  "locationDetail":"Location Detail",
+  "locationName":"Location Name",
+  "locationType":"Location Type",
+  "locationLatitude":"Latitude",
+  "locationLongitude":"Longitude",
+  "locationAccuracy":"Accuracy",
+  "locationAltitude":"Altitude",
+  "locationEmpty":"(No Location Items Found)",
+
+  "saveButton": "Save",
+  "editButton": "Edit",
+  "cancelButton": "Cancel",
+  "submitButton": "Submit",
+  "networkErrorPrompt": "There is currently no network connection. Your data will be uploaded to the server when there is a connection!",
+  "formErrorPrompt": "There are problems with the form",
+  "formRequiredPrompt": "You must enter a {{value}}.",
+  "formFieldPatternError": "{{value}} contains illegal characters. Characters should be alphabetical or numeric.",
+  "locationFormTypeError": "Location Type should be RUR (Rural) or URB (Urban). Click the help (?) icon for more information."
 }

@@ -10,6 +10,10 @@ import {IndividualListComponent} from "./individual-list/individual-list.compone
 import {HelpPopoverComponent} from "./help-popover/help-popover.component";
 import {LocationListComponent} from "./location-list/location-list.component";
 import {ErrorReportingComponent} from "./error-reporting/error-reporting.component";
+import {TranslateModule} from "@ngx-translate/core";
+
+
+
 
 @NgModule({
   imports: [
@@ -17,6 +21,8 @@ import {ErrorReportingComponent} from "./error-reporting/error-reporting.compone
     FormsModule,
     ReactiveFormsModule,
     IonicModule.forRoot(),
+    TranslateModule.forChild()
+
   ],
   declarations: [
     OpenhdsTitleHeaderComponent,

@@ -3,28 +3,29 @@
 <ion-content padding>
   <ion-card>
     <ion-card-header>
-      OpenHDS Server URL
-        <ion-button *ngIf="!this.showURL; else showURLIcon" fill="outline" spot="start" size="small"
+      <ion-item>
+      {{"databaseURL" | translate}}
+        <ion-button *ngIf="!this.showURL; else showURLIcon" fill="outline" slot="end" size="small"
                     (click)="this.displayURL()">
           <ion-icon  name="arrow-dropright"></ion-icon>
         </ion-button>
 
         <ng-template #showURLIcon>
-          <ion-button size="small" fill="outline" spot="start" size="small" (click)="this.displayURL()">
+          <ion-button size="small" fill="outline" slot="end" size="small" (click)="this.displayURL()">
             <ion-icon  name="arrow-dropdown"></ion-icon>
           </ion-button>
         </ng-template>
-
+      </ion-item>
     </ion-card-header>
     <ion-card-content *ngIf="this.showURL">
       <div>
         <ion-input [disabled]="!this.editing" type="text" name='url' [(ngModel)]="this.url"></ion-input>
         <div *ngIf="!editing; else elseBlock">
-          <ion-button size="small" fill="outline" (click)="this.setEditing()">Edit URL</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.setEditing()">{{"editButton" | translate}}</ion-button>
         </div>
         <ng-template #elseBlock>
-          <ion-button size="small" fill="outline" (click)="this.saveServerUrl()">Save URL</ion-button>
-          <ion-button size="small" fill="outline" (click)="this.setEditing()">Cancel</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.saveServerUrl()">{{"saveButton" | translate}}</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.setEditing()">{{"cancelButton" | translate}}</ion-button>
         </ng-template>
       </div>
     </ion-card-content>
@@ -32,17 +33,20 @@
 
 
   <ion-card>
-    <ion-card-header>Location Hierarchy Configuration
-      <ion-button size="small" fill="outline" spot="end" *ngIf="!this.showHierarchy; else showHierarchyIcon"
-                  (click)="this.displayLH()">
-        <ion-icon  name="arrow-dropright"></ion-icon>
-      </ion-button>
-
-      <ng-template #showHierarchyIcon>
-        <ion-button size="small" fill="outline" spot="end" (click)="this.displayLH()">
-          <ion-icon  name="arrow-dropdown"></ion-icon>
+    <ion-card-header>
+      <ion-item>
+        {{'locationHierarchyConfig' | translate}}
+        <ion-button size="small" fill="outline" slot="end" *ngIf="!this.showHierarchy; else showHierarchyIcon"
+                    (click)="this.displayLH()">
+          <ion-icon  name="arrow-dropright"></ion-icon>
         </ion-button>
-      </ng-template>
+
+        <ng-template #showHierarchyIcon>
+          <ion-button size="small" fill="outline" slot="end" (click)="this.displayLH()">
+            <ion-icon  name="arrow-dropdown"></ion-icon>
+          </ion-button>
+        </ng-template>
+      </ion-item>
     </ion-card-header>
 
     <ion-card-content>
@@ -53,29 +57,32 @@
                      [(ngModel)]="this.hierarchyLevels[key]"></ion-input>
         </ion-item>
         <div *ngIf="!this.editingLH; else elseLocHierBlock">
-          <ion-button size="small" fill="outline" (click)="this.setLHEditing()">Edit Hierarchy Configuration
+          <ion-button size="small" fill="outline" (click)="this.setLHEditing()">{{"editButton" | translate}}
           </ion-button>
         </div>
         <ng-template #elseLocHierBlock>
-          <ion-button size="small" fill="outline" (click)="this.saveLocationHierarchy()">Save Hierarchy Configuration
+          <ion-button size="small" fill="outline" (click)="this.saveLocationHierarchy()">{{"saveButton" | translate}}
           </ion-button>
-          <ion-button size="small" fill="outline" (click)="this.setLHEditing()">Cancel</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.setLHEditing()">{{"cancelButton" | translate}}</ion-button>
         </ng-template>
       </div>
     </ion-card-content>
   </ion-card>
 
   <ion-card>
-    <ion-card-header>Codes and Parameters
-      <ion-button size="small" fill="outline" spot="end" *ngIf="!this.showCodes; else showCodesIconBlock"
-                  (click)="this.displayCodes()">
-        <ion-icon  name="arrow-dropright"></ion-icon>
-      </ion-button>
-      <ng-template #showCodesIconBlock>
-        <ion-button size="small" fill="outline" spot="end" (click)="this.displayCodes()">
-          <ion-icon  name="arrow-dropdown"></ion-icon>
+    <ion-card-header>
+      <ion-item>
+        {{"codesConfig" | translate}}
+        <ion-button size="small" fill="outline" slot="end" *ngIf="!this.showCodes; else showCodesIconBlock"
+                    (click)="this.displayCodes()">
+          <ion-icon  name="arrow-dropright"></ion-icon>
         </ion-button>
-      </ng-template>
+        <ng-template #showCodesIconBlock>
+          <ion-button size="small" fill="outline" slot="end" (click)="this.displayCodes()">
+            <ion-icon  name="arrow-dropdown"></ion-icon>
+          </ion-button>
+        </ng-template>
+      </ion-item>
     </ion-card-header>
 
     <ion-card-content *ngIf="showCodes">
@@ -86,11 +93,11 @@
                      [(ngModel)]="this.codes[key]"></ion-input>
         </ion-item>
         <div *ngIf="!this.editingCodes; else elseCodeBlock">
-          <ion-button size="small" fill="outline" (click)="this.setCodeEditing()">Edit Code Configuration</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.setCodeEditing()">{{"editButton" | translate}}</ion-button>
         </div>
         <ng-template #elseCodeBlock>
-          <ion-button size="small" fill="outline" (click)="this.saveCodes()">Save Code Configuration</ion-button>
-          <ion-button size="small" fill="outline" (click)="this.setCodeEditing()">Cancel</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.saveCodes()">{{"saveButton" | translate}}</ion-button>
+          <ion-button size="small" fill="outline" (click)="this.setCodeEditing()">{{"cancelButton" | translate}}</ion-button>
         </ng-template>
       </div>
     </ion-card-content>
