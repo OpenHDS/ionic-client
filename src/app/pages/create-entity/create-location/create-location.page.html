@@ -14,12 +14,12 @@
     <div class="error" *ngIf="formSubmitted && form.invalid">
         <ion-item>
           <ion-text>
-            There are problems with the form:
+            {{'formErrorPrompt' | translate}}
           </ion-text>
         </ion-item>
         <ion-item lines="none" *ngFor="let error of form.getFormValidationMessages()">
           <ion-text>
-            {{ error }}
+            {{ error }}  <!--- error is translated in getFormValidationMessages --->
           </ion-text>
         </ion-item>
     </div>
@@ -38,34 +38,32 @@
           <ion-icon name="help-circle" ></ion-icon>
         </ion-button>
 
-
-
       </ion-item>
       <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
-        <ion-text color="danger" *ngFor="let error of control.getValidationMessages()">
+        <ion-text color="danger" *ngFor="let error of control.getValidationMessages()"> <!--- error is translated in getFormValidationMessages --->
           {{error }}
         </ion-text>
       </ion-item>
     </div>
 
     <br/>
-    <ion-button *ngIf="!this.navService.data.editing" type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">Create Location</ion-button>
-    <ion-button *ngIf="this.navService.data.editing"  type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">Edit Location</ion-button>
+    <ion-button *ngIf="!this.navService.data.editing" type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">{{'createButton' | translate}}</ion-button>
+    <ion-button *ngIf="this.navService.data.editing"  type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">{{'editButton' | translate}}</ion-button>
   </form>
   <br/>
 
   <ion-button fill="outline" (click)="this.goBackToCensus()">
-    Cancel
+    {{'cancelButton' | translate}}
   </ion-button>
 
   <br>
 
   <ion-item>
-    <ion-item-divider color="primary">Additional Options</ion-item-divider>
+    <ion-item-divider color="primary">{{'additionalOptionsLabel' | translate}}</ion-item-divider>
   </ion-item>
 
   <ion-item>
-    <ion-label>Geolocation Enabled</ion-label>
+    <ion-label>{{'geolocationLabel' | translate}}</ion-label>
     <ion-toggle [(ngModel)]="geolocEnabled"></ion-toggle>
   </ion-item>
 </ion-content>

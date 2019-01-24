@@ -94,7 +94,7 @@ export class CreateIndividualPage implements OnInit {
     this.navService.data.individual.status = 'U';
     await this.individualProvider.update(this.navService.data.individual);
     this.formSubmitted = false;
-    this.navCtrl.goBack();
+    this.navCtrl.back();
   }
 
   async goBackToCensus(){
@@ -103,7 +103,7 @@ export class CreateIndividualPage implements OnInit {
     else
       this.syncObserver.publishChange('Individual:Create:Success', {ind: this.individual, head: false});
       this.syncObserver.publishChange("Census:Reload:Individual", {ind: this.individual});
-    this.navCtrl.goBack();
+    this.navCtrl.back();
   }
 
   async createAndSaveCensusIndividual() {

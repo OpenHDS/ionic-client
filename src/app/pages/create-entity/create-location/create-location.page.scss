@@ -6,11 +6,6 @@
     --background: rgba(var(--error-rgb), 0.5);
   }
 
-  //Transparent background for lists (to make ion-item color show without gaps)
-  ion-list{
-    --background: opacity(#fff, 0.0);
-  }
-
   ion-text{
     color: #983a37;
     font-weight:bold

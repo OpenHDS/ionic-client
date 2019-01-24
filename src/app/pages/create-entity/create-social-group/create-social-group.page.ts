@@ -63,7 +63,7 @@ export class CreateSocialGroupPage implements OnInit {
 
   //Dismiss the modal. Note: Data is not saved if the form is not completed!
   async dismissForm() {
-    this.navCtrl.goBack();
+    this.navCtrl.back();
   }
 
   async submitForm(form){
@@ -104,13 +104,13 @@ export class CreateSocialGroupPage implements OnInit {
     this.navService.data.socialGroup.status = 'U';
     await this.sgProvider.update(this.navService.data.socialGroup);
     this.formSubmitted = false;
-    this.navCtrl.goBack();
+    this.navCtrl.back();
   }
 
   async goBackToCensus(socialGroup: SocialGroup){
     this.syncObserver.publishChange("SocialGroup:Create:Success", socialGroup);
     this.syncObserver.publishChange("SocialGroup:Create:ListUpdate");
-    this.navCtrl.goBack();
+    this.navCtrl.back();
   }
 
   async createHead(){

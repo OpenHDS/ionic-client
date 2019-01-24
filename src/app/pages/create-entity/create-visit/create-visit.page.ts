@@ -101,7 +101,7 @@ export class CreateVisitPage implements OnInit {
 
   goBackToCensus(){
     this.syncObserver.publishChange("Visit:Create:Success", this.visit);
-    this.navController.goBack();
+    this.navController.back();
   }
 
   async helpPopup(labelName:string){

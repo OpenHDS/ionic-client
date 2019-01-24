@@ -16,6 +16,7 @@ import {ModalController} from "@ionic/angular";
 import {ErrorReportingComponent} from "../../components/error-reporting/error-reporting.component";
 import {NavigationService} from "../../services/NavigationService/navigation.service";
 import {NavigationEnd, Router} from "@angular/router";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'data-entry-approval',
@@ -38,7 +39,8 @@ export class DataEntryApprovalPage implements OnInit {
   selectedEntry: any;
   navigationSubscription;
 
-  constructor(public router: Router, public modalCtrl: ModalController, public navParams: NavigationService, public individualService: IndividualService, public locationService: LocationService,
+  constructor(public router: Router, public modalCtrl: ModalController, public navParams: NavigationService,
+              public individualService: IndividualService, public locationService: LocationService, public translate: TranslateService,
               public socialGroupService: SocialGroupService, public visitService: VisitService, public errorService: ErrorService) {
 
     // Reload page when clicked on from menu to remove data from when last loaded
@@ -167,7 +169,7 @@ export class DataEntryApprovalPage implements OnInit {
     this.viewEntry = true;
     switch (this.selectedForReview) {
       case 'locations':
-        this.form = new LocationFormGroup();
+        this.form = new LocationFormGroup(this.translate);
         break;
       case 'socialgroups':
         this.form = new SocialGroupFormGroup();
