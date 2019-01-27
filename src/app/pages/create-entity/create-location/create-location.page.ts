@@ -130,7 +130,7 @@ export class CreateLocationPage implements OnInit {
 
 
   async helpPopup(labelName:string){
-    let helpMessage = this.form.getFormHelpMessage();
+    let helpMessage = await this.form.getFormHelpMessage();
     this.navService.data = {label: labelName, helpMessage: helpMessage};
     const modal = await this.modalController.create({
         component: HelpPopoverComponent

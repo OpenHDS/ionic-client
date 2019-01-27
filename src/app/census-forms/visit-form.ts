@@ -1,10 +1,11 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {TranslateService} from "@ngx-translate/core";
 
 export class VisitFormControl extends FormControl {
   label: string;
   modelProperty: string;
 
-  constructor(label: string, property: string, value: any, validator: any, disabled?: boolean) {
+  constructor(public translate: TranslateService, label: string, property: string, value: any, validator: any, disabled?: boolean) {
     super({value: value, disabled: disabled}, validator);
     this.label = label;
     this.modelProperty = property;
@@ -16,19 +17,18 @@ export class VisitFormControl extends FormControl {
       for (const errorName in this.errors) {
         switch (errorName) {
           case 'required':
-            messages.push(`You must enter a ${this.label}`);
+            this.translate.get('formRequiredPrompt', {value: this.label}).forEach(async x => messages.push(x));
             break;
           case 'pattern':
-            let message = (`${this.label} contains illegal characters.`);
-
             if(this.modelProperty === 'realVisit') {
-              message += ' A real visit should have the value of 0 or 1. Click on the help (?) button for more information.';
+              this.translate.get('realVisitError', {value: this.label}).forEach(async x => messages.push(x));
+            } else {
+              this.translate.get('formFieldPatternError', {value: this.label}).forEach(async x => messages.push(x));
             }
-
-            messages.push(message);
             break;
           case 'min':
-            messages.push(`Round numbers can't be less than 0.` );
+            this.translate.get('visitRoundNumberError', {value: this.label}).forEach(async x => messages.push(x));
+            break;
         }
       }
     }
@@ -44,18 +44,18 @@ export class VisitFormGroup extends FormGroup {
   };
 
   // Form group, fieldworker and locationId are auto-populated fields!
-  constructor() {
+  constructor(public translate: TranslateService) {
     super({
-      collectedBy: new VisitFormControl('Fieldworker', 'collectedBy', '', [], true),
-      visitLocation: new VisitFormControl('Location Id', 'visitLocation', '', [], true),
-      roundNumber:  new VisitFormControl('Round Number', 'roundNumber', '',
+      collectedBy: new VisitFormControl(translate,'Fieldworker', 'collectedBy', '', [], true),
+      visitLocation: new VisitFormControl(translate,'Location Id', 'visitLocation', '', [], true),
+      roundNumber:  new VisitFormControl(translate,'Round Number', 'roundNumber', '',
         [], true),
-      extId: new VisitFormControl('External Id', 'extId', '',
+      extId: new VisitFormControl(translate,'External Id', 'extId', '',
         [Validators.compose([Validators.required,
           Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
-      visitDate: new VisitFormControl('Visit Date', 'visitDate', '',
+      visitDate: new VisitFormControl(translate,'Visit Date', 'visitDate', '',
         [Validators.compose([Validators.required])]),
-      realVisit: new VisitFormControl('Real Visit', 'realVisit', '',
+      realVisit: new VisitFormControl(translate,'Real Visit', 'realVisit', '',
         [Validators.compose([Validators.required,
           Validators.pattern('(0|1)')])])
     });
@@ -75,8 +75,10 @@ export class VisitFormGroup extends FormGroup {
     return messages;
   }
 
-  getFormHelpMessage(label) {
-    return this.formHelpMessages[label];
+  async getFormHelpMessage(label) {
+    let helpMessages = undefined;
+    await this.translate.get('visitFormHelpMessages').forEach(x => helpMessages = x);
+    return helpMessages[label];
   }
 
 

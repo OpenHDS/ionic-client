@@ -20,13 +20,12 @@ export class LocationFormControl extends FormControl {
             this.translate.get('formRequiredPrompt', {value: this.label}).forEach(async x => messages.push(x));
             break;
           case 'pattern':
-            let message = (`${this.label} contains illegal characters. Characters should be alphabetical or numeric.`);
+            this.translate.get('formFieldPatternError', {value: this.label}).forEach(async x => messages.push(x));
 
             if(this.modelProperty === 'locationType') {
-              message += ' Location Type should be RUR (Rural) or URB (Urban). Click the help (?) icon for more information.';
+              this.translate.get('locationFormTypeError', {value: this.label}).forEach(async x => messages.push(x));
             }
 
-            messages.push(message);
             break;
         }
       }
@@ -38,9 +37,6 @@ export class LocationFormControl extends FormControl {
 
 @Injectable()
 export class LocationFormGroup extends FormGroup {
-  formHelpMessages = {
-    type: ['RUR - Rural', 'URB - Urban']
-  };
 
   //Form group, fieldworker and locationLevel are auto-populated fields!
   constructor(public translate: TranslateService) {
@@ -71,7 +67,9 @@ export class LocationFormGroup extends FormGroup {
     return messages;
   }
 
-  getFormHelpMessage() {
-    return this.formHelpMessages.type;
+  async getFormHelpMessage() {
+    let helpMessages = undefined;
+    await this.translate.get('locationTypeHelp').forEach(x => helpMessages = x);
+    return helpMessages.type;
   }
 }

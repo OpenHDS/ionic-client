@@ -13,6 +13,9 @@
   "locationHierarchyConfig": "Location Hierarchy Configuration",
   "codesConfig": "Codes and Parameters",
 
+  "collectedBy": "Collected By",
+  "extId": "External Id",
+
   "locationCreate":"Create Location",
   "locationEdit":"Edit Location",
   "locationDetail":"Location Detail",
@@ -22,15 +25,66 @@
   "locationLongitude":"Longitude",
   "locationAccuracy":"Accuracy",
   "locationAltitude":"Altitude",
-  "locationEmpty":"(No Location Items Found)",
+  "locationEmpty":"(No Locations Found)",
+  "geolocationLabel": "Geolocation",
+  "locationTypeHelp": {
+    "type": ["RUR - Rural", "URB - Urban"]
+  },
+  "additionalOptionsLabel": "Additional Options",
+
+  "socialCreate":"Create Social Group",
+  "socialEdit":"Edit Social Group",
+  "groupHeadCreate": "Create Group Head",
+  "groupHeadEdit": "Edit Social Group Head",
+  "lookupHeadButton": "Lookup Social Group Head",
+  "socialName":"Group Name",
+  "socialType":"Group Type",
+  "socialGroupHead":"Group Head",
+  "socialGroupEmpty":"(No Social Groups Found)",
+  "socialGroupTypeHelp": {
+    "type": ["COH - Cohort", "FAM - Family"]
+  },
+
+  "individualCreate":"Create Individual",
+  "individualEdit":"Edit Individual",
+  "indFirstName":"First Name",
+  "indMiddleName":"Middle Name",
+  "indLastName":"Last Name",
+  "indGender":"Gender",
+  "indRelationToHead":"Relation To Head",
+  "indPartialDate":"Partial Date",
+  "indDob":"Date of Birth",
+  "indEmpty":"(No Individuals Found)",
+  "individualFormHelpMessages": {
+    "Gender": ["F - Female", "M - Male"],
+    "Partial Date": ["1 - Exact", "2 - Approximate"],
+    "relationToHead": ["1 - Head", "2 - Spouse", "3 - Son/Daughter", "4 - Brother/Sister", "5 - Parent",
+      "6 - Grandchild", "7 - Not Related", "8 - Other Relative", "9 - Unknown"]
+  },
+
+  "visitCreate":"Create Visit",
+  "visitEdit":"Edit Visit",
+  "visitLocationId": "Location Id",
+  "visitRoundNumber": "Round Number",
+  "visitDate": "Visit Date",
+  "visitReal": "Real Visit",
+  "visitRoundNumberError": "Round numbers can't be less than 0.",
+  "realVisitError": "A real visit should have the value of 0 or 1. Click on the help (?) button for more information.",
+  "visitFormHelpMessages": {
+    "Real Visit": ["0 - Real", "1 - Empty House"]
+  },
 
   "saveButton": "Save",
   "editButton": "Edit",
   "cancelButton": "Cancel",
   "submitButton": "Submit",
+  "setGroupHeadButton": "Set Social Group Head",
   "networkErrorPrompt": "There is currently no network connection. Your data will be uploaded to the server when there is a connection!",
   "formErrorPrompt": "There are problems with the form",
   "formRequiredPrompt": "You must enter a {{value}}.",
   "formFieldPatternError": "{{value}} contains illegal characters. Characters should be alphabetical or numeric.",
-  "locationFormTypeError": "Location Type should be RUR (Rural) or URB (Urban). Click the help (?) icon for more information."
+  "locationFormTypeError": "Location Type should be RUR (Rural) or URB (Urban). Click the help (?) icon for more information.",
+  "socialGroupFormTypeError": "Social Group Type should be COH (Cohort) or FAM (Family). Click the help (?) icon for more information.",
+  "individualGenderFormError": "Individuals gender should be M (Male) or F (Female). Click the help (?) icon for more information."
+
 }

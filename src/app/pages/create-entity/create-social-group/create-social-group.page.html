@@ -10,17 +10,18 @@
   </div>
 
   <form novalidate [formGroup]="sgForm" (ngSubmit)="submitForm(sgForm)">
-    <div class="error">
-      <ion-item *ngIf="formSubmitted && sgForm.invalid">
-        <ion-text>{{'formErrorPrompt' | translate}}</ion-text>
+    <div class="error" *ngIf="formSubmitted && form.invalid">
+      <ion-item>
+        <ion-text>
+          {{'formErrorPrompt' | translate}}
+        </ion-text>
       </ion-item>
-
-      <ion-item color="danger" *ngFor="let error of sgForm.getFormValidationMessages()">
-        <ion-text>{{error}} </ion-text> <!--- error is translated in getFormValidationMessages --->
+      <ion-item lines="none" *ngFor="let error of form.getFormValidationMessages()">
+        <ion-text>
+          {{ error }}  <!--- error is translated in getFormValidationMessages --->
+        </ion-text>
       </ion-item>
-
     </div>
-
     <!------  Form Fields --------->
     <div class="form-group" *ngFor="let control of sgForm.formControls">
       <ion-item>
@@ -29,10 +30,10 @@
                    formControlName="{{control.modelProperty}}"></ion-input>
         <ion-button type="button" fill="outline" spot="end"
                 [hidden]="control.label != 'Group Type'" (click)="helpPopup(control.label)">
-          <ion-icon name="help-circle" ></ion-icon>
+          <ion-icon ios="ios-help-circle-outline" md="md-help-circle-outline"></ion-icon>
         </ion-button>
       </ion-item>
-      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
+      <ion-item *ngIf="(formSubmitted || control.dirty || control.touched) && control.invalid">
         <ion-text color="danger" *ngFor="let error of control.getValidationMessages()"> <!--- error is translated in getFormValidationMessages --->
           {{error}}
         </ion-text>

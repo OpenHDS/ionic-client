@@ -11,6 +11,7 @@ import {AuthService} from "../../../services/AuthService/auth.service";
 import {ModalController, NavController} from "@ionic/angular";
 import {HelpPopoverComponent} from "../../../components/help-popover/help-popover.component";
 import {Router} from "@angular/router";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'create-visit',
@@ -18,7 +19,6 @@ import {Router} from "@angular/router";
   styleUrls: ['./create-visit.page.scss'],
 })
 export class CreateVisitPage implements OnInit {
-  readonly PAGE_NAME = 'Create a Visit';
   collectedBy: Fieldworker;
   visitLocation: Location;
   visitForm: VisitFormGroup;
@@ -29,16 +29,16 @@ export class CreateVisitPage implements OnInit {
 
   constructor(public router: Router, public syncObserver: SynchonizationObservableService, public navParams: NavigationService, public navController: NavController,
               public visitProvider: VisitService, public netConfig: NetworkConfigurationService, public modalController: ModalController,
-              public authProvider: AuthService) {
+              public authProvider: AuthService, public translate: TranslateService) {
 
     this.syncObserver.subscribe("Baseline:CreateVisit", () => {
       console.log("Baseline Census: Create a Visit");
     });
 
-    this.visitForm = new VisitFormGroup();
+    this.visitForm = new VisitFormGroup(translate);
 
 
-    if(this.navParams.data.editing){
+    if(this.navParams.data.editing != undefined){
       this.setEditVisitFormValues();
     } else {
       this.visitForm.get('collectedBy').setValue(this.navParams.data.collectedBy);
@@ -55,9 +55,9 @@ export class CreateVisitPage implements OnInit {
   }
 
   setEditVisitFormValues(){
-    let individual = this.navParams.data.visit;
+    let visit = this.navParams.data.visit;
     for(let prop in this.visitForm.controls){
-      this.visitForm.get(prop).setValue(individual[prop])
+      this.visitForm.get(prop).setValue(visit[prop])
     }
   }
 
@@ -105,7 +105,7 @@ export class CreateVisitPage implements OnInit {
   }
 
   async helpPopup(labelName:string){
-    let helpMessage = this.visitForm.getFormHelpMessage(labelName);
+    let helpMessage = await this.visitForm.getFormHelpMessage(labelName);
     this.navParams.data = {label: labelName, helpMessage: helpMessage};
     const modal = await this.modalController.create({
       component: HelpPopoverComponent

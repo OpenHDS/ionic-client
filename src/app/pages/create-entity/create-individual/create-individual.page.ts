@@ -13,6 +13,7 @@ import {CensusSubmissionService} from "../../../services/CensusSubmissionService
 import {FieldworkerService} from "../../../services/FieldworkerService/fieldworker.service";
 import {CensusIndividual} from "../../../models/census-individual";
 import {NavigationEnd, Router} from "@angular/router";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'create-individual',
@@ -30,12 +31,12 @@ export class CreateIndividualPage implements OnInit {
 
   constructor(public syncObserver: SynchonizationObservableService,public navService: NavigationService, public navCtrl: NavController,
               public individualProvider: IndividualService, public netConfig: NetworkConfigurationService,
-              public modalCtrl: ModalController, public router: Router,
+              public modalCtrl: ModalController, public router: Router, public translate: TranslateService,
               public authService: AuthService, public censusSub: CensusSubmissionService,
               public fieldworkerProvider: FieldworkerService) {
 
 
-    this.individualForm = new CensusIndividualFormGroup();
+    this.individualForm = new CensusIndividualFormGroup(translate);
     if (this.navService.data.createHead) {
       this.createHead = true;
     } else {
@@ -129,7 +130,7 @@ export class CreateIndividualPage implements OnInit {
 
 
   async helpPopup(labelName){
-    let helpMessage = this.individualForm.getFormHelpMessage(labelName);
+    let helpMessage = await this.individualForm.getFormHelpMessage(labelName);
     this.navService.data.helpMessage = helpMessage;
     this.navService.data.label = labelName;
     const modal = await this.modalCtrl.create({

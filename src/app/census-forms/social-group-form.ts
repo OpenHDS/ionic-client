@@ -1,10 +1,11 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {TranslateService} from "@ngx-translate/core";
 
 export class SocialGroupFormControl extends FormControl {
   label: string;
   modelProperty: string;
 
-  constructor(label:string, property:string, value: any, validator: any, disabled?: boolean) {
+  constructor(public translate: TranslateService, label:string, property:string, value: any, validator: any, disabled?: boolean) {
     super({value: value, disabled: disabled}, validator);
     this.label = label;
     this.modelProperty = property;
@@ -16,18 +17,16 @@ export class SocialGroupFormControl extends FormControl {
       for (const errorName in this.errors) {
         switch (errorName) {
           case 'required':
-            messages.push(`You must enter a ${this.label}`);
+            this.translate.get('formRequiredPrompt', {value: this.label}).forEach(async x => messages.push(x));
             break;
           case 'pattern':
-            let message = (`${this.label} contains illegal characters.`);
 
             if(this.modelProperty === 'extId' || this.modelProperty === 'groupName') {
-              message += ' Characters should be alphabetic or numeric.';
+              this.translate.get('formFieldPatternError', {value: this.label}).forEach(async x => messages.push(x));
             } else if(this.modelProperty === 'groupType') {
-              message += ' Possible values include FAM (Family) or COH (Cohort).';
+              this.translate.get('socialGroupFormTypeError', {value: this.label}).forEach(async x => messages.push(x));
             }
 
-            messages.push(message);
             break;
         }
       }
@@ -38,21 +37,18 @@ export class SocialGroupFormControl extends FormControl {
 }
 
 export class SocialGroupFormGroup extends FormGroup {
-  formHelpMessages = {
-    type: ['COH - Cohort', 'FAM - Family']
-  };
 
   // Form group, fieldworker and locationId are auto-populated fields!
-  constructor() {
+  constructor(public translate: TranslateService) {
     super({
-      collectedBy: new SocialGroupFormControl('Fieldworker', 'collectedBy', '' , [], true),
-      extId: new SocialGroupFormControl('External Id', 'extId', '',
+      collectedBy: new SocialGroupFormControl(translate, 'Fieldworker', 'collectedBy', '' , [], true),
+      extId: new SocialGroupFormControl(translate,'External Id', 'extId', '',
         [Validators.compose([Validators.required,
           Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
-      groupName: new SocialGroupFormControl('Group Name', 'groupName', '',
+      groupName: new SocialGroupFormControl(translate,'Group Name', 'groupName', '',
         [Validators.compose([Validators.required,
           Validators.pattern('^[^-\\s][a-zA-Z0-9 ]*')])]),
-      groupType: new SocialGroupFormControl('Group Type', 'groupType', '',
+      groupType: new SocialGroupFormControl(translate,'Group Type', 'groupType', '',
         [Validators.compose([Validators.required,
           Validators.pattern('(FAM|COH)')])])
     });
@@ -70,8 +66,10 @@ export class SocialGroupFormGroup extends FormGroup {
     return messages;
   }
 
-  getFormHelpMessage(formLabel){
-    return this.formHelpMessages.type;
+  async getFormHelpMessage(formLabel){
+    let helpMessages = undefined;
+    await this.translate.get('socialGroupTypeHelp').forEach(x => helpMessages = x);
+    return helpMessages.type;
   }
 }
 

@@ -35,11 +35,11 @@
         </ion-input>
         <ion-button type="button" fill="outline" color="clear" spot="end"
                     [hidden]="control.label != 'Location Type'" (click)="helpPopup(control.label)">
-          <ion-icon name="help-circle" ></ion-icon>
+          <ion-icon ios="ios-help-circle-outline" md="md-help-circle-outline"></ion-icon>
         </ion-button>
 
       </ion-item>
-      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
+      <ion-item *ngIf="(formSubmitted || control.dirty || control.touched) && control.invalid">
         <ion-text color="danger" *ngFor="let error of control.getValidationMessages()"> <!--- error is translated in getFormValidationMessages --->
           {{error }}
         </ion-text>
@@ -47,8 +47,8 @@
     </div>
 
     <br/>
-    <ion-button *ngIf="!this.navService.data.editing" type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">{{'createButton' | translate}}</ion-button>
-    <ion-button *ngIf="this.navService.data.editing"  type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">{{'editButton' | translate}}</ion-button>
+    <ion-button *ngIf="!this.navService.data.editing" type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">{{'locationCreate' | translate}}</ion-button>
+    <ion-button *ngIf="this.navService.data.editing"  type="submit"  fill="outline"  [disabled]="formSubmitted && form.invalid" type="submit">{{'locationEdit' | translate}}</ion-button>
   </form>
   <br/>
 
