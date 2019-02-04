@@ -1,44 +1,47 @@
-<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="'entityCorrectionPage'"></openhds-header>
 <ion-content padding>
   <ion-row>
-
     <!-- List of Entities to select from and view errors for -->
-    <ion-col responsive size="3">
-      <ion-list>
-        <ion-item lines="full" *ngFor="let label of this.ENTITY_LABELS"
-                  (click)="this.changeEntity(label)">
-          <ion-text [color]="this.selectedLabel === label.toLowerCase() ? 'primary': 'dark'">
-            {{label}}
-          </ion-text>
-        </ion-item>
-      </ion-list>
+    <ion-col size="3">
+      <ion-item>
+        <ion-label>{{'entryTypeLabel' | translate}}</ion-label>
+        <ion-select [(ngModel)]="selectedLabel" value="locations" (ionChange)="this.changeEntity()">
+          <ion-select-option value="locations">{{'locationsLabel' | translate}}</ion-select-option>
+          <ion-select-option value="socialgroups">{{'socialGroupsLabel' | translate}}</ion-select-option>
+          <ion-select-option value="individuals">{{'individualsLabel' | translate}}</ion-select-option>
+          <ion-select-option value="visits">{{'visitsLabel' | translate}}</ion-select-option>
+        </ion-select>
+      </ion-item>
     </ion-col>
+
 
     <!-- List of errors for selected entities -->
     <ion-col>
       <ion-item *ngIf="this.errorKeys === undefined || this.errorKeys.length === 0 ; else elseBlock">
         <ion-text>
-          There are no errors for {{this.selectedLabel}}.
+          ({{'noErrorLabel' | translate}} {{this.selectedLabel | translate}})
         </ion-text>
       </ion-item>
       <ng-template #elseBlock>
-        <ion-list lines="full">
-          <ion-item *ngFor="let ent of this.errorKeys">
-            <ion-col size="3">
-              {{ent}}
+        <ion-grid class="table">
+          <ion-row class="table-header">
+            <ion-col>{{'extId' | translate}}</ion-col>
+            <ion-col>{{'errorMessagesLabel' | translate}}</ion-col>
+            <ion-col></ion-col>
+          </ion-row>
+
+          <ion-row class="table-row" *ngFor="let ent of this.errorKeys">
+            <ion-col>{{ent}}</ion-col>
+            <ion-col>
+              <ion-text *ngFor="let messages of this.errors[ent]">
+                {{messages["errorMessage"]}}
+              </ion-text>
             </ion-col>
-              <ion-col>
-                <ion-list *ngFor="let messages of this.errors[ent]">
-                  <ion-col size="6">
-                    <ion-text>
-                      {{messages["errorMessage"]}}
-                    </ion-text>
-                  </ion-col>
-                </ion-list>
-              </ion-col>
-            <ion-button fill="outline" slot="end" (click)="this.correctEntityError(ent)">Correct Error</ion-button>
-          </ion-item>
-        </ion-list>
+            <ion-col>
+              <ion-button fill="outline" size="small" (click)="this.correctEntityError(ent)">{{'correctErrorButton' | translate}}</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ng-template>
     </ion-col>
   </ion-row>

@@ -15,11 +15,14 @@
 
   "collectedBy": "Collected By",
   "extId": "External Id",
+  "status": "Status",
+  "collectedDate": "Date Collected",
 
   "locationCreate":"Create Location",
   "locationEdit":"Edit Location",
   "locationDetail":"Location Detail",
   "locationName":"Location Name",
+  "locationId": "Location Id",
   "locationType":"Location Type",
   "locationLatitude":"Latitude",
   "locationLongitude":"Longitude",
@@ -32,6 +35,7 @@
   },
   "additionalOptionsLabel": "Additional Options",
 
+  "levelInHierarchyLabel": "Level in Location Hierarchy",
   "socialCreate":"Create Social Group",
   "socialEdit":"Edit Social Group",
   "groupHeadCreate": "Create Group Head",
@@ -47,6 +51,7 @@
 
   "individualCreate":"Create Individual",
   "individualEdit":"Edit Individual",
+  "indWholeName":"Name",
   "indFirstName":"First Name",
   "indMiddleName":"Middle Name",
   "indLastName":"Last Name",
@@ -58,7 +63,7 @@
   "individualFormHelpMessages": {
     "Gender": ["F - Female", "M - Male"],
     "Partial Date": ["1 - Exact", "2 - Approximate"],
-    "relationToHead": ["1 - Head", "2 - Spouse", "3 - Son/Daughter", "4 - Brother/Sister", "5 - Parent",
+    "Relationship to Head": ["1 - Head", "2 - Spouse", "3 - Son/Daughter", "4 - Brother/Sister", "5 - Parent",
       "6 - Grandchild", "7 - Not Related", "8 - Other Relative", "9 - Unknown"]
   },
 
@@ -70,14 +75,67 @@
   "visitReal": "Real Visit",
   "visitRoundNumberError": "Round numbers can't be less than 0.",
   "realVisitError": "A real visit should have the value of 0 or 1. Click on the help (?) button for more information.",
+  "visitEmpty":"(No Visits Found)",
   "visitFormHelpMessages": {
     "Real Visit": ["0 - Real", "1 - Empty House"]
   },
 
+
+  "searchPage": "Search a Record",
+  "locationsLabel": "Locations",
+  "socialGroupsLabel": "Social Groups",
+  "individualsLabel": "Individuals",
+  "visitsLabel": "Visits",
+  "locationsPlaceholder": "Search By Location External Id or Location Name.",
+  "socialGroupPlaceholder": "Search By Social Group External Id, Group Head External Id, or Social Group Name",
+  "individualPlaceholder": "Search By Individual External Id, or by Individuals Name",
+
+  "dataApprovalPage": "Data Entry Approval",
+  "viewEntriesLabel": "View By",
+  "entryTypeLabel": "Entry Type",
+  "notApprovedLabel": "Not Approved",
+  "approvedLabel": "Approved",
+
+  "databaseSyncPage": "Database Synchronization",
+  "syncDatabase": "Sync Entire Database",
+  "databaseEntity": "Database Entity",
+  "lastSynced": "Last Synced",
+  "syncSuccessful": "Last Synced",
+  "fieldworkerLabel": "Fieldworker",
+  "locHierarchyLabel": "Location Hierarchy",
+  "locationLabel": "Location",
+  "socialGroupLabel": "Social Group",
+  "individualLabel": "Individual",
+
+  "entityCorrectionPage": "Entity Correction",
+  "noErrorLabel": "There are no errors for ",
+  "locations": "locations",
+  "socialgroups": "social groups",
+  "individuals": "individuals",
+  "visits": "visits",
+  "errorMessagesLabel": "Error Messages",
+
+  "fieldworkerDash": "Fieldworker Dashboard",
+  "supervisorDashboard": "Supervisor Dashboard",
+  "correctErrorButton": "Correct Error",
+
+  "helpPageTitle": "Help: {{value}}",
+  "validMessage": "Valid inputs for this field are:",
+
+  "errorReportPageTitle": "Report an Error",
+  "errorReportingPlaceholderLabel": "Report an error for the data entered above. Fieldworker will be notified of error.",
+  "errorReportingValMessage": "A message for a reported error is required.",
+  "reportErrorButton": "Report Error",
+
+  "syncButton": "Sync",
   "saveButton": "Save",
   "editButton": "Edit",
   "cancelButton": "Cancel",
   "submitButton": "Submit",
+  "selectButton": "Select",
+  "approveButton": "Approve",
+  "needsCorrection": "Needs Correction",
+  "reviewEntryButton": "Review",
   "setGroupHeadButton": "Set Social Group Head",
   "networkErrorPrompt": "There is currently no network connection. Your data will be uploaded to the server when there is a connection!",
   "formErrorPrompt": "There are problems with the form",
@@ -86,5 +144,4 @@
   "locationFormTypeError": "Location Type should be RUR (Rural) or URB (Urban). Click the help (?) icon for more information.",
   "socialGroupFormTypeError": "Social Group Type should be COH (Cohort) or FAM (Family). Click the help (?) icon for more information.",
   "individualGenderFormError": "Individuals gender should be M (Male) or F (Female). Click the help (?) icon for more information."
-
 }

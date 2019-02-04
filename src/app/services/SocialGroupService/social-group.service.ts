@@ -57,6 +57,8 @@ export class SocialGroupService extends DatabaseService {
     sg.syncedWithServer = false;
     sg.processed = false;
     sg.clientInsert = new Date().getTime();
+    sg.insertDate = new Date();
+
 
 
     await this.insert(sg);

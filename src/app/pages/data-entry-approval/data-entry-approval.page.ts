@@ -123,6 +123,7 @@ export class DataEntryApprovalPage implements OnInit {
 
   approve() {
     this.selectedEntry.processed = true;
+    this.selectedEntry.status = 'A';
     if (this.selectedEntry.errorReported) {
       this.selectedEntry.errorReported = false;
       this.errorService.findAndMarkResolved(this.selectedEntry.extId);
@@ -131,6 +132,7 @@ export class DataEntryApprovalPage implements OnInit {
   }
 
   markForCorrection() {
+    this.selectedEntry.status = 'P';
     this.selectedEntry.errorReported = true;
     if (this.selectedEntry.processed)
       this.selectedEntry.processed = false;
@@ -172,13 +174,13 @@ export class DataEntryApprovalPage implements OnInit {
         this.form = new LocationFormGroup(this.translate);
         break;
       case 'socialgroups':
-        this.form = new SocialGroupFormGroup();
+        this.form = new SocialGroupFormGroup(this.translate);
         break;
       case 'individuals':
-        this.form = new CensusIndividualFormGroup();
+        this.form = new CensusIndividualFormGroup(this.translate);
         break;
       case 'visits':
-        this.form = new VisitFormGroup();
+        this.form = new VisitFormGroup(this.translate);
         break;
     }
 
