@@ -47,6 +47,8 @@ export class IndividualService extends DatabaseService {
       ind.uuid = UUID.UUID().toString();
     }
 
+    ind.insertDate = new Date();
+
     ind.status = 'C';
     ind.errorReported = false;
     ind.deleted = false;

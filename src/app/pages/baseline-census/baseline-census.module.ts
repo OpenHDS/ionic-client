@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { BaselineCensusPage } from './baseline-census.page';
 import {ComponentsModule} from "../../components/components";
+import {TranslateModule} from "@ngx-translate/core";
 
 const routes: Routes = [
   {
@@ -22,7 +23,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    TranslateModule.forChild()
   ],
   declarations: [BaselineCensusPage],
   providers: []

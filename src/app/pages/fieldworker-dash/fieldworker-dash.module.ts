@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { FieldworkerDashPage } from './fieldworker-dash.page';
 import {ComponentsModule} from "../../components/components";
+import {TranslateModule} from "@ngx-translate/core";
 
 const routes: Routes = [
   {
@@ -20,7 +21,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    TranslateModule.forChild()
   ],
   declarations: [FieldworkerDashPage]
 })

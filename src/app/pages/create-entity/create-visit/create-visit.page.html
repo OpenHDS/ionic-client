@@ -1,28 +1,27 @@
-<openhds-header [headerTitle]="this.editing ? 'Edit a Visit' : this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="this.navParams.data.editing ? 'visitEdit' : 'visitCreate'"></openhds-header>
 
 <ion-content>
   <div *ngIf="!this.netConfig.isConnected()">
-    <ion-card color="danger">
+    <ion-card>
       <ion-card-content>
-        <p>There is currently no network connection. You data will be uploaded to the server when there
-          is a connection!</p>
+        <ion-text>{{'networkErrorPrompt' | translate}}</ion-text>
       </ion-card-content>
     </ion-card>
   </div>
 
   <form novalidate [formGroup]="visitForm" (ngSubmit)="submitForm(visitForm)">
-    <ion-item color="danger" *ngIf="formSubmitted && visitForm.invalid">
-      <ion-text>
-        There are problems with the form:
-      </ion-text>
-      <ion-list>
-        <ion-item color="danger" *ngFor="let error of visitForm.getFormValidationMessages(visitForm)">
-          <ion-text>
-            {{error}}
-          </ion-text>
-        </ion-item>
-      </ion-list>
-    </ion-item>
+    <div class="error" *ngIf="formSubmitted && visitForm.invalid">
+      <ion-item>
+        <ion-text>
+          {{'formErrorPrompt' | translate}}
+        </ion-text>
+      </ion-item>
+      <ion-item lines="none" *ngFor="let error of visitForm.getFormValidationMessages()">
+        <ion-text>
+          {{ error }}  <!--- error is translated in getFormValidationMessages --->
+        </ion-text>
+      </ion-item>
+    </div>
 
 
     <!------  Form Fields --------->
@@ -34,30 +33,30 @@
         <ion-input class="form-control"
                    formControlName="{{control.modelProperty}}">
         </ion-input>
-        <ion-button type="button" fill="outline" color="clear" spot="end"
+        <ion-button type="button" fill="outline" spot="end"
                     [hidden]="control.label != 'Real Visit'" (click)="helpPopup(control.label)">
-          <ion-icon name="help-circle" ></ion-icon>
+          <ion-icon ios="ios-help-circle-outline" md="md-help-circle-outline"></ion-icon>
         </ion-button>
 
 
 
       </ion-item>
-      <ion-item *ngIf="(formSubmitted || control.dirty) && control.invalid">
-        <p color="danger" *ngFor="let error of control.getValidationMessages()">
+      <ion-item *ngIf="(formSubmitted || control.dirty || control.touched) && control.invalid">
+        <ion-text color="danger" *ngFor="let error of control.getValidationMessages()">
           {{error}}
-        </p>
+        </ion-text>
       </ion-item>
     </div>
 
     <br/>
-    <ion-button *ngIf="!this.navParams.data.editing" type="submit"  fill="outline" [disabled]="formSubmitted && visitForm.invalid" type="submit">Create Visit</ion-button>
-    <ion-button *ngIf="this.navParams.data.editing" type="submit"  fill="outline"  [disabled]="formSubmitted && visitForm.invalid" type="submit">Edit Visit</ion-button>
+    <ion-button *ngIf="!this.navParams.data.editing" type="submit"  fill="outline" [disabled]="formSubmitted && visitForm.invalid" type="submit">{{'visitCreate' | translate}}</ion-button>
+    <ion-button *ngIf="this.navParams.data.editing" type="submit"  fill="outline"  [disabled]="formSubmitted && visitForm.invalid" type="submit">{{'visitEdit' | translate}}</ion-button>
 
   </form>
   <br/>
 
   <ion-button fill="outline" (click)="this.goBackToCensus()">
-    Cancel
+    {{'cancelButton' || translate}}
   </ion-button>
 </ion-content>
 

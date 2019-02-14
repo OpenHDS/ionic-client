@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {Events, MenuController, NavController} from '@ionic/angular';
 import {AuthService} from '../../services/AuthService/auth.service';
 import {SynchonizationObservableService} from "../../services/SynchonizationObserverable/synchonization-observable.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'login',
@@ -18,8 +19,9 @@ export class LoginPage implements OnInit {
   showLoginError = false;
 
   constructor(public router: Router, public ev: Events, public menu: MenuController, public syncObserver: SynchonizationObservableService,
-              public navController: NavController,
+              public navController: NavController, public translate: TranslateService,
               public authProvider: AuthService, public formBuilder: FormBuilder) {
+
 
     this.loginForm = formBuilder.group({
       username: ['', Validators.compose([Validators.required])],

@@ -9,6 +9,7 @@ import {ModalController, NavController} from "@ionic/angular";
 import {AuthService} from "../../../services/AuthService/auth.service";
 import {NavigationService} from "../../../services/NavigationService/navigation.service";
 import {Router} from "@angular/router";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'create-social-group',
@@ -25,9 +26,9 @@ export class CreateSocialGroupPage implements OnInit {
   socialGroup: SocialGroup;
   constructor(public navCtrl: NavController, public syncObserver: SynchonizationObservableService,  public navService: NavigationService, public router: Router,
               public sgProvider: SocialGroupService, public netConfig: NetworkConfigurationService, public modalController: ModalController,
-              public authService: AuthService) {
+              public translate: TranslateService, public authService: AuthService) {
 
-    this.sgForm = new SocialGroupFormGroup();
+    this.sgForm = new SocialGroupFormGroup(translate);
 
     if(this.navService.data.editing){
       this.setEditSocialGroupFormValues();
@@ -63,7 +64,7 @@ export class CreateSocialGroupPage implements OnInit {
 
   //Dismiss the modal. Note: Data is not saved if the form is not completed!
   async dismissForm() {
-    this.navCtrl.goBack();
+    this.navCtrl.back();
   }
 
   async submitForm(form){
@@ -104,13 +105,13 @@ export class CreateSocialGroupPage implements OnInit {
     this.navService.data.socialGroup.status = 'U';
     await this.sgProvider.update(this.navService.data.socialGroup);
     this.formSubmitted = false;
-    this.navCtrl.goBack();
+    this.navCtrl.back();
   }
 
   async goBackToCensus(socialGroup: SocialGroup){
     this.syncObserver.publishChange("SocialGroup:Create:Success", socialGroup);
     this.syncObserver.publishChange("SocialGroup:Create:ListUpdate");
-    this.navCtrl.goBack();
+    this.navCtrl.back();
   }
 
   async createHead(){
@@ -128,7 +129,7 @@ export class CreateSocialGroupPage implements OnInit {
   }
 
   async helpPopup(labelName){
-    let helpMessage = this.sgForm.getFormHelpMessage(labelName);
+    let helpMessage = await this.sgForm.getFormHelpMessage(labelName);
     this.navService.data = {label: labelName, helpMessage: helpMessage};
     const modal = await this.modalController.create({
       component: HelpPopoverComponent

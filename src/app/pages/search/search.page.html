@@ -1,17 +1,17 @@
-<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="'searchPage'"></openhds-header>
 
 
 <ion-content padding>
   <div padding>
     <ion-segment [(ngModel)]="entityType">
       <ion-segment-button value="locations" (click)="this.loadList()">
-        Locations
+        {{'locationsLabel' | translate}}
       </ion-segment-button>
       <ion-segment-button value="socialgroups" (click)="this.loadList()">
-        Social Groups
+        {{'socialGroupsLabel' | translate}}
       </ion-segment-button>
       <ion-segment-button value="individuals" (click)="this.loadList()">
-        Individuals
+        {{'individualsLabel' | translate}}
       </ion-segment-button>
     </ion-segment>
   </div>
@@ -20,20 +20,25 @@
     <div *ngSwitchCase="'locations'">
       <div>
         <ion-item>
-          <ion-searchbar autocomplete="true" animated="true" placeholder="Search By Location External Id or Location Name"
+          <ion-searchbar autocomplete="true" animated="true" placeholder="{{'locationsPlaceholder' | translate}}"
                          (ionInput)="this.search($event)"></ion-searchbar>
         </ion-item>
       </div>
       <div>
         <ion-list lines="full">
           <ion-card *ngFor="let loc of this.filteredLocations">
-            <ion-item>
-              <ion-text>
-                <h1>{{loc.locationName}}</h1>
-                <h5> Ext Id: {{loc.extId}}</h5>
-                <ion-button fill="outline" click="this.confirmSelection(loc)">Select</ion-button>
-              </ion-text>
-            </ion-item>
+              <ion-card-header>
+                <ion-item lines="inset">
+                  <ion-card-title>
+                    {{loc.locationName}}
+                  </ion-card-title>
+                  <ion-button fill="outline" slot="end" click="this.confirmSelection(loc)">{{'selectButton' | translate}}</ion-button>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-card-subtitle> Ext Id: {{loc.extId}}</ion-card-subtitle>
+                </ion-item>
+              </ion-card-header>
+
           </ion-card>
         </ion-list>
       </div>
@@ -41,21 +46,27 @@
     <div *ngSwitchCase="'socialgroups'">
       <div>
         <ion-item>
-          <ion-searchbar placeholder="Search By Social Group External Id, Group Head External Id, or Social Group Name"
+          <ion-searchbar placeholder="{{'socialGroupPlaceholder' | translate}}"
                          (ionInput)="this.search($event)"></ion-searchbar>
         </ion-item>
       </div>
       <div>
         <ion-list lines="full">
           <ion-card *ngFor="let sg of this.filteredSocialGroups">
-            <ion-item>
-              <ion-text>
-                <h1>{{sg.groupName}}</h1>
-                <h5> Group Head: {{sg.groupHead.firstName}} {{sg.groupHead.lastName}}</h5>
-                <h5> Ext Id: {{sg.extId}}</h5>
-                <ion-button fill="outline" (click)="this.confirmSelection(sg)">Select</ion-button>
-              </ion-text>
-            </ion-item>
+            <ion-card-header>
+              <ion-item lines="inset">
+                <ion-card-title>
+                  {{sg.groupName}}
+                </ion-card-title>
+                <ion-button fill="outline" slot="end" click="this.confirmSelection(sg)">{{'selectButton' | translate}}</ion-button>
+              </ion-item>
+              <ion-item lines="none">
+                  <ion-card-subtitle> Group Head: {{sg.groupHead.firstName}} {{sg.groupHead.lastName}}</ion-card-subtitle>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-card-subtitle> Ext Id: {{sg.extId}}</ion-card-subtitle>
+              </ion-item>
+            </ion-card-header>
           </ion-card>
         </ion-list>
       </div>
@@ -63,21 +74,24 @@
     <div *ngSwitchCase="'individuals'">
       <div>
         <ion-item>
-          <ion-searchbar placeholder="Search By Individual External Id, or by Individuals Name"
+          <ion-searchbar placeholder="{{'individualPlaceholder' | translate}}"
                          (click)="this.search($event)"></ion-searchbar>
         </ion-item>
       </div>
       <div>
         <ion-list lines="full">
           <ion-card *ngFor="let ind of this.filteredIndividuals">
-            <ion-item>
-              <ion-text>
-                <h1>{{ind.firstName}} {{ind.lastName}}</h1>
-                <h5> Ext Id: {{ind.extId}}</h5>
-                <ion-button spot="end" fill="outline" (click)="this.confirmSelection(ind)">Select</ion-button>
-              </ion-text>
-
-            </ion-item>
+            <ion-card-header>
+              <ion-item lines="inset">
+                <ion-card-title>
+                  {{ind.firstName}} {{ind.lastName}}
+                </ion-card-title>
+                <ion-button fill="outline" slot="end" (click)="this.confirmSelection(ind)">{{'selectButton' | translate}}</ion-button>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-card-subtitle> Ext Id: {{ind.extId}}</ion-card-subtitle>
+              </ion-item>
+            </ion-card-header>
           </ion-card>
         </ion-list>
       </div>

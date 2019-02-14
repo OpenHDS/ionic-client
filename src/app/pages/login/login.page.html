@@ -10,44 +10,44 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="this.onLogin(loginForm.value)">
       <ion-item>
-        <ion-label>Username</ion-label>
+        <ion-label>{{'loginUsername' | translate}}</ion-label>
         <ion-input formControlName="username" name="username" type="text">
         </ion-input>
       </ion-item>
       <ion-item *ngIf="loginForm.controls['username'].invalid && (loginForm.controls['username'].dirty || loginForm.controls['username'].touched)">
         <ion-text color="danger">
-          The username entered is either incorrect or not valid.
+          {{'usernameFormError' | translate}}
         </ion-text>
       </ion-item>
 
       <ion-item>
-        <ion-label>Password</ion-label>
+        <ion-label>{{'loginPassword' | translate}}</ion-label>
         <ion-input formControlName="password" name="password" type="password" required>
         </ion-input>
       </ion-item>
       <ion-item *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
         <ion-text color="danger">
-          The password entered is either incorrect or not valid.
+          {{'passwordFormError' | translate}}
         </ion-text>
       </ion-item>
 
       <ion-row>
         <ion-col>
-          <ion-button type="submit" expand="block">Login</ion-button>
+          <ion-button type="submit" expand="block">{{'loginButton' | translate}}</ion-button>
         </ion-col>
       </ion-row>
     </form>
 
     <ion-item>
-      <ion-label>Supervisor Login (Unselect if Fieldworker)</ion-label>
+      <ion-label>{{'loginSupervisor' | translate }}</ion-label>
       <ion-checkbox checked="true" [(ngModel)]="this.loginAsSuper"></ion-checkbox>
     </ion-item>
 
     <ion-card [hidden]="!this.showLoginError" class="error">
       <ion-card-content>
-        <ion-text>
-          <b>Error: Invalid username and/or password was provided.</b>
-        </ion-text>
+          <ion-text>
+            <b>{{'loginErrorMessage' | translate }}</b>
+          </ion-text>
       </ion-card-content>
     </ion-card>
 

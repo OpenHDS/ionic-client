@@ -1,8 +1,8 @@
-<openhds-header [headerTitle]="this.PAGE_NAME"></openhds-header>
+<openhds-header [headerTitle]="'databaseSyncPage'"></openhds-header>
 
 <ion-content padding>
   <ion-card [hidden]="this.networkConfig.isConnected()">
-    <ion-card-content>There is no network connection. A network connection is required to sync with the database.</ion-card-content>
+    <ion-card-content>{{'networkErrorPrompt' | translate}}</ion-card-content>
   </ion-card>
 
   <ion-card [hidden]="this.errors.length == 0">
@@ -11,19 +11,19 @@
     </ion-card-content>
   </ion-card>
   <ion-item>
-    <ion-button slot="end" (click)="this.syncDatabase()">Sync Entire Database</ion-button>
+    <ion-button slot="end" (click)="this.syncDatabase()">{{'syncDatabase' | translate}}</ion-button>
   </ion-item>
 
   <ion-grid class="table">
     <ion-row class="table-header">
-      <ion-col>Database Entity</ion-col>
-      <ion-col>Last Synced</ion-col>
-      <ion-col>Sync Successful</ion-col>
+      <ion-col>{{'databaseEntity' | translate}}</ion-col>
+      <ion-col>{{'lastSynced' | translate}}</ion-col>
+      <ion-col>{{'syncSuccessful' | translate}}</ion-col>
       <ion-col></ion-col>
     </ion-row>
 
     <ion-row class="table-row">
-      <ion-col>Fieldworker</ion-col>
+      <ion-col>{{'fieldworkerLabel' | translate}}</ion-col>
       <ion-col>
         <ion-text>
           {{fieldworkerSync != undefined ? (fieldworkerSync.time | date:'mediumDate'): "N/A" }}
@@ -34,11 +34,11 @@
           {{fieldworkerSync == undefined ? 'N/A': fieldworkerSync.success ? 'Yes': " No" }}
         </ion-text>
       </ion-col>
-      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncFieldworkers()">Sync</ion-button></ion-col>
+      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncFieldworkers()">{{'syncButton' | translate}}</ion-button></ion-col>
     </ion-row>
 
     <ion-row class="table-row">
-      <ion-col>Location Hierarchy</ion-col>
+      <ion-col>{{'locHierarchyLabel' | translate}}</ion-col>
       <ion-col>
         <ion-text>
           {{hierarchySync != undefined ? (hierarchySync.time | date:'mediumDate'): "N/A" }}
@@ -49,11 +49,11 @@
           {{hierarchySync == undefined ? 'N/A': hierarchySync.success ? 'Yes': " No" }}
         </ion-text>
       </ion-col>
-      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncLocLevels()">Sync</ion-button></ion-col>
+      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncLocLevels()">{{'syncButton' | translate}}</ion-button></ion-col>
     </ion-row>
 
     <ion-row class="table-row">
-      <ion-col>Location</ion-col>
+      <ion-col>{{'locationLabel' | translate}}</ion-col>
       <ion-col>
         <ion-text>
           {{locationSync != undefined ? (locationSync.time | date:'mediumDate'): "N/A" }}
@@ -64,11 +64,11 @@
           {{locationSync == undefined ? 'N/A': locationSync.success ? 'Yes': " No" }}
         </ion-text>
       </ion-col>
-      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncLocations()">Sync</ion-button></ion-col>
+      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncLocations()">{{'syncButton' | translate}}</ion-button></ion-col>
     </ion-row>
 
     <ion-row class="table-row">
-      <ion-col>Social Group</ion-col>
+      <ion-col>{{'socialGroupLabel' | translate}}</ion-col>
       <ion-col>
         <ion-text>
           {{socialGroupSync != undefined ? (socialGroupSync.time | date:'mediumDate'): "N/A" }}
@@ -79,11 +79,11 @@
           {{socialGroupSync == undefined ? 'N/A': socialGroupSync.success ? 'Yes': " No" }}
         </ion-text>
       </ion-col>
-      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncSocialGroups()">Sync</ion-button></ion-col>
+      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncSocialGroups()">{{'syncButton' | translate}}</ion-button></ion-col>
     </ion-row>
 
     <ion-row class="table-row">
-      <ion-col>Individual</ion-col>
+      <ion-col>{{'individualLabel' | translate}}</ion-col>
       <ion-col>
         <ion-text>
           {{individualSync != undefined ? (individualSync.time | date:'mediumDate'): "N/A" }}
@@ -94,7 +94,7 @@
           {{individualSync == undefined ? 'N/A': individualSync.success ? 'Yes': " No" }}
         </ion-text>
       </ion-col>
-      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncIndividuals()">Sync</ion-button></ion-col>
+      <ion-col><ion-button color="primary" size="small" fill="outline" (click)="this.syncIndividuals()">{{'syncButton' | translate}}</ion-button></ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>

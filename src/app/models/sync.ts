@@ -3,5 +3,5 @@
 export class SyncInfo{
   entity: string;
   success: boolean;
-  time: Date;
+  time: number;
 }

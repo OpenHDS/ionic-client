@@ -88,7 +88,7 @@ export class DatabaseSyncPage implements OnInit {
       let syncInfo = new SyncInfo();
       syncInfo.entity = 'fieldworker';
       syncInfo.success = true;
-      syncInfo.time = new Date();
+      syncInfo.time = new Date().getTime();
       this.fieldworkerSync = syncInfo;
       this.syncService.insertSyncInfo(syncInfo);
     }).catch((err) => {
@@ -102,7 +102,7 @@ export class DatabaseSyncPage implements OnInit {
   async syncLocLevels() {
     let syncInfo = new SyncInfo();
     syncInfo.entity = 'hierarchy';
-    syncInfo.time = new Date();
+    syncInfo.time = new Date().getTime();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing location levels... Please wait'
@@ -133,7 +133,7 @@ export class DatabaseSyncPage implements OnInit {
   async syncLocations() {
     let syncInfo = new SyncInfo();
     syncInfo.entity = 'location';
-    syncInfo.time = new Date();
+    syncInfo.time = new Date().getTime();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing location... Please wait'
@@ -157,7 +157,7 @@ export class DatabaseSyncPage implements OnInit {
   async syncSocialGroups() {
     let syncInfo = new SyncInfo();
     syncInfo.entity = 'socialGroup';
-    syncInfo.time = new Date();
+    syncInfo.time = new Date().getTime();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing social groups... Please wait'
@@ -182,7 +182,7 @@ export class DatabaseSyncPage implements OnInit {
   async syncIndividuals() {
     let syncInfo = new SyncInfo();
     syncInfo.entity = 'individual';
-    syncInfo.time = new Date();
+    syncInfo.time = new Date().getTime();
 
     const loading = await this.loadingCtrl.create({
       message: 'Synchronizing individuals... Please wait'
@@ -205,9 +205,9 @@ export class DatabaseSyncPage implements OnInit {
   }
 
   async syncNewDataWithServer() {
-    await this.locProvider.synchronizeOfflineLocations().catch((err) => {console.log(err); this.locationSyncSuccess = false; });
-    await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err); this.sgSyncSuccess = false;});
-    await this.indProvider.synchronizeOfflineIndividuals().catch(err => {console.log(err); this.individualSyncSuccess = false;});
+    await this.locProvider.synchronizeOfflineLocations().catch((err) => {console.log(err)});
+    await this.sgProvider.synchronizeOfflineSocialGroups().catch(err => {console.log(err)});
+    await this.indProvider.synchronizeOfflineIndividuals().catch(err => {console.log(err)});
     await this.visitService.synchronizeOfflineVisits().catch(err => console.log(err));
   }
 

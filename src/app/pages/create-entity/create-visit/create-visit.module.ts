@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CreateVisitPage } from './create-visit.page';
 import {ComponentsModule} from "../../../components/components";
+import {TranslateModule} from "@ngx-translate/core";
 
 const routes: Routes = [
   {
@@ -21,7 +22,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule, ReactiveFormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    TranslateModule.forChild()
   ],
   declarations: [CreateVisitPage]
 })

@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar color="danger">
-    <ion-title>Help: {{this.label}}</ion-title>
+    <ion-title>{{'helpPageTitle' | translate:{value: this.label} }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
     <ion-item>
-        Valid inputs for this field are:
+        {{'validMessage' | translate}}
     </ion-item>
     <ion-list lines="full">
       <ion-item *ngFor="let message of this.helpMessage">

@@ -9,7 +9,7 @@ import {Component, Input} from "@angular/core";
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>{{this.headerTitle}}</ion-title>
+        <ion-title>{{this.headerTitle | translate}}</ion-title>
       </ion-toolbar>
     </ion-header>
   `,

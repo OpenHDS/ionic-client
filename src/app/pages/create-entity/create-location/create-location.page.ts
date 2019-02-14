@@ -11,6 +11,7 @@ import {Fieldworker} from "../../../models/fieldworker";
 import {NavigationService} from "../../../services/NavigationService/navigation.service";
 import {HelpPopoverComponent} from "../../../components/help-popover/help-popover.component";
 import {SynchonizationObservableService} from "../../../services/SynchonizationObserverable/synchonization-observable.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'create-location',
@@ -28,13 +29,13 @@ export class CreateLocationPage implements OnInit {
   @Output() loc: Location;
   //Default for a new location being created. Values will be set if a location is being fixed (due to errors that may have occurred).
   constructor(public syncObserver: SynchonizationObservableService, public navController: NavController,
-              public navService: NavigationService,
+              public navService: NavigationService, public translate: TranslateService,
               public loadingCtrl: LoadingController,
               public locProvider: LocationService, private geo: Geolocation,
               public netConfig: NetworkConfigurationService, public modalController: ModalController) {
 
 
-    this.form = new LocationFormGroup();
+    this.form = new LocationFormGroup(translate);
 
     if(this.navService.data.editing){
       this.setEditLocationFormValues();
@@ -75,7 +76,6 @@ export class CreateLocationPage implements OnInit {
       loc.altitude = resp.coords.altitude;
       loc.accuracy = resp.coords.altitudeAccuracy;
     }).catch(err => console.log(err)).then(() => {
-      this.geoloc = true;
       loading.dismiss();
     });
 
@@ -121,16 +121,16 @@ export class CreateLocationPage implements OnInit {
     this.formSubmitted = false;
   }
 
-
   async goBackToCensus(location: Location){
     this.syncObserver.publishChange("Location:Create:Success", location);
     this.syncObserver.publishChange("Location:Create:ListUpdate");
-    this.navController.goBack(); //Go back to baseline
+    this.navController.back(); //Go back to baseline
   }
 
 
+
   async helpPopup(labelName:string){
-    let helpMessage = this.form.getFormHelpMessage();
+    let helpMessage = await this.form.getFormHelpMessage();
     this.navService.data = {label: labelName, helpMessage: helpMessage};
     const modal = await this.modalController.create({
         component: HelpPopoverComponent

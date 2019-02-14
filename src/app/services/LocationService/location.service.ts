@@ -54,6 +54,7 @@ export class LocationService extends DatabaseService {
     loc.processed = false;
     loc.deleted = false;
     loc.clientInsert = new Date().getTime();
+    loc.insertDate =   new Date();
 
     return await this.insert(loc);
   }

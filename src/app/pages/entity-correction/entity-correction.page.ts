@@ -16,10 +16,9 @@ import {NavigationEnd, Router} from "@angular/router";
 
 export class EntityCorrectionPage implements OnInit {
   readonly PAGE_NAME = 'Error Correction';
-  readonly ENTITY_LABELS = ["Locations", "Social Groups", "Individuals", "Visits"];
   errors: any;
   errorKeys: any;
-  selectedLabel = this.ENTITY_LABELS[0].toLowerCase();
+  selectedLabel = 'locations';
   navigationSubscription;
 
   constructor(public router: Router, public navService: NavigationService, public errorService: ErrorService, public visitService: VisitService,
@@ -38,17 +37,15 @@ export class EntityCorrectionPage implements OnInit {
   initializeCorrectionPage(){
     this.errors = undefined;
     this.errorKeys = undefined;
-    this.selectedLabel = this.ENTITY_LABELS[0].toLowerCase();
+    this.selectedLabel = 'locations';
     this.loadEntityErrors();
   }
 
   ngOnInit() {
-    this.loadEntityErrors();
+    this.initializeCorrectionPage();
   }
 
-  changeEntity(label){
-    this.selectedLabel = label.toLowerCase();
-
+  changeEntity(){
     this.loadEntityErrors();
   }
 

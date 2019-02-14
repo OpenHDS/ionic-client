@@ -1,0 +1,14 @@
+.error {
+  --error-rgb: 217, 83, 79;
+  --error-text-rbg: 152, 58, 55;
+
+  ion-item{
+    --background: rgba(var(--error-rgb), 0.5);
+  }
+
+  ion-text{
+    color: #983a37;
+    font-weight:bold
+  }
+}
+
